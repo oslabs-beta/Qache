@@ -63,15 +63,4 @@ class Cache {
   }
 }
 
-const cache = new Cache()
-
-const fakeDBLookup = (fail) =>
-  new Promise((resolve, reject) => {
-    setTimeout((fail) => {
-      if(fail) reject("failed")
-      resolve("Hello World");
-    }, 2000);
-});
-
-
 module.exports = Cache

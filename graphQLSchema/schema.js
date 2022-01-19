@@ -2,6 +2,14 @@ const { buildSchema } = require("graphql");
 const Cache = require('../Qachengo/Qachengo')
 const cache = new Cache
 
+const fakeDBLookup = (fail) =>
+  new Promise((resolve, reject) => {
+    setTimeout((fail) => {
+      if(fail) reject("failed")
+      resolve("Hello World");
+    }, 2000);
+});
+
 const schema = buildSchema(`
   type Query {
     hello: String
