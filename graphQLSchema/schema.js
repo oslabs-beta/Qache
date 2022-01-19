@@ -1,6 +1,7 @@
 const { buildSchema } = require("graphql");
 const Cache = require('../Qachengo/Qachengo')
-const cache = new Cache
+
+const cache = new Cache()
 
 const fakeDBLookup = (fail) =>
   new Promise((resolve, reject) => {

@@ -4,7 +4,6 @@ class Cache {
     this.defaultExpiration = options.expiration; //10 minute default expiration
     //Prevents excessive cleanups
     this.lastCleanup = 0;
-
     // Where data, and key specific data lives
     this.content = {}; // STORE OF DATA
   }
@@ -43,7 +42,7 @@ class Cache {
   //Cleans up stale data
   cleanUp(key) {
     //Evict a stale key if key is provided
-    if (key !== undefined) {
+    if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
         delete this.content[key];
       }
