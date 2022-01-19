@@ -19,15 +19,17 @@ const schema = buildSchema(`
 
 const rootValue = {
   hello: async() => {
+
     const t1 = Date.now()
+
     const cachedResponse = cache.check('hello')
     if(cachedResponse) return `${cachedResponse} from Qachengo in ${Date.now() - t1} ms`
 
     //some database lookup
 
     const normalResponse = await fakeDBLookup()
-
     cache.set('hello', normalResponse)
+    
     return `${normalResponse} from The Database in ${Date.now() - t1} ms`
   },
 };

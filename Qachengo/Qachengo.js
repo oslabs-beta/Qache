@@ -25,7 +25,6 @@ class Cache {
         value,
         expires: Date.now() + this.defaultExpiration,
       };
-      this.size++;
     }
   }
   //Check for key, and return value if found
