@@ -23,12 +23,7 @@ class Cache {
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
 
-    if (fields.length === 1 && typeof dbResponse === "string"){
-      this.content[fields[0]] = {
-        value: dbResponse,
-        expires: Date.now() + this.defaultExpiration,
-      };
-    } else if (fields.length === 1 && Array.isArray(dbResponse)){
+    if (fields.length === 1){
       this.content[fields[0]] = {
         value: dbResponse,
         expires: Date.now() + this.defaultExpiration,
