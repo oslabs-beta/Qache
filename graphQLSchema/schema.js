@@ -23,8 +23,8 @@ const fakeWeatherLookup = (fail) =>
           summary: 'Mostly sunny',
           stats: {
             precipitation: 1,
-            humidity: 41
-          }
+            humidity: 41,
+          },
         })
       );
     }, 2000);
@@ -51,36 +51,33 @@ const schema = buildSchema(`
 
 const rootValue = {
   hello: async (parent, args, info) => {
-    console.log(info);
     const t1 = Date.now();
 
-    const cachedResponse = cache.check('hello');
-    if (cachedResponse)
-      return `${cachedResponse} from Qachengo in ${Date.now() - t1} ms`;
+    const cachedResponse = cache.check(info);
+    if (cachedResponse) return cachedResponse;
 
     //some database lookup
 
     const normalResponse = await fakeDBLookup();
-    cache.set('hello', normalResponse);
+    cache.store(info, normalResponse);
 
-    return `${normalResponse} from The Database in ${Date.now() - t1} ms`;
+    return normalResponse;
   },
   weather: async (parent, args, info) => {
-
     const t1 = Date.now();
 
     const cachedResponse = cache.check(info);
 
-    if (cachedResponse){
-      console.log(`This call took ${Date.now()-t1}ms, coming from cache`)
-      return cachedResponse
+    if (cachedResponse) {
+      console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
+      return cachedResponse;
     }
     //some database lookup
     const jsonResponse = await fakeWeatherLookup();
     const normalResponse = await JSON.parse(jsonResponse);
 
-    cache.set(info, normalResponse);
-    console.log(`This call took ${Date.now()-t1}ms, coming from database`)
+    cache.store(info, normalResponse);
+    console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
 };
