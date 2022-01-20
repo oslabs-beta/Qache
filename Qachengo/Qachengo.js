@@ -12,6 +12,7 @@ class Cache {
   // FLOW : store > _getRefs + parseQuery > _storeData
   store(info, dbResponse) {
     const { fields } = this._getRefs(info);
+    console.log(fields, dbResponse)
     this._storeData(fields, dbResponse);
   }
 
@@ -22,7 +23,12 @@ class Cache {
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
 
-    if (typeof dbResponse === "string"){
+    if (fields.length === 1 && typeof dbResponse === "string"){
+      this.content[fields[0]] = {
+        value: dbResponse,
+        expires: Date.now() + this.defaultExpiration,
+      };
+    } else if (fields.length === 1 && Array.isArray(dbResponse)){
       this.content[fields[0]] = {
         value: dbResponse,
         expires: Date.now() + this.defaultExpiration,
