@@ -19,12 +19,68 @@ class Cache {
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
 
-  // Delete data from queue
-  remove(node) {
-    // point prev
-    this._pointAway(node, 'prev');
-    // point next
-    this._pointAway(node, 'next');
+  /**
+   * This function performs the following in order:
+   * 1. Checks if the node exists in the cache and removes it if found. This behavior enforces that a new node with the same value as an existing node in memory overwrites the existing one and is enqueued to the tail since it is the most recently used data.
+   * 2. Alternatively checks to see if the cache is full and then deletes the data from the cache and queue.
+   * 3. Enqueues a new node at the tail of the queue
+   * @param {string} key
+   * @param {object} value
+   */
+  _addToQueue(key, value) {
+    const nodeInCache = this.content[key];
+    // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
+    if (nodeInCache) {
+      this._removeFromQueue(nodeInCache);
+      this.size--;
+    }
+    // when the cache is full, we delete the node from the cache and the queue
+    else if (this.size === this.maxSize) {
+      delete this.content[this.head.key]; // remove from cache
+      this._removeFromQueue(this.head);
+      this.size--;
+    }
+
+    // insert new node at tail of the linked list (queue)
+    if (this.tail) {
+      const node = new Node(key, value);
+      node.next = this.tail;
+      this.tail.prev = node;
+      this.tail = node;
+    }
+    // queue is empty. point head & tail ➡ new Node
+    else this.tail = this.head = new Node(key, value);
+
+    // add node to cache
+    this.content[key] = this.tail;
+    this.size++;
+  }
+
+  /**
+   * Deletes a node from the queue
+   * @param {object} node
+   */
+  _removeFromQueue(node) {
+    // point node's `prev` pointer to the appropriate node
+    this._detachNeighbor(node, 'prev');
+    // point node's `next` pointer to the appropriate node
+    this._detachNeighbor(node, 'next');
+  }
+
+  _getFromQueue(key) {
+    try {
+      const nodeInCache = this.content[key];
+      if (!nodeInCache)
+        throw new Error(`There is no key: ${key} in the cache.`);
+      // put newly accessed node at the tail of the list
+      if (this.tail !== nodeInCache) {
+        // recall that _addToQueue will remove existing node and add the node back at the tail of the queue
+        this._addToQueue(key, nodeinCache.value);
+      }
+      return nodeInCache.value;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /**
@@ -40,7 +96,7 @@ class Cache {
    * @param {object} node
    * @param {string} p1
    */
-  _pointAway(node, p1) {
+  _detachNeighbor(node, p1) {
     const p2 = p1 === 'prev' ? 'next' : 'prev'; // pointer for the opposite direction passed in
     const end = p1 === 'prev' ? 'tail' : 'head'; // pointer for which end of queue we are removing from
     const neighbor = node[p1];
@@ -72,7 +128,7 @@ class Cache {
 
     if (fields.length === 1) {
       this.content[fields[0]] = {
-        value: dbResponse,
+        data: dbResponse,
         expires: Date.now() + this.defaultExpiration,
       };
     } else {
@@ -80,10 +136,14 @@ class Cache {
         if (isObject(dbResponse[field])) {
           this._storeData(fields, dbResponse[field]);
         } else {
-          this.content[field] = {
-            value: dbResponse[field],
+          // this.content[field] = {
+          //   value: dbResponse[field],
+          //   expires: Date.now() + this.defaultExpiration,
+          // };
+          this._addToQueue(field, {
+            data: dbResponse[field],
             expires: Date.now() + this.defaultExpiration,
-          };
+          });
           this.size++; // add to size of cache
         }
       }
@@ -101,7 +161,8 @@ class Cache {
       this.cleanUp(field);
       if (this.content.hasOwnProperty(field)) {
         if (typeof queryObj === 'string') {
-          queryObj = this.content[field].value;
+          // queryObj = this.content[field].value;
+          queryObj = this._getFromQueue(field);
         } else {
           this._addToQueryObj(field, this.content[field].value, queryObj);
         }

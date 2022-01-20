@@ -33,9 +33,7 @@ const fakeSevenDayLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
       if (fail) reject('failed');
-      resolve(
-        JSON.stringify([41, 25, 30, 10, 2, 20, 30])
-      );
+      resolve(JSON.stringify([41, 25, 30, 10, 2, 20, 30]));
     }, 2000);
   });
 
@@ -72,7 +70,7 @@ const rootValue = {
 
     //some database lookup
     const normalResponse = await fakeDBLookup();
-    
+
     cache.store(info, normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
 
@@ -91,7 +89,7 @@ const rootValue = {
     //some database lookup
 
     const normalResponse = await fakeSevenDayLookup();
-    const parsedResponse = JSON.parse(normalResponse)
+    const parsedResponse = JSON.parse(normalResponse);
     cache.store(info, parsedResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
 
@@ -104,6 +102,7 @@ const rootValue = {
     const cachedResponse = cache.check(info);
 
     if (cachedResponse) {
+      console.log(cachedResponse);
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
     }
