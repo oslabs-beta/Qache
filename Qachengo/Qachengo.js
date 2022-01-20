@@ -1,3 +1,6 @@
+const helpers = require('../helperFunctions.js');
+const getTimeLeft = helpers.getTimeLeft;
+
 class Cache {
   constructor(options = { expiration: 1000 * 60 * 10 }) {
     //set expiration in options or default to 10min
@@ -87,14 +90,14 @@ class Cache {
   cleanUp(key) {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
-      if (this.content[key].expires < Date.now()) {
+      if (getTimeLeft(key) <= 0) {
         delete this.content[key];
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
-        if (this.content[key].expires < Date.now()) {
+        if (getTimeLeft(key) <= 0) {
           delete this.content[key];
         }
       }
@@ -141,6 +144,10 @@ class Cache {
     //count amount of keys
     size() {
       return Object.keys(this.content).length;
+    }
+    // returns amount of time left before given cached item expires
+    printTimeLeft(key) {
+      return (`This cached info will expire in ${getTimeLeft(key) / 1000} seconds`)
     }
   }
   
