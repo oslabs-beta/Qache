@@ -27,7 +27,7 @@ class Cache {
    * @param {string} key
    * @param {object} value
    */
-  _addToQueue(key, value) {
+  _addToQueueAndCache(key, value) {
     const nodeInCache = this.content[key];
     // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
     if (nodeInCache) {
@@ -74,8 +74,8 @@ class Cache {
         throw new Error(`There is no key: ${key} in the cache.`);
       // put newly accessed node at the tail of the list
       if (this.tail !== nodeInCache) {
-        // recall that _addToQueue will remove existing node and add the node back at the tail of the queue
-        this._addToQueue(key, nodeinCache.value);
+        // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
+        this._addToQueueAndCache(key, nodeinCache.value);
       }
       return nodeInCache.value;
     } catch (error) {
@@ -140,7 +140,7 @@ class Cache {
           //   value: dbResponse[field],
           //   expires: Date.now() + this.defaultExpiration,
           // };
-          this._addToQueue(field, {
+          this._addToQueueAndCache(field, {
             data: dbResponse[field],
             expires: Date.now() + this.defaultExpiration,
           });
