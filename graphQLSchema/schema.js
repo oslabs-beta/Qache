@@ -29,6 +29,20 @@ const fakeWeatherLookup = (fail) =>
       );
     }, 2000);
   });
+const fakeGetAllUsers = (fail) =>
+  new Promise((resolve, reject) => {
+    setTimeout((fail) => {
+      if (fail) reject('failed');
+      resolve(
+        JSON.stringify([
+          {username: "nader12334", firstName: "nader", lastName: "almogazy", age: 27},
+          {username: "leocrossman", firstName: "leo", lastName: "crossman", age: 23},
+          {username: "ep1815", firstName: "evan", lastName: "preedy", age: 23},
+          {username: "stebed", firstName: "steven", lastName: "du", age: 20},
+        ])
+      );
+    }, 2000);
+  });
 const fakeSevenDayLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
@@ -45,6 +59,13 @@ const schema = buildSchema(`
     humidity: Int
   }
 
+  type User {
+    username: String
+    firstName: String
+    lastName: String
+    age: Int
+  }
+
   type Weather {
     temperature: Int
     windspeed: Int
@@ -56,6 +77,7 @@ const schema = buildSchema(`
     hello: String
     sevenDayTemp: [Int]
     weather: Weather
+    getAllUsers: [User]
   }
 `);
 
@@ -109,9 +131,26 @@ const rootValue = {
     }
     //some database lookup
     const jsonResponse = await fakeWeatherLookup();
-    const normalResponse = await JSON.parse(jsonResponse);
-
+    const normalResponse = JSON.parse(jsonResponse);
+    
     cache.store(info, normalResponse);
+    console.log(`This call took ${Date.now() - t1}ms, coming from database`);
+    return normalResponse;
+  },
+  getAllUsers: async (parent, args, info) => {
+    const t1 = Date.now();
+
+    const cachedResponse = cache.listPull("getAllUsers");
+
+    if (cachedResponse) {
+      console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
+      return cachedResponse;
+    }
+    //some database lookup
+    const jsonResponse = await fakeGetAllUsers();
+    const normalResponse = JSON.parse(jsonResponse);
+    
+    cache.listPush("getAllUsers", ...normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
