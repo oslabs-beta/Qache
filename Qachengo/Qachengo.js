@@ -26,12 +26,7 @@ class Cache {
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
 
-    if (fields.length === 1 && typeof dbResponse === "string"){
-      this.content[fields[0]] = {
-        value: dbResponse,
-        expires: Date.now() + this.defaultExpiration,
-      };
-    } else if (fields.length === 1 && Array.isArray(dbResponse)){
+    if (fields.length === 1){
       this.content[fields[0]] = {
         value: dbResponse,
         expires: Date.now() + this.defaultExpiration,
@@ -141,7 +136,7 @@ class Cache {
       return isTopLevel ? {fields, queryObj: queryObj[topLevelField]} : {fields, queryObj,}
     }
     /* {UTILITY METHODS} */
-    //count amount of keys
+    // count amount of keys
     size() {
       return Object.keys(this.content).length;
     }
@@ -149,6 +144,7 @@ class Cache {
     printTimeLeft(key) {
       return (`This cached info will expire in ${getTimeLeft(key) / 1000} seconds`)
     }
+    // 
   }
   
   module.exports = Cache;

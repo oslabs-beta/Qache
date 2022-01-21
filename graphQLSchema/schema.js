@@ -71,8 +71,8 @@ const rootValue = {
     }
 
     //some database lookup
-
     const normalResponse = await fakeDBLookup();
+    
     cache.store(info, normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
 
