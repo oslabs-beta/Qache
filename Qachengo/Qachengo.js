@@ -17,7 +17,6 @@ class Cache {
 
   //for item lists, we will have unique cache keys per list.
   listPush(listKey, ...item) {
-    console.log(item)
     if(listKey === undefined) {
       console.log("Error, storeList requires a unique cache key")
     } else if(!Array.isArray(item)){
@@ -96,7 +95,6 @@ class Cache {
   }
 
   pullList(listKey, start = 0, end){
-    console.log(this.content[listKey])
     this.cleanUp(listKey)
     if (this.content[listKey] === undefined) return null
     const {list} = this.content[listKey]

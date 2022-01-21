@@ -143,7 +143,6 @@ const rootValue = {
     const cachedResponse = cache.pullList("getAllUsers");
 
     if (cachedResponse) {
-      console.log(cache.content)
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
     }
@@ -155,7 +154,6 @@ const rootValue = {
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
-  
 };
 
 module.exports = { rootValue, schema };
