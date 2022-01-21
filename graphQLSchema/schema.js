@@ -131,8 +131,8 @@ const rootValue = {
     }
     //some database lookup
     const jsonResponse = await fakeWeatherLookup();
-    const normalResponse = await JSON.parse(jsonResponse);
-
+    const normalResponse = JSON.parse(jsonResponse);
+    
     cache.store(info, normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
@@ -148,8 +148,8 @@ const rootValue = {
     }
     //some database lookup
     const jsonResponse = await fakeGetAllUsers();
-    const normalResponse = await JSON.parse(jsonResponse);
-
+    const normalResponse = JSON.parse(jsonResponse);
+    
     cache.listPush("getAllUsers", ...normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
