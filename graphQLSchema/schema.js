@@ -140,7 +140,7 @@ const rootValue = {
   getAllUsers: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.pullList("getAllUsers");
+    const cachedResponse = cache.listPull("getAllUsers");
 
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);

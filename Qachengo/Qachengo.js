@@ -15,24 +15,6 @@ class Cache {
     this._storeData(fields, dbResponse);
   }
 
-  //for item lists, we will have unique cache keys per list.
-  listPush(listKey, ...item) {
-    if(listKey === undefined) {
-      console.log("Error, storeList requires a unique cache key")
-    } else if(!Array.isArray(item)){
-      console.log("Error, data is not a valid string")
-    } else {
-      item.forEach((n) => this._pushToList(listKey, n))
-      this.content[listKey].expires = Date.now() + this.expiration
-    }
-  }
-  _pushToList(listKey, item){
-    if (this.content[listKey] === undefined) {
-      this.content[listKey] = {list: [], expires: Date.now() + this.expiration}
-    } 
-    this.content[listKey].list.push(item)
-  }
-
   _getRefs(info) {
     return this.parseQuery(info.operation.selectionSet.selections);
   }
@@ -94,7 +76,22 @@ class Cache {
     }
   }
 
-  pullList(listKey, start = 0, end){
+  //for item lists, we will have unique cache keys per list.
+  listPush(listKey, ...item) {
+    //Remind user that a key is required for this method
+    if(listKey === undefined) {
+      console.log("Error, storeList requires a unique cache key")
+    } else {
+      //Check if a list exists for this key, if not, create one.
+      if (this.content[listKey] === undefined) {
+        this.content[listKey] = {list: [], expires: Date.now() + this.expiration}
+      } 
+      // for each item given, we push that item into cache, THEN refresh expiration.
+      item.forEach((n) => this.content[listKey].list.push(n))
+      this.content[listKey].expires = Date.now() + this.expiration
+    }
+  }
+  listPull(listKey, start = 0, end){
     this.cleanUp(listKey)
     if (this.content[listKey] === undefined) return null
     const {list} = this.content[listKey]
