@@ -1,7 +1,7 @@
 class Cache {
   constructor(options = { expiration: 1000 * 60 * 10 }) {
     //set expiration in options or default to 10min
-    this.defaultExpiration = options.expiration; //10 minute default expiration
+    this.expiration = options.expiration; //10 minute default expiration
     //Prevents excessive cleanups
     this.lastCleanup = 0;
     // Where data, and key specific data lives
@@ -12,8 +12,26 @@ class Cache {
   // FLOW : store > _getRefs + parseQuery > _storeData
   store(info, dbResponse) {
     const { fields } = this._getRefs(info);
-    console.log(fields, dbResponse)
     this._storeData(fields, dbResponse);
+  }
+
+  //for item lists, we will have unique cache keys per list.
+  listPush(listKey, ...item) {
+    console.log(item)
+    if(listKey === undefined) {
+      console.log("Error, storeList requires a unique cache key")
+    } else if(!Array.isArray(item)){
+      console.log("Error, data is not a valid string")
+    } else {
+      item.forEach((n) => this._pushToList(listKey, n))
+      this.content[listKey].expires = Date.now() + this.expiration
+    }
+  }
+  _pushToList(listKey, item){
+    if (this.content[listKey] === undefined) {
+      this.content[listKey] = {list: [], expires: Date.now() + this.expiration}
+    } 
+    this.content[listKey].list.push(item)
   }
 
   _getRefs(info) {
@@ -26,7 +44,7 @@ class Cache {
     if (fields.length === 1){
       this.content[fields[0]] = {
         value: dbResponse,
-        expires: Date.now() + this.defaultExpiration,
+        expires: Date.now() + this.expiration,
       };
     } else {
       for (const field in dbResponse) {
@@ -35,7 +53,7 @@ class Cache {
         } else {
           this.content[field] = {
             value: dbResponse[field],
-            expires: Date.now() + this.defaultExpiration,
+            expires: Date.now() + this.expiration,
           };
         }
       }
@@ -65,7 +83,6 @@ class Cache {
     }
     return isMissingData ? null : queryObj;
   }
-
   _addToQueryObj(field, value, queryObj) {
     const isObject = (x) => typeof x === 'object' && x !== null;
     for (let key in queryObj) {
@@ -78,6 +95,13 @@ class Cache {
     }
   }
 
+  pullList(listKey, start = 0, end){
+    console.log(this.content[listKey])
+    this.cleanUp(listKey)
+    if (this.content[listKey] === undefined) return null
+    const {list} = this.content[listKey]
+    return end ? list.slice(start, end) : list.slice(start)
+  }
   //Cleans up stale data
   cleanUp(key) {
     //Evict a stale key if key is provided
