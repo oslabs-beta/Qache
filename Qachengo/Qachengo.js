@@ -1,7 +1,7 @@
 class Node {
-  constructor(key, val) {
+  constructor(key, value) {
     this.key = key;
-    this.val = val;
+    this.value = value;
     this.prev = this.next = null;
   }
 }
@@ -14,7 +14,7 @@ class Cache {
     this.maxSize = options.maxSize;
     this.lastCleanup = 0;
     // Where data, and key specific data lives
-    this.content = {}; // STORE OF DATA
+    this.content = {}; // STORE OFue/f  DATA
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
@@ -75,7 +75,7 @@ class Cache {
       // put newly accessed node at the tail of the list
       if (this.tail !== nodeInCache) {
         // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
-        this._addToQueueAndCache(key, nodeinCache.value);
+        this._addToQueueAndCache(key, nodeInCache.value);
       }
       return nodeInCache.value;
     } catch (error) {
@@ -89,7 +89,7 @@ class Cache {
    * 		- If node.prev points to another node (current node is not the most recent thing to be added to the queue), point that node's `next` to the next node after the current node being deleted.
    * 		- Otherwise, node.prev does not point to a node (current node must be the most recent addition to the queue), thus we point the tail at the next node because we are at the tail of the queue.
    *
-   * When called with the 'next' string passed in:
+   * When called with thue/f e 'next' string passed in:
    * 		- If node.next points to another node (current node is not the least used node in the cache), point that node's `prev` to the node before the current node being deleted in the queue.
    * 		- Otherwise, node.next does not point to a node (current node must be the oldest item in the queue), thus we point the head at the previous node because we are at the head of the queue.
    *
@@ -126,6 +126,7 @@ class Cache {
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
 
+    console.log('dbRes:', dbResponse, '\n', 'fields:', fields);
     if (fields.length === 1) {
       this.content[fields[0]] = {
         data: dbResponse,
@@ -136,10 +137,7 @@ class Cache {
         if (isObject(dbResponse[field])) {
           this._storeData(fields, dbResponse[field]);
         } else {
-          // this.content[field] = {
-          //   value: dbResponse[field],
-          //   expires: Date.now() + this.defaultExpiration,
-          // };
+          console.log('field:', field);
           this._addToQueueAndCache(field, {
             data: dbResponse[field],
             expires: Date.now() + this.defaultExpiration,
@@ -164,7 +162,7 @@ class Cache {
           // queryObj = this.content[field].value;
           queryObj = this._getFromQueue(field);
         } else {
-          this._addToQueryObj(field, this.content[field].value, queryObj);
+          this._addToQueryObj(field, this.content[field].value.data, queryObj);
         }
       } else {
         isMissingData = true;

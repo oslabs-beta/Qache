@@ -73,7 +73,6 @@ const rootValue = {
 
     cache.store(info, normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
-
     return normalResponse;
   },
   // ARRAY TEST
@@ -92,7 +91,6 @@ const rootValue = {
     const parsedResponse = JSON.parse(normalResponse);
     cache.store(info, parsedResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
-
     return parsedResponse;
   },
   //OBJECT TEST
@@ -100,7 +98,6 @@ const rootValue = {
     const t1 = Date.now();
 
     const cachedResponse = cache.check(info);
-
     if (cachedResponse) {
       console.log(cachedResponse);
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
