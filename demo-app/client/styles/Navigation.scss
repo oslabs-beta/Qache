@@ -1,0 +1,92 @@
+$offwhite: #fafafa;
+
+#nav-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 5rem;
+  padding-top: 2.5rem;
+  padding-left: 15rem;
+  padding-right: 15rem;
+  background-color: white;
+
+  .navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 80px;
+    background-color: white;
+    border-bottom: solid 1px #dfdfdf;
+    .menu-bars {
+      margin-left: 0;
+      font-size: 2rem;
+      background: none;
+    }
+
+    a {
+      margin-left: 3.75rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+      cursor: pointer;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .search {
+      position: relative;
+      left: 4.5rem;
+    }
+
+    input {
+      width: 50%;
+      height: 1.5rem;
+      margin-left: 3rem;
+      padding-left: 1.75rem;
+    }
+  }
+
+  .nav-menu {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    width: 20rem;
+    height: 100vh;
+    top: 0;
+    left: -100%;
+    transition: 750ms;
+    background-color: $offwhite;
+  }
+
+  .nav-menu.active {
+    padding-top: 1.5rem;
+    left: 0;
+    z-index: 10;
+    transition: 250ms;
+    overflow: scroll;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+  }
+
+  .nav-menu-items {
+    width: 100%;
+
+    .navbar-toggle {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 5rem;
+      margin-left: 2rem;
+      font-size: 2rem;
+      background-color: $offwhite;
+    }
+  }
+}
