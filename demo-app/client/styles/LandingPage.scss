@@ -1,0 +1,45 @@
+.landingPage-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15rem;
+  padding-right: 15rem;
+
+  .section-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  img {
+    width: 65%;
+  }
+
+  .img-caption {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    top: 37rem;
+    left: 20rem;
+    padding-left: 1rem;
+    padding-right: 5rem;
+    height: 5rem;
+    backdrop-filter: blur(25px);
+
+    h2 {
+      font-weight: 300;
+    }
+  }
+
+  .graph-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+  }
+}
