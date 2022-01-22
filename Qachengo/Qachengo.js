@@ -114,7 +114,6 @@ class Cache {
   // FLOW : store ➡ getRefs ➡ _storeData
   store(info, dbResponse) {
     const { fields } = this._getRefs(info);
-    console.log(fields, dbResponse);
     this._storeData(fields, dbResponse);
   }
 
@@ -168,7 +167,6 @@ class Cache {
     }
     return isMissingData ? null : queryObj;
   }
-
   _addToQueryObj(field, value, queryObj) {
     const isObject = (x) => typeof x === 'object' && x !== null;
     for (let key in queryObj) {
@@ -181,6 +179,43 @@ class Cache {
     }
   }
 
+  //for item lists, we will have unique cache keys per list.
+  listPush(listKey, ...item) {
+    //Remind user that a key is required for this method
+    if (listKey === undefined) {
+      console.log('Error, storeList requires a unique cache key');
+    } else {
+      //Check if a list exists for this key, if not, create one.
+      if (this.content[listKey] === undefined) {
+        this.content[listKey] = {
+          list: [],
+          expires: Date.now() + this.expiration,
+        };
+      }
+      // for each item given, we push that item into cache, THEN refresh expiration.
+      item.forEach((n) => this.content[listKey].list.push(n));
+      this.content[listKey].expires = Date.now() + this.expiration;
+    }
+  }
+  listPull(listKey, start = 0, end) {
+    this.cleanUp(listKey);
+    if (this.content[listKey] === undefined) return null;
+    const { list } = this.content[listKey];
+    return end ? list.slice(start, end) : list.slice(start);
+  }
+  listFetch(listKey, targetKey, targetValue) {
+    const returnArray = [];
+    if (this.content[listKey] === undefined) return null;
+
+    for (const item of this.content[listKey].list) {
+      console.log(item[targetKey], targetValue);
+      if (item[targetKey] === targetValue) {
+        returnArray.push(item);
+      }
+    }
+    if (returnArray.length === 0) return null;
+    return returnArray;
+  }
   //Cleans up stale data
   cleanUp(key) {
     //Evict a stale key if key is provided
