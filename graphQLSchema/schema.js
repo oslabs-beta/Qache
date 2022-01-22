@@ -85,8 +85,9 @@ const rootValue = {
   //STRING TEST
   hello: async (parent, args, info) => {
     const t1 = Date.now();
-
+    // console.log('this is info: ' , info)
     const cachedResponse = cache.check(info);
+    // const expiration = cachedResponse.expires
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -103,7 +104,7 @@ const rootValue = {
   // ARRAY TEST
   sevenDayTemp: async (parent, args, info) => {
     const t1 = Date.now();
-
+    
     const cachedResponse = cache.check(info);
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);

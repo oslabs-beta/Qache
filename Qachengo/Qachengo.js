@@ -1,6 +1,3 @@
-const helpers = require('../helperFunctions.js');
-const getTimeLeft = helpers.getTimeLeft;
-
 class Cache {
   constructor(options = { expiration: 1000 * 60 * 10 }) {
     //set expiration in options or default to 10min
@@ -48,6 +45,7 @@ class Cache {
   //Check for key, and return value if found 
   //FLOW: check > _getRefs + parseQuery > _addToQueryObj > check returns
   check(info) {
+    console.log('in check(info)')
     let { selections, fields, queryObj } = this._getRefs(info);
     let isMissingData = false;
 
@@ -104,14 +102,15 @@ class Cache {
   cleanUp(key) {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
-      if (getTimeLeft(key) <= 0) {
+      console.log(this.printTimeLeft(key));
+      if (this.content[key].expires < Date.now()) {
         delete this.content[key];
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
-        if (getTimeLeft(key) <= 0) {
+        if (this.content[key].expires < Date.now()) {
           delete this.content[key];
         }
       }
@@ -161,7 +160,7 @@ class Cache {
     }
     // returns amount of time left before given cached item expires
     printTimeLeft(key) {
-      return (`This cached info will expire in ${getTimeLeft(key) / 1000} seconds`)
+      return (`This cached info will expire in ${(this.content[key].expires - Date.now()) / 1000} seconds`)
     }
     // 
   }
