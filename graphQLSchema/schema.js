@@ -182,11 +182,9 @@ const rootValue = {
   },
   getUserByUsername: async (args, parent, info) => {
     const t1 = Date.now();
-    console.log(parent)
     const {username} = args
 
     const cachedResponse = cache.listFetch("users", "username", username)
-    console.log(cachedResponse)
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse[0];
@@ -199,6 +197,23 @@ const rootValue = {
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
+  // createUser: async (args, parent, info) => {
+  //   const t1 = Date.now();
+  //   const {username} = args
+
+  //   const cachedResponse = cache.listFetch("users", "username", username)
+  //   if (cachedResponse) {
+  //     console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
+  //     return cachedResponse[0];
+  //   }
+  //   //some database lookup
+  //   const jsonResponse = await fakeGetUser("nader12334");
+  //   const normalResponse = JSON.parse(jsonResponse);
+    
+  //   cache.listPush("users", normalResponse);
+  //   console.log(`This call took ${Date.now() - t1}ms, coming from database`);
+  //   return normalResponse;
+  // },
 };
 
 module.exports = { rootValue, schema };
