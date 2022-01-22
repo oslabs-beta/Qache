@@ -1,15 +1,14 @@
 class Node {
-  constructor(key, value) {
-    this.key = key;
+  constructor(value) {
     this.value = value;
     this.prev = this.next = null;
   }
 }
 
 class Cache {
-  constructor(options = { expiration: 1000 * 60 * 10, maxSize: 5 }) {
-    //set expiration in options or default to 10min
-    this.defaultExpiration = options.expiration; //10 minute default expiration
+  constructor(options = { timeToLive: 1000 * 60 * 10, maxSize: 5 }) {
+    //set timeToLive in options or default to 10min
+    this.TTL = options.timeToLive; //10 minute default timeToLive
     //Prevents excessive cleanups
     this.maxSize = options.maxSize;
     this.lastCleanup = 0;
@@ -43,13 +42,13 @@ class Cache {
 
     // insert new node at tail of the linked list (queue)
     if (this.tail) {
-      const node = new Node(key, value);
+      const node = new Node(value);
       node.next = this.tail;
       this.tail.prev = node;
       this.tail = node;
     }
     // queue is empty. point head & tail ➡ new Node
-    else this.tail = this.head = new Node(key, value);
+    else this.tail = this.head = new Node(value);
 
     // add node to cache
     this.content[key] = this.tail;
@@ -67,7 +66,7 @@ class Cache {
     this._detachNeighbor(node, 'next');
   }
 
-  _getFromQueue(key) {
+  _getDataFromQueue(key) {
     try {
       const nodeInCache = this.content[key];
       if (!nodeInCache)
@@ -77,7 +76,7 @@ class Cache {
         // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
         this._addToQueueAndCache(key, nodeInCache.value);
       }
-      return nodeInCache.value;
+      return nodeInCache.value.data;
     } catch (error) {
       console.error(error);
     }
@@ -128,21 +127,20 @@ class Cache {
 
     console.log('dbRes:', dbResponse, '\n', 'fields:', fields);
     if (fields.length === 1) {
-      this.content[fields[0]] = {
+      console.log('field: ', fields[0], '\n');
+      this._addToQueueAndCache(fields[0], {
         data: dbResponse,
-        expires: Date.now() + this.defaultExpiration,
-      };
+        expires: Date.now() + this.TTL,
+      });
     } else {
       for (const field in dbResponse) {
         if (isObject(dbResponse[field])) {
           this._storeData(fields, dbResponse[field]);
         } else {
-          console.log('field:', field);
           this._addToQueueAndCache(field, {
             data: dbResponse[field],
-            expires: Date.now() + this.defaultExpiration,
+            expires: Date.now() + this.TTL,
           });
-          this.size++; // add to size of cache
         }
       }
     }
@@ -159,8 +157,7 @@ class Cache {
       this.cleanUp(field);
       if (this.content.hasOwnProperty(field)) {
         if (typeof queryObj === 'string') {
-          // queryObj = this.content[field].value;
-          queryObj = this._getFromQueue(field);
+          queryObj = this._getDataFromQueue(field);
         } else {
           this._addToQueryObj(field, this.content[field].value.data, queryObj);
         }

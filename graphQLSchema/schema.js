@@ -4,12 +4,14 @@ const gql = require('graphql-tag');
 
 const cache = new Cache();
 
+const fakeTimeout = 1000;
+
 const fakeDBLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
       if (fail) reject('failed');
       resolve('Hello World');
-    }, 2000);
+    }, fakeTimeout);
   });
 
 const fakeWeatherLookup = (fail) =>
@@ -27,14 +29,14 @@ const fakeWeatherLookup = (fail) =>
           },
         })
       );
-    }, 2000);
+    }, fakeTimeout);
   });
 const fakeSevenDayLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
       if (fail) reject('failed');
       resolve(JSON.stringify([41, 25, 30, 10, 2, 20, 30]));
-    }, 2000);
+    }, fakeTimeout);
   });
 
 const schema = buildSchema(`
@@ -80,6 +82,7 @@ const rootValue = {
     const t1 = Date.now();
 
     const cachedResponse = cache.check(info);
+    console.log(cache.content);
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
