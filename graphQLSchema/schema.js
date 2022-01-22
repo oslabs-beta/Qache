@@ -4,6 +4,18 @@ const gql = require('graphql-tag');
 
 const cache = new Cache();
 
+const userList = [
+  {"username": "nader12334", "firstName": "nader", "lastName": "almogazy", "age": 27},
+  {"username": "leocrossman", "firstName": "leo", "lastName": "crossman", "age": 23},
+  {"username": "ep1815", "firstName": "evan", "lastName": "preedy", "age": 23},
+  {"username": "stebed", "firstName": "steven", "lastName": "du", "age": 20},
+]
+const getUser = (username) => {
+  for (const user of userList) {
+    if (user.username === username) return user
+  }
+  return null
+}
 const fakeDBLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
@@ -29,20 +41,24 @@ const fakeWeatherLookup = (fail) =>
       );
     }, 2000);
   });
-const fakeGetAllUsers = (fail) =>
+const fakeGetAllUsers = () =>
   new Promise((resolve, reject) => {
-    setTimeout((fail) => {
-      if (fail) reject('failed');
+    setTimeout(() => {
+      if (err) reject('failed');
       resolve(
-        JSON.stringify([
-          {username: "nader12334", firstName: "nader", lastName: "almogazy", age: 27},
-          {username: "leocrossman", firstName: "leo", lastName: "crossman", age: 23},
-          {username: "ep1815", firstName: "evan", lastName: "preedy", age: 23},
-          {username: "stebed", firstName: "steven", lastName: "du", age: 20},
-        ])
+        JSON.stringify(userList)
       );
     }, 2000);
   });
+const fakeGetUser = (username) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(
+        JSON.stringify(getUser(username))
+      )
+    }, 2000);
+  });
+}
 const fakeSevenDayLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
@@ -65,6 +81,12 @@ const schema = buildSchema(`
     lastName: String
     age: Int
   }
+  input UserInput {
+    username: String
+    firstName: String
+    lastName: String
+    age: Int
+  }
 
   type Weather {
     temperature: Int
@@ -78,6 +100,10 @@ const schema = buildSchema(`
     sevenDayTemp: [Int]
     weather: Weather
     getAllUsers: [User]
+    getUserByUsername(username: String): User
+  }
+  type Mutation {
+    createUser(user: UserInput): User
   }
 `);
 
@@ -140,7 +166,7 @@ const rootValue = {
   getAllUsers: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.listPull("getAllUsers");
+    const cachedResponse = cache.listPull("allUsers");
 
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
@@ -150,7 +176,26 @@ const rootValue = {
     const jsonResponse = await fakeGetAllUsers();
     const normalResponse = JSON.parse(jsonResponse);
     
-    cache.listPush("getAllUsers", ...normalResponse);
+    cache.listPush("allUsers", ...normalResponse);
+    console.log(`This call took ${Date.now() - t1}ms, coming from database`);
+    return normalResponse;
+  },
+  getUserByUsername: async (args, parent, info) => {
+    const t1 = Date.now();
+    console.log(parent)
+    const {username} = args
+
+    const cachedResponse = cache.listFetch("users", "username", username)
+    console.log(cachedResponse)
+    if (cachedResponse) {
+      console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
+      return cachedResponse[0];
+    }
+    //some database lookup
+    const jsonResponse = await fakeGetUser("nader12334");
+    const normalResponse = JSON.parse(jsonResponse);
+    
+    cache.listPush("users", normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },

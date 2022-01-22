@@ -97,6 +97,19 @@ class Cache {
     const {list} = this.content[listKey]
     return end ? list.slice(start, end) : list.slice(start)
   }
+  listFetch(listKey, targetKey, targetValue){
+    const returnArray = []
+    if (this.content[listKey] === undefined) return null
+
+    for (const item of this.content[listKey].list){
+      console.log(item[targetKey], targetValue)
+      if (item[targetKey] === targetValue) {
+        returnArray.push(item)
+      }
+    }
+    if (returnArray.length === 0) return null
+    return returnArray
+  }
   //Cleans up stale data
   cleanUp(key) {
     //Evict a stale key if key is provided
