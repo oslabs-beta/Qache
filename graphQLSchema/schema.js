@@ -19,7 +19,7 @@ const getUser = (username) => {
 const fakeDBLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
-      if (fail) reject('failed');
+      // if (fail) reject('failed');
       resolve('Hello World');
     }, 2000);
   });
@@ -27,7 +27,7 @@ const fakeDBLookup = (fail) =>
 const fakeWeatherLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
-      if (fail) reject('failed');
+      // if (fail) reject('failed');
       resolve(
         JSON.stringify({
           temperature: 48,
@@ -44,7 +44,7 @@ const fakeWeatherLookup = (fail) =>
 const fakeGetAllUsers = () =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (err) reject('failed');
+      // if (err) reject('failed');
       resolve(
         JSON.stringify(userList)
       );
@@ -62,7 +62,7 @@ const fakeGetUser = (username) => {
 const fakeSevenDayLookup = (fail) =>
   new Promise((resolve, reject) => {
     setTimeout((fail) => {
-      if (fail) reject('failed');
+      // if (fail) reject('failed');
       resolve(
         JSON.stringify([41, 25, 30, 10, 2, 20, 30])
       );
@@ -184,13 +184,13 @@ const rootValue = {
     const t1 = Date.now();
     const {username} = args
 
-    const cachedResponse = cache.listFetch("users", "username", username)
+    const cachedResponse = cache.listFetch("users", "username", username) // list key, target/filter key, target value
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse[0];
     }
     //some database lookup
-    const jsonResponse = await fakeGetUser("nader12334");
+    const jsonResponse = await fakeGetUser(username);
     const normalResponse = JSON.parse(jsonResponse);
     
     cache.listPush("users", normalResponse);
