@@ -178,6 +178,8 @@ class Cache {
       }
     }
   }
+  //Creates a list, with a unique key identifier. Option to add items to this list on creation.
+  // It will be strongly advised to only create a list once it's full and complete content is available for storage.
   listCreate(listKey, ...item) {
     if (listKey === undefined) {
       console.log('Error, listCreate requires a unique cache key');
@@ -194,6 +196,14 @@ class Cache {
       this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
+  //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
+  listRange(listKey, start = 0, end) {
+    this.cleanUp(listKey);
+    if (this.content[listKey] === undefined) return null;
+    const { data } = this.content[listKey];
+    return end ? data.slice(start, end) : data.slice(start);
+  }
+
   //for item lists, we will have unique cache keys per list.
   listPush(listKey, ...item) {
     //Remind user that a key is required for this method
@@ -210,13 +220,8 @@ class Cache {
     }
   }
 
-  //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
-  listRange(listKey, start = 0, end) {
-    this.cleanUp(listKey);
-    if (this.content[listKey] === undefined) return null;
-    const { data } = this.content[listKey];
-    return end ? data.slice(start, end) : data.slice(start);
-  }
+
+
 
   //If list exists, assumed fresh complete, returns filtered results
   //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
