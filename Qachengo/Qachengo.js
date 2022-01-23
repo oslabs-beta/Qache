@@ -103,27 +103,21 @@ class Cache {
     else this[end] = node[p2];
   }
 
-  // wipe the cache
-  clear() {
-    this.content = {};
-    this.size = 0;
-    this.tail = this.head = null;
-  }
-
+  
   // Store data into Cache
   // FLOW : store ➡ getRefs ➡ _storeData
   store(info, dbResponse) {
     const { fields } = this._getRefs(info);
     this._storeData(fields, dbResponse);
   }
-
+  
   _getRefs(info) {
     return this.parseQuery(info.operation.selectionSet.selections);
   }
-
+  
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
-
+    
     console.log('dbRes:', dbResponse, '\n', 'fields:', fields);
     if (fields.length === 1) {
       console.log('field: ', fields[0], '\n');
@@ -144,13 +138,13 @@ class Cache {
       }
     }
   }
-
+  
   //Check for key, and return value if found
   //FLOW: check > _getRefs + parseQuery > _addToQueryObj > check returns
   check(info) {
     let { selections, fields, queryObj } = this._getRefs(info);
     let isMissingData = false;
-
+    
     for (const field of fields) {
       //cleans stale data out of corresponding field
       this.cleanUp(field);
@@ -203,7 +197,7 @@ class Cache {
     const { data } = this.content[listKey];
     return end ? data.slice(start, end) : data.slice(start);
   }
-
+  
   //for item lists, we will have unique cache keys per list.
   listPush(listKey, ...item) {
     //Remind user that a key is required for this method
@@ -248,18 +242,17 @@ class Cache {
             break;
           }
         }
-        //if flag was never set off, add item to filtered list
+        //if flag was never set off, remove item from list
         if (!missing) {
           const index = currentList.indexOf(item)
           array.splice(index, 1);
           this.size--;
           if(unique) break;
         }
-      }
-      
+      }      
     }
   }
-
+  
   listUpdate(filterObject, newItem, ...listKey){
     // Option to specify if each list only contains the item once.
     let unique = false
@@ -286,7 +279,7 @@ class Cache {
             break;
           }
         }
-        //if flag was never set off, add item to filtered list
+        //if flag was never set off, update item in list
         if (!missing) {
           Object.assign(item, newItem)
           if(unique) break;
@@ -295,8 +288,8 @@ class Cache {
       
     }
   }
-
-
+  
+  
   //If list exists, assumed fresh complete, returns filtered results
   //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
   listFetch(listKey, filterObject) {
@@ -339,26 +332,7 @@ class Cache {
       }
     }
   }
-  //Cleans up stale data
-  cleanUp(key) {
-    //Evict a stale key if key is provided
-    if (key !== undefined && this.content[key] !== undefined) {
-      if (this.content[key].expires < Date.now()) {
-        delete this.content[key];
-        this.size--
-      }
-    }
-    //Option to cleanUp all keys if need arises
-    else {
-      for (const key in this.content) {
-        if (this.content[key].expires < Date.now()) {
-          delete this.content[key];
-          this.size--
-        }
-      }
-    }
-  }
-
+  
   /**
    * @param {object[]} selectionSet
    * @return {object} fields
@@ -366,7 +340,7 @@ class Cache {
   parseQuery(selections, isTopLevel = true) {
     //Create a fields array to hold all REQUESTED FIELDS from GQL QUERY
     const fields = [];
-
+    
     //Create a queryObj, to be the template for our return Obj
     const queryObj = {};
     // Loop through GraphQL field selections
@@ -377,31 +351,57 @@ class Cache {
         const result = this.parseQuery(
           selection.selectionSet.selections,
           false
-        );
-        const key = selection.name.value;
-        //add subfields to final queryObj and Fields
-        queryObj[key] = result.queryObj;
-        fields.push(...result.fields);
-      } else {
-        // no selection set, so must be basic primitive field
-        // Add to fields and queryObj
-        const key = selection.name.value;
-        queryObj[key] = selection.name.value;
-        fields.push(selection.name.value);
+          );
+          const key = selection.name.value;
+          //add subfields to final queryObj and Fields
+          queryObj[key] = result.queryObj;
+          fields.push(...result.fields);
+        } else {
+          // no selection set, so must be basic primitive field
+          // Add to fields and queryObj
+          const key = selection.name.value;
+          queryObj[key] = selection.name.value;
+          fields.push(selection.name.value);
+        }
       }
-    }
-    // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
-    const topLevelField = selections[0].name.value;
-    //The topLevel Object is expected to not be included, so we add logic to omit
-    return isTopLevel
+      // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
+      const topLevelField = selections[0].name.value;
+      //The topLevel Object is expected to not be included, so we add logic to omit
+      return isTopLevel
       ? { fields, queryObj: queryObj[topLevelField] }
       : { fields, queryObj };
+    }
+    /* {UTILITY METHODS} */
+    //Cleans up stale data
+    cleanUp(key) {
+      //Evict a stale key if key is provided
+      if (key !== undefined && this.content[key] !== undefined) {
+        if (this.content[key].expires < Date.now()) {
+          delete this.content[key];
+          this.size--
+        }
+      }
+      //Option to cleanUp all keys if need arises
+      else {
+        for (const key in this.content) {
+          if (this.content[key].expires < Date.now()) {
+            delete this.content[key];
+            this.size--
+          }
+        }
+      }
+    }
+    //count amount of keys
+    size() {
+      return Object.keys(this.content).length;
+    }
+    // wipe the cache
+    clear() {
+      this.content = {};
+      this.size = 0;
+      this.tail = this.head = null;
+    }
   }
-  /* {UTILITY METHODS} */
-  //count amount of keys
-  size() {
-    return Object.keys(this.content).length;
-  }
-}
-
-module.exports = Cache;
+  
+  module.exports = Cache;
+  
