@@ -5,6 +5,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const port = 3000;
 
+const productsRouter = require('./routes/products.js');
+const roomsRouter = require('./routes/rooms.js');
+const dealsRouter = require('./routes/deals.js');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
@@ -13,6 +17,11 @@ mongoose.connect('', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });
+
+// sending to routers upon request
+app.use('/products', productsRouter);
+app.use('/rooms', roomsRouter);
+app.use('/deals', dealsRouter);
 
 const productController = require('./controllers/productController');
 
