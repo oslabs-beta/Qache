@@ -252,6 +252,7 @@ class Cache {
     if (keys === undefined){
       this.clear()
     }
+    //Clears specific keys and adjusts size property if key exists.
     for (let key of keys){
       if (this.content[key] !== undefined){
         delete this.content[key]
@@ -265,6 +266,7 @@ class Cache {
     if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
         delete this.content[key];
+        this.size--
       }
     }
     //Option to cleanUp all keys if need arises
@@ -272,6 +274,7 @@ class Cache {
       for (const key in this.content) {
         if (this.content[key].expires < Date.now()) {
           delete this.content[key];
+          this.size--
         }
       }
     }
