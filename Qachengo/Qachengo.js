@@ -219,8 +219,82 @@ class Cache {
       this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
+  // Support for Delete Mutations to keep cache fresher longer
+  // The array of listKeys should be every key the developer wants to remove a specific item from. 
+  // It should be every list the item belongs to, ideally.
+  // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
+  // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
+  listRemove(filterObject, ...listKey){
+    // Option to specify if each list only contains the item once.
+    let unique = false
+    if (filterObject.hasOwnProperty("unique")){
+      unique = filterObject.unique
+      delete filterObject.unique
+    }
+    // Some intuition that if the ID key exists the item must be unique to each list.
+    if (filterObject.hasOwnProperty("id") || filterObject.hasOwnProperty("ID") || filterObject.hasOwnProperty("_id")){
+      unique = true
+    }
+    //Loops through each listKey
+    for (const key of listKey){
+      //Loops through each list to find the item. using a unique identifier, such as the items id
+      const currentList = this.content[key].data
+      for (const item of currentList){
+        let missing = false
+        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+        for(let filter in filterObject){
+          if (item[filter] !== filterObject[filter]){
+            missing = true
+            break;
+          }
+        }
+        //if flag was never set off, add item to filtered list
+        if (!missing) {
+          const index = currentList.indexOf(item)
+          array.splice(index, 1);
+          this.size--;
+          if(unique) break;
+        }
+      }
+      
+    }
+  }
 
-
+  listUpdate(filterObject, newItem, ...listKey){
+    // Option to specify if each list only contains the item once.
+    let unique = false
+    // Some intuition that if the ID key exists the item must be unique to each list.
+    if (filterObject.hasOwnProperty("id") || filterObject.hasOwnProperty("ID") || filterObject.hasOwnProperty("_id")){
+      unique = true
+    }
+    // If our inuition isn't what the dev wants, they can specify otherwise.
+    if (filterObject.hasOwnProperty("unique")){
+      unique = filterObject.unique
+      // delete this key because we don't want to loop over it for item validation
+      delete filterObject.unique
+    }
+    //Loops through each listKey
+    for (const key of listKey){
+      //Loops through each list to find the item. using a unique identifier, such as the items id
+      const currentList = this.content[key].data
+      for (const item of currentList){
+        let missing = false
+        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+        for(let filter in filterObject){
+          if (item[filter] !== filterObject[filter]){
+            missing = true
+            break;
+          }
+        }
+        //if flag was never set off, add item to filtered list
+        if (!missing) {
+          Object.assign(item, newItem)
+          if(unique) break;
+        }
+      }
+      
+    }
+  }
 
 
   //If list exists, assumed fresh complete, returns filtered results
