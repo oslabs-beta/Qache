@@ -178,43 +178,86 @@ class Cache {
       }
     }
   }
-
+  listCreate(listKey, ...item) {
+    if (listKey === undefined) {
+      console.log('Error, listCreate requires a unique cache key');
+    } else {
+      //Check if a list exists for this key, if not, create one.
+      if (this.content[listKey] === undefined) {
+        this._addToQueueAndCache(listKey, {
+          data: [],
+          expires: Date.now() + this.TTL,
+        });
+      }
+      // for each item given, we push that item into cache, THEN refresh expiration.
+      item.forEach((n) => this.content[listKey].data.push(n));
+      this.content[listKey].expires = Date.now() + this.TTL;
+    }
+  }
   //for item lists, we will have unique cache keys per list.
   listPush(listKey, ...item) {
     //Remind user that a key is required for this method
     if (listKey === undefined) {
-      console.log('Error, storeList requires a unique cache key');
+      console.log('Error, listPush requires a unique cache key');
     } else {
       //Check if a list exists for this key, if not, create one.
       if (this.content[listKey] === undefined) {
-        this.content[listKey] = {
-          list: [],
-          expires: Date.now() + this.expiration,
-        };
+        return null
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].list.push(n));
-      this.content[listKey].expires = Date.now() + this.expiration;
+      item.forEach((n) => this.content[listKey].data.push(n));
+      this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
-  listPull(listKey, start = 0, end) {
+
+  //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
+  listRange(listKey, start = 0, end) {
     this.cleanUp(listKey);
     if (this.content[listKey] === undefined) return null;
-    const { list } = this.content[listKey];
-    return end ? list.slice(start, end) : list.slice(start);
+    const { data } = this.content[listKey];
+    return end ? data.slice(start, end) : data.slice(start);
   }
-  listFetch(listKey, targetKey, targetValue) {
-    const returnArray = [];
-    if (this.content[listKey] === undefined) return null;
 
-    for (const item of this.content[listKey].list) {
-      console.log(item[targetKey], targetValue);
-      if (item[targetKey] === targetValue) {
-        returnArray.push(item);
+  //If list exists, assumed fresh complete, returns filtered results
+  //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
+  listFetch(listKey, filterObject) {
+    this.cleanUp(listKey);
+    // Check if list exists, if not return null.
+    if (this.content[listKey] === undefined) return null;
+    const returnList = [];
+    // If list does exist, loop through list and find item by filter Object
+    for (const item of this.content[listKey].data) {
+      //create a flag to set off if  a filter is not matching
+      let missing = false
+      //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+      for(let filter in filterObject){
+        if (item[filter] !== filterObject[filter]){
+          missing = true
+          break;
+        }
+      }
+      //if flag was never set off, add item to filtered list
+      if (!missing) {
+        returnList.push(item);
       }
     }
-    if (returnArray.length === 0) return null;
-    return returnArray;
+    //if filtered list is empty, return null
+    if (returnList.length === 0) return null;
+    //if non empty return results
+    return returnList;
+  }
+  // Option to invalidate certain lists, or items and remove them from cache, for certain mutations. 
+  invalidate(...keys){
+    //Clears cache if no keys are specified
+    if (keys === undefined){
+      this.clear()
+    }
+    for (let key of keys){
+      if (this.content[key] !== undefined){
+        delete this.content[key]
+        this.size--
+      }
+    }
   }
   //Cleans up stale data
   cleanUp(key) {
