@@ -14,7 +14,7 @@ class Cache {
     this.maxSize = options.maxSize;
     this.lastCleanup = 0;
     // Where data, and key specific data lives
-    this.content = {}; // STORE OFue/f  DATA
+    this.content = {}; // STORE OF DATA
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
