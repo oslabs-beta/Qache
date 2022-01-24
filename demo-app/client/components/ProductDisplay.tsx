@@ -5,7 +5,6 @@ import { Product } from '../../interfaces';
 const ProductDisplay = () => {
   const [productData, setProductData] = useState<Product[]>([]);
 
-  // graphql query
   const body = {
     query: `{getProductsBy(category: "Bedroom") {
       name
@@ -18,24 +17,19 @@ const ProductDisplay = () => {
     }}`
   };
 
-  // const setDisplay = (data) => {
-  //   console.log('set display', data)
-  // };
-
   useEffect(() => {
-    const t1 = Date.now(); // time before axios post starts
+    const t1: number = Date.now(); // time before axios post starts
     axios.post<Product[]>('http://localhost:3000/graphql', body)
       .then(({ data }: AxiosResponse<any>) => {
-        const t2 = Date.now();
-        console.log(data.data.getProductsBy);
+        const t2: number = Date.now();
+        console.log('Query response: ', data.data.getProductsBy); // array of products
         setProductData(data.data.getProductsBy);
         console.log(t2 - t1, 'ms'); // time after axios post finished
       })
   }, []);
 
-  console.log('product state: ', productData);
+  console.log('Product state: ', productData);
   
-
   return (
     <>
       <h1>Bedroom</h1>
