@@ -31,14 +31,13 @@ class Cache {
     const nodeInCache = this.content[key];
     // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
     if (nodeInCache) {
+      // we only remove from queue and NOT cache since we are just enqueueing this node
       this._removeFromQueue(nodeInCache);
       this.size--;
     }
     // when the cache is full, we delete the node from the cache and the queue
     else if (this.size === this.maxSize) {
-      delete this.content[this.head.keyRef]; // remove from cache
-      this._removeFromQueue(this.head);
-      this.size--;
+      this._removeFromQueueAndCache(this.head);
     }
 
     // insert new node at tail of the linked list (queue)
@@ -51,7 +50,7 @@ class Cache {
     // queue is empty. point head & tail ➡ new Node
     else this.tail = this.head = new Node(key, value);
 
-    // add node to cache
+    // add node to cache (enqueue)
     this.content[key] = this.tail;
     this.size++;
   }
@@ -76,9 +75,9 @@ class Cache {
    * Removes a node from the queue and deletes the corresponding data from the cache
    * @param {object} key
    */
-  _removeFromQueueAndCache(key) {
-    this._removeFromQueue(key);
-    delete this.content[key];
+  _removeFromQueueAndCache(node) {
+    delete this.content[node.keyRef];
+    this._removeFromQueue(node);
     this.size--;
   }
 
