@@ -2,11 +2,12 @@
 coverage/
 dist/*
 !dist/index.html
-node_modules/
+**/node_modules
 *.log
+**/.vscode
 
 #.env files contain passwords/api keys
-.env
+**/*.env
 
 # OS generated files
 .DS_Store

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
+require('dotenv').config();
 
 const schema = require('./typeDefs/schema');
 const resolvers = require('./resolvers/resolvers');
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
-mongoose.connect('mongodb+srv://sdu1278:zTsku1BXZh8M6yRv@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'qachengo' });
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });
