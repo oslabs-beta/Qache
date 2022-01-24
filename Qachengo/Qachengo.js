@@ -1,5 +1,6 @@
 class Node {
-  constructor(value) {
+  constructor(keyRef, value) {
+    this.keyRef = keyRef;
     this.value = value;
     this.prev = this.next = null;
   }
@@ -35,20 +36,20 @@ class Cache {
     }
     // when the cache is full, we delete the node from the cache and the queue
     else if (this.size === this.maxSize) {
-      delete this.content[this.head.key]; // remove from cache
+      delete this.content[this.head.keyRef]; // remove from cache
       this._removeFromQueue(this.head);
       this.size--;
     }
 
     // insert new node at tail of the linked list (queue)
     if (this.tail) {
-      const node = new Node(value);
+      const node = new Node(key, value);
       node.next = this.tail;
       this.tail.prev = node;
       this.tail = node;
     }
     // queue is empty. point head & tail ➡ new Node
-    else this.tail = this.head = new Node(value);
+    else this.tail = this.head = new Node(key, value);
 
     // add node to cache
     this.content[key] = this.tail;
@@ -275,7 +276,7 @@ class Cache {
   /* {UTILITY METHODS} */
   //count amount of keys
   size() {
-    return Object.keys(this.content).length;
+    return this.size;
   }
 }
 
