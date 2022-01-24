@@ -54,7 +54,7 @@ const fakeCreateUser = (userObject) =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
       // if (err) reject('failed');
-      userList.push(userObject)
+      userList.push(userObject);
       resolve(userObject);
     }, 195);
   });
@@ -124,7 +124,7 @@ const rootValue = {
     //some database lookup
     const normalResponse = await fakeDBLookup();
 
-    cache.set("hello", normalResponse);
+    cache.set('hello', normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
@@ -132,7 +132,7 @@ const rootValue = {
   sevenDayTemp: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.get("sevenDayTemp");
+    const cachedResponse = cache.get('sevenDayTemp');
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -142,7 +142,7 @@ const rootValue = {
 
     const normalResponse = await fakeSevenDayLookup();
     const parsedResponse = JSON.parse(normalResponse);
-    cache.set("sevenDayTemp", parsedResponse);
+    cache.set('sevenDayTemp', parsedResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return parsedResponse;
   },
@@ -150,7 +150,7 @@ const rootValue = {
   weather: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.get("weather");
+    const cachedResponse = cache.get('weather');
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -159,7 +159,7 @@ const rootValue = {
     const jsonResponse = await fakeWeatherLookup();
     const normalResponse = JSON.parse(jsonResponse);
 
-    cache.set("weather", normalResponse);
+    cache.set('weather', normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
@@ -185,14 +185,20 @@ const rootValue = {
     const { username } = args;
     //Attempt direct key lookup - constant time
     const cacheKeyLookup = cache.get(username);
-    if (cacheKeyLookup){
-      console.log(`This call took ${Date.now() - t1}ms, coming from cacheKeyLookup or cache.get`);
+    if (cacheKeyLookup) {
+      console.log(
+        `This call took ${
+          Date.now() - t1
+        }ms, coming from cacheKeyLookup or cache.get`
+      );
       return cacheKeyLookup;
     }
     //Attempt list lookup - O(n) time
-    const listResponse = cache.listFetch('users', {username, unique:true}); // listKey, filterObj
+    const listResponse = cache.listFetch('users', { username, unique: true }); // listKey, filterObj
     if (listResponse) {
-      console.log(`This call took ${Date.now() - t1}ms, coming from cached users list`);
+      console.log(
+        `This call took ${Date.now() - t1}ms, coming from cached users list`
+      );
       cache.set(username, listResponse[0]);
       return listResponse[0];
     }
@@ -204,15 +210,17 @@ const rootValue = {
     return normalResponse;
   },
   createUser: async (args, parent, info) => {
-    const {user} = args
+    const { user } = args;
     //some database creation, storage, and response (return new User)
     const normalResponse = await fakeCreateUser(user);
-    console.log("Successfully added new user")
+    console.log('Successfully added new user');
     // push the returned user to the users list if it exists
-    cache.listPush(normalResponse, "users");
+    cache.listPush(normalResponse, 'users');
     //set a key, username, to equal the user object
-    cache.set(user.username, normalResponse)
-    return normalResponse
+    cache.set(user.username, normalResponse);
+    // TODO: Currently, we are able to add a new node that will make cache.size > cache.maxSize, and we are appropriately removing the first entry to the cache. However, the node that becomes the head, has it's .next pointing to the new node inserted at the tail, instead of what was previously it's .next. Fix this!
+    cache.log();
+    return normalResponse;
   },
 };
 
