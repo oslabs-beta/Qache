@@ -1,5 +1,6 @@
 class Node {
-  constructor(value) {
+  constructor(keyRef, value) {
+    this.keyRef = keyRef;
     this.value = value;
     this.prev = this.next = null;
   }
@@ -28,14 +29,13 @@ class Cache {
     const nodeInCache = this.content[key];
     // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
     if (nodeInCache) {
+      // we only remove from queue and NOT cache since we are just enqueueing this node
       this._removeFromQueue(nodeInCache);
       this.size--;
     }
     // when the cache is full, we delete the node from the cache and the queue
     else if (this.size === this.maxSize) {
-      delete this.content[this.head.key]; // remove from cache
-      this._removeFromQueue(this.head);
-      this.size--;
+      this._removeFromQueueAndCache(this.head);
     }
 
     // insert new node at tail of the linked list (queue)
@@ -48,9 +48,19 @@ class Cache {
     // queue is empty. point head & tail ➡ new Node
     else this.tail = this.head = new Node(value);
 
-    // add node to cache
+    // add node to cache (enqueue)
     this.content[key] = this.tail;
     this.size++;
+  }
+
+  /**
+   * Removes a node from the queue and deletes the corresponding data from the cache
+   * @param {object} key
+   */
+  _removeFromQueueAndCache(node) {
+    delete this.content[node.keyRef];
+    this._removeFromQueue(node);
+    this.size--;
   }
 
   /**
@@ -67,9 +77,9 @@ class Cache {
   _getDataFromQueue(key) {
     try {
       const nodeInCache = this.content[key];
-      if (!nodeInCache){
+      if (!nodeInCache) {
         console.log(`There is no key: ${key} in the cache.`);
-        return null
+        return null;
       }
       // put newly accessed node at the tail of the list
       if (this.tail !== nodeInCache) {
@@ -80,6 +90,27 @@ class Cache {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  /**
+   * Removes a node from the queue and deletes the corresponding data from the cache
+   * @param {object} key
+   */
+  _removeFromQueueAndCache(node) {
+    delete this.content[node.keyRef];
+    this._removeFromQueue(node);
+    this.size--;
+  }
+
+  /**
+   * Deletes a node from the queue
+   * @param {object} node
+   */
+  _removeFromQueue(node) {
+    // point node's `prev` pointer to the appropriate node
+    this._detachNeighbor(node, 'prev');
+    // point node's `next` pointer to the appropriate node
+    this._detachNeighbor(node, 'next');
   }
 
   /**
@@ -264,7 +295,7 @@ class Cache {
   //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
   listFetch(listKey, filterObject) {
     this.cleanUp(listKey);
-    console.log(listKey, filterObject)
+    console.log(listKey, filterObject);
     // Check if list exists, if not return null.
     if (this.content[listKey] === undefined) return null;
 
@@ -299,7 +330,7 @@ class Cache {
       //if flag was never set off, add item to filtered list
       if (!missing) {
         returnList.push(item);
-        if(unique) break;
+        if (unique) break;
       }
     }
     //refresh list expiration since it has been accessed
@@ -348,8 +379,13 @@ class Cache {
   }
   //count amount of keys
   size() {
-    return Object.keys(this.content).length;
+    return this.size;
   }
+
+  _isSizeValid() {
+    return this.size === Object.keys(this.content).length;
+  }
+
   // wipe the cache
   clear() {
     this.content = {};
