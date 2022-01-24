@@ -73,6 +73,16 @@ class Cache {
   }
 
   /**
+   * Removes a node from the queue and deletes the corresponding data from the cache
+   * @param {object} key
+   */
+  _removeFromQueueAndCache(key) {
+    this._removeFromQueue(key);
+    delete this.content[key];
+    this.size--;
+  }
+
+  /**
    * Deletes a node from the queue
    * @param {object} node
    */
