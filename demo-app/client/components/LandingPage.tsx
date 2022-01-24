@@ -17,7 +17,12 @@ const LandingPage = () => {
             <h2>
               Experience our caching solution when searching for products!
             </h2>
-            <LineGraph />
+            <LineGraph
+              metrics={{
+                labels: ['1', '2', '3', '4', '5', '6'],
+                data: [645, 272, 80, 81, 80, 79],
+              }}
+            />
           </div>
         </div>
       </div>
