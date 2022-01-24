@@ -43,9 +43,17 @@ module.exports = {
   },
 
   getProductsBy: async (args, parent, info) => {
-    const category = await Category.findOne({ name: args.category }).populate('products');
-    console.log(category);
-    return category.products
+    const { category } = args; 
+    const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
+    if (cacheRes) {
+      return cacheRes;
+    } // if exists, returns the array of products
+    console.log(cacheRes);
+    console.log(cache.content);
+    const dbRes = await Category.findOne({ name: category }).populate('products');
+    cache.listCreate(category, dbRes.products); // sets products array into cache under the name of category
+    console.log(dbRes);
+    return dbRes.products
   },
 
 
