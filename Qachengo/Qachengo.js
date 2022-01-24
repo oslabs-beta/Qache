@@ -69,8 +69,10 @@ class Cache {
   _getDataFromQueue(key) {
     try {
       const nodeInCache = this.content[key];
-      if (!nodeInCache)
-        throw new Error(`There is no key: ${key} in the cache.`);
+      if (!nodeInCache){
+        console.log(`There is no key: ${key} in the cache.`);
+        return null
+      }
       // put newly accessed node at the tail of the list
       if (this.tail !== nodeInCache) {
         // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
@@ -103,21 +105,276 @@ class Cache {
     else this[end] = node[p2];
   }
 
-  
+  get(key) {
+    return this._getDataFromQueue(key);
+  }
+
+  set(key, value) {
+    this._addToQueueAndCache(key, {
+      data: value,
+      expires: Date.now() + this.TTL,
+    });
+  }
+
+  //Creates a list, with a unique key identifier. Option to add items to this list on creation.
+  // It will be strongly advised to only create a list once it's full and complete content is available for storage.
+  listCreate(listKey, ...item) {
+    if (listKey === undefined) {
+      console.log('Error, listCreate requires a unique cache key');
+    } else {
+      //Check if a list exists for this key, if not, create one.
+      if (this.content[listKey] === undefined) {
+        this._addToQueueAndCache(listKey, {
+          data: [],
+          expires: Date.now() + this.TTL,
+        });
+      }
+      // for each item given, we push that item into cache, THEN refresh expiration.
+      item.forEach((n) => this.content[listKey].value.data.push(n));
+      this.content[listKey].expires = Date.now() + this.TTL;
+    }
+  }
+  //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
+  listRange(listKey, start = 0, end) {
+    this.cleanUp(listKey);
+    if (this.content[listKey] === undefined) return null;
+    const { data } = this.content[listKey].value;
+    return end ? data.slice(start, end) : data.slice(start);
+  }
+
+  //for item lists, we will have unique cache keys per list.
+  listPush(item, ...listKeys) {
+    //Remind user that a key is required for this method
+    if (listKeys === undefined) {
+      console.log('Error, listPush requires atleast one unique cache key');
+    } else {
+      //Check if a list exists for this key, if not, create one.
+      for (const listKey of listKeys) {
+        if (this.content[listKey] === undefined) {
+          return null;
+        }
+        //We push that item into cache, THEN refresh expiration.
+        this.content[listKey].value.data.push(item);
+        this.content[listKey].expires = Date.now() + this.TTL;
+      }
+    }
+  }
+  // Support for Delete Mutations to keep cache fresher longer
+  // The array of listKeys should be every key the developer wants to remove a specific item from.
+  // It should be every list the item belongs to, ideally.
+  // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
+  // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
+
+  listRemoveItem(filterObject, ...listKey) {
+    // Option to specify if each list only contains the item once.
+    let unique = false;
+    if (filterObject.hasOwnProperty('unique')) {
+      unique = filterObject.unique;
+      delete filterObject.unique;
+    }
+    // Some intuition that if the ID key exists the item must be unique to each list.
+    if (
+      filterObject.hasOwnProperty('id') ||
+      filterObject.hasOwnProperty('ID') ||
+      filterObject.hasOwnProperty('_id')
+    ) {
+      unique = true;
+    }
+    //Loops through each listKey
+    for (const key of listKey) {
+      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
+      this.cleanUp(key);
+      if (this.content[key] !== undefined) {
+        this.content[key].expires = Date.now() + this.TTL;
+      } else {
+        // If key is undefined, skip key.
+        continue;
+      }
+      // **Cleanup protocol**
+
+      //Loops through each list to find the item. using a unique identifier, such as the items id
+      const currentList = this.content[key].value.data;
+      for (const item of currentList) {
+        let missing = false;
+        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+        for (let filter in filterObject) {
+          if (item[filter] !== filterObject[filter]) {
+            missing = true;
+            break;
+          }
+        }
+        //if flag was never set off, remove item from list
+        if (!missing) {
+          const index = currentList.indexOf(item);
+          array.splice(index, 1);
+          this.size--;
+          if (unique) break;
+        }
+      }
+    }
+  }
+
+  listUpdate(filterObject, newItem, ...listKey) {
+    // Option to specify if each list only contains the item once.
+    let unique = false;
+    // Some intuition that if the ID key exists the item must be unique to each list.
+    if (
+      filterObject.hasOwnProperty('id') ||
+      filterObject.hasOwnProperty('ID') ||
+      filterObject.hasOwnProperty('_id')
+    ) {
+      unique = true;
+    }
+    // If our inuition isn't what the dev wants, they can specify otherwise.
+    if (filterObject.hasOwnProperty('unique')) {
+      unique = filterObject.unique;
+      // delete this key because we don't want to loop over it for item validation
+      delete filterObject.unique;
+    }
+    //Loops through each listKey
+    for (const key of listKey) {
+      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
+      this.cleanUp(key);
+      if (this.content[key] !== undefined) {
+        this.content[key].expires = Date.now() + this.TTL;
+      } else {
+        // If key is undefined, skip key.
+        continue;
+      }
+      // **Cleanup protocol**
+      //Loops through each list to find the item. using a unique identifier, such as the items id
+      const currentList = this.content[key].value.data;
+      for (const item of currentList) {
+        let missing = false;
+        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+        for (let filter in filterObject) {
+          if (item[filter] !== filterObject[filter]) {
+            missing = true;
+            break;
+          }
+        }
+        //if flag was never set off, update item in list
+        if (!missing) {
+          Object.assign(item, newItem);
+          if (unique) break;
+        }
+      }
+    }
+  }
+
+  //If list exists, assumed fresh complete, returns filtered results
+  //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
+  listFetch(listKey, filterObject) {
+    this.cleanUp(listKey);
+    console.log(listKey, filterObject)
+    // Check if list exists, if not return null.
+    if (this.content[listKey] === undefined) return null;
+
+    const returnList = [];
+    // Option to specify if each list only contains the item once.
+    let unique = false;
+    // Some intuition that if the ID key exists the item must be unique to each list.
+    if (
+      filterObject.hasOwnProperty('id') ||
+      filterObject.hasOwnProperty('ID') ||
+      filterObject.hasOwnProperty('_id')
+    ) {
+      unique = true;
+    }
+    // If our inuition isn't what the dev wants, they can specify otherwise.
+    if (filterObject.hasOwnProperty('unique')) {
+      unique = filterObject.unique;
+      // delete this key because we don't want to loop over it for item validation
+      delete filterObject.unique;
+    }
+    // If list does exist, loop through list and find item by filter Object
+    for (const item of this.content[listKey].value.data) {
+      console.log(item)
+      //create a flag to set off if  a filter is not matching
+      let missing = false;
+      //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
+      for (let filter in filterObject) {
+        if (item[filter] !== filterObject[filter]) {
+          missing = true;
+          break;
+        }
+      }
+      //if flag was never set off, add item to filtered list
+      if (!missing) {
+        returnList.push(item);
+      }
+    }
+    //refresh list expiration since it has been accessed
+    this.content[listKey].expires = Date.now() + this.TTL;
+
+    //if filtered list is empty, return null
+    if (returnList.length === 0) return null;
+
+    //if non empty return results
+    return returnList;
+  }
+  // Option to invalidate certain lists, or items and remove them from cache, for certain mutations.
+  invalidate(...keys) {
+    //Clears cache if no keys are specified
+    if (keys === undefined) {
+      this.clear();
+    }
+    //Clears specific keys and adjusts size property if key exists.
+    for (let key of keys) {
+      if (this.content[key] !== undefined) {
+        delete this.content[key];
+        this.size--;
+      }
+    }
+  }
+
+  /* {UTILITY METHODS} */
+  //Cleans up stale data
+  cleanUp(key) {
+    //Evict a stale key if key is provided
+    if (key !== undefined && this.content[key] !== undefined) {
+      if (this.content[key].expires < Date.now()) {
+        delete this.content[key];
+        this.size--;
+      }
+    }
+    //Option to cleanUp all keys if need arises
+    else {
+      for (const key in this.content) {
+        if (this.content[key].expires < Date.now()) {
+          delete this.content[key];
+          this.size--;
+        }
+      }
+    }
+  }
+  //count amount of keys
+  size() {
+    return Object.keys(this.content).length;
+  }
+  // wipe the cache
+  clear() {
+    this.content = {};
+    this.size = 0;
+    this.tail = this.head = null;
+  }
+
+  // **Unused**
+
   // Store data into Cache
   // FLOW : store ➡ getRefs ➡ _storeData
   store(info, dbResponse) {
     const { fields } = this._getRefs(info);
     this._storeData(fields, dbResponse);
   }
-  
+
   _getRefs(info) {
     return this.parseQuery(info.operation.selectionSet.selections);
   }
-  
+
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
-    
+
     console.log('dbRes:', dbResponse, '\n', 'fields:', fields);
     if (fields.length === 1) {
       console.log('field: ', fields[0], '\n');
@@ -138,13 +395,11 @@ class Cache {
       }
     }
   }
-  
-  //Check for key, and return value if found
-  //FLOW: check > _getRefs + parseQuery > _addToQueryObj > check returns
+
   check(info) {
     let { selections, fields, queryObj } = this._getRefs(info);
     let isMissingData = false;
-    
+
     for (const field of fields) {
       //cleans stale data out of corresponding field
       this.cleanUp(field);
@@ -172,195 +427,7 @@ class Cache {
       }
     }
   }
-  //Creates a list, with a unique key identifier. Option to add items to this list on creation.
-  // It will be strongly advised to only create a list once it's full and complete content is available for storage.
-  listCreate(listKey, ...item) {
-    if (listKey === undefined) {
-      console.log('Error, listCreate requires a unique cache key');
-    } else {
-      //Check if a list exists for this key, if not, create one.
-      if (this.content[listKey] === undefined) {
-        this._addToQueueAndCache(listKey, {
-          data: [],
-          expires: Date.now() + this.TTL,
-        });
-      }
-      // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].value.data.push(n));
-      this.content[listKey].expires = Date.now() + this.TTL;
-    }
-  }
-  //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
-  listRange(listKey, start = 0, end) {
-    this.cleanUp(listKey);
-    console.log(this.content[listKey])
-    if (this.content[listKey] === undefined) return null;
-    const { data } = this.content[listKey].value;
-    return end ? data.slice(start, end) : data.slice(start);
-  }
-  
-  //for item lists, we will have unique cache keys per list.
-  listPush(item, ...listKeys) {
-    //Remind user that a key is required for this method
-    if (listKeys === undefined) {
-      console.log('Error, listPush requires atleast one unique cache key');
-    } else {
-      //Check if a list exists for this key, if not, create one.
-      for (const listKey of listKeys){
-        if (this.content[listKey] === undefined) {
-          return null
-        }
-        //We push that item into cache, THEN refresh expiration.
-        this.content[listKey].data.push(item);
-        this.content[listKey].expires = Date.now() + this.TTL;
-      }
-    }
-  }
-  // Support for Delete Mutations to keep cache fresher longer
-  // The array of listKeys should be every key the developer wants to remove a specific item from. 
-  // It should be every list the item belongs to, ideally.
-  // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
-  // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
 
-  listRemoveItem(filterObject, ...listKey){
-    // Option to specify if each list only contains the item once.
-    let unique = false
-    if (filterObject.hasOwnProperty("unique")){
-      unique = filterObject.unique
-      delete filterObject.unique
-    }
-    // Some intuition that if the ID key exists the item must be unique to each list.
-    if (filterObject.hasOwnProperty("id") || filterObject.hasOwnProperty("ID") || filterObject.hasOwnProperty("_id")){
-      unique = true
-    }
-    //Loops through each listKey
-    for (const key of listKey){
-
-      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
-      this.cleanUp(key);
-      if(this.content[key] !== undefined) {
-        this.content[key].expires = Date.now() + this.TTL;
-      } else {
-        // If key is undefined, skip key.
-        continue;
-      }
-      // **Cleanup protocol**
-
-      //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].data
-      for (const item of currentList){
-        let missing = false
-        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
-        for(let filter in filterObject){
-          if (item[filter] !== filterObject[filter]){
-            missing = true
-            break;
-          }
-        }
-        //if flag was never set off, remove item from list
-        if (!missing) {
-          const index = currentList.indexOf(item)
-          array.splice(index, 1);
-          this.size--;
-          if(unique) break;
-        }
-      }      
-    }
-  }
-  
-  listUpdate(filterObject, newItem, ...listKey){
-    // Option to specify if each list only contains the item once.
-    let unique = false
-    // Some intuition that if the ID key exists the item must be unique to each list.
-    if (filterObject.hasOwnProperty("id") || filterObject.hasOwnProperty("ID") || filterObject.hasOwnProperty("_id")){
-      unique = true
-    }
-    // If our inuition isn't what the dev wants, they can specify otherwise.
-    if (filterObject.hasOwnProperty("unique")){
-      unique = filterObject.unique
-      // delete this key because we don't want to loop over it for item validation
-      delete filterObject.unique
-    }
-    //Loops through each listKey
-    for (const key of listKey){
-      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
-      this.cleanUp(key);
-      if(this.content[key] !== undefined) {
-        this.content[key].expires = Date.now() + this.TTL;
-      } else {
-        // If key is undefined, skip key.
-        continue;
-      }
-      // **Cleanup protocol**
-      //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].data
-      for (const item of currentList){
-        let missing = false
-        //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
-        for(let filter in filterObject){
-          if (item[filter] !== filterObject[filter]){
-            missing = true
-            break;
-          }
-        }
-        //if flag was never set off, update item in list
-        if (!missing) {
-          Object.assign(item, newItem)
-          if(unique) break;
-        }
-      }
-      
-    }
-  }
-  
-  
-  //If list exists, assumed fresh complete, returns filtered results
-  //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
-  listFetch(listKey, filterObject) {
-    this.cleanUp(listKey);
-    // Check if list exists, if not return null.
-    if (this.content[listKey] === undefined) return null;
-    const returnList = [];
-    // If list does exist, loop through list and find item by filter Object
-    for (const item of this.content[listKey].data) {
-      //create a flag to set off if  a filter is not matching
-      let missing = false
-      //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
-      for(let filter in filterObject){
-        if (item[filter] !== filterObject[filter]){
-          missing = true
-          break;
-        }
-      }
-      //if flag was never set off, add item to filtered list
-      if (!missing) {
-        returnList.push(item);
-      }
-    }
-    //refresh list expiration since it has been accessed
-    this.content[listKey].expires = Date.now() + this.TTL;
-
-    //if filtered list is empty, return null
-    if (returnList.length === 0) return null;
-
-    //if non empty return results
-    return returnList;
-  }
-  // Option to invalidate certain lists, or items and remove them from cache, for certain mutations. 
-  invalidate(...keys){
-    //Clears cache if no keys are specified
-    if (keys === undefined){
-      this.clear()
-    }
-    //Clears specific keys and adjusts size property if key exists.
-    for (let key of keys){
-      if (this.content[key] !== undefined){
-        delete this.content[key]
-        this.size--
-      }
-    }
-  }
-  
   /**
    * @param {object[]} selectionSet
    * @return {object} fields
@@ -368,7 +435,7 @@ class Cache {
   parseQuery(selections, isTopLevel = true) {
     //Create a fields array to hold all REQUESTED FIELDS from GQL QUERY
     const fields = [];
-    
+
     //Create a queryObj, to be the template for our return Obj
     const queryObj = {};
     // Loop through GraphQL field selections
@@ -379,57 +446,26 @@ class Cache {
         const result = this.parseQuery(
           selection.selectionSet.selections,
           false
-          );
-          const key = selection.name.value;
-          //add subfields to final queryObj and Fields
-          queryObj[key] = result.queryObj;
-          fields.push(...result.fields);
-        } else {
-          // no selection set, so must be basic primitive field
-          // Add to fields and queryObj
-          const key = selection.name.value;
-          queryObj[key] = selection.name.value;
-          fields.push(selection.name.value);
-        }
+        );
+        const key = selection.name.value;
+        //add subfields to final queryObj and Fields
+        queryObj[key] = result.queryObj;
+        fields.push(...result.fields);
+      } else {
+        // no selection set, so must be basic primitive field
+        // Add to fields and queryObj
+        const key = selection.name.value;
+        queryObj[key] = selection.name.value;
+        fields.push(selection.name.value);
       }
-      // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
-      const topLevelField = selections[0].name.value;
-      //The topLevel Object is expected to not be included, so we add logic to omit
-      return isTopLevel
+    }
+    // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
+    const topLevelField = selections[0].name.value;
+    //The topLevel Object is expected to not be included, so we add logic to omit
+    return isTopLevel
       ? { fields, queryObj: queryObj[topLevelField] }
       : { fields, queryObj };
-    }
-    /* {UTILITY METHODS} */
-    //Cleans up stale data
-    cleanUp(key) {
-      //Evict a stale key if key is provided
-      if (key !== undefined && this.content[key] !== undefined) {
-        if (this.content[key].expires < Date.now()) {
-          delete this.content[key];
-          this.size--
-        }
-      }
-      //Option to cleanUp all keys if need arises
-      else {
-        for (const key in this.content) {
-          if (this.content[key].expires < Date.now()) {
-            delete this.content[key];
-            this.size--
-          }
-        }
-      }
-    }
-    //count amount of keys
-    size() {
-      return Object.keys(this.content).length;
-    }
-    // wipe the cache
-    clear() {
-      this.content = {};
-      this.size = 0;
-      this.tail = this.head = null;
-    }
   }
-  
-  module.exports = Cache;
-  
+}
+
+module.exports = Cache;

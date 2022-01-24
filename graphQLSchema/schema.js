@@ -125,7 +125,6 @@ const rootValue = {
     const t1 = Date.now();
 
     const cachedResponse = cache.check(info);
-    console.log(cache.content);
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -145,7 +144,6 @@ const rootValue = {
 
     const cachedResponse = cache.check(info);
     if (cachedResponse) {
-      console.log(cachedResponse);
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
     }
@@ -176,18 +174,26 @@ const rootValue = {
   },
   getUserByUsername: async (args, parent, info) => {
     const t1 = Date.now();
+    console.log(cache.content)
     const { username } = args;
-
-    const cachedResponse = cache.listFetch('users', 'username', username); // list key, target/filter key, target value
-    if (cachedResponse) {
-      console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
-      return cachedResponse[0];
+    //Attempt direct key lookup - constant time
+    const cacheKeyLookup = cache.get(username);
+    if (cacheKeyLookup){
+      console.log("cacheKeyLookup",cacheKeyLookup)
+      console.log(`This call took ${Date.now() - t1}ms, coming from cacheKeyLookup or cache.get`);
+      return cacheKeyLookup;
+    }
+    //Attempt list lookup - O(n) time
+    const listResponse = cache.listFetch('users', {username, unique:true}); // listKey, filterObj
+    if (listResponse) {
+      console.log(`This call took ${Date.now() - t1}ms, coming from cached users list`);
+      cache.set(username, listResponse[0]);
+      return listResponse[0];
     }
     //some database lookup
     const jsonResponse = await fakeGetUser(username);
     const normalResponse = JSON.parse(jsonResponse);
-
-    cache.listPush('users', normalResponse);
+    cache.set(username, normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
