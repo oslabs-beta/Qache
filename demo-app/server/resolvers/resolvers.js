@@ -6,7 +6,8 @@ const cache = new Cache();
 
 module.exports = {
   addProduct: async (args, parent, info) => {
-    const { name, description, imageUrl, quantity, price, onSale, category } = args.product;
+    const { name, description, imageUrl, quantity, price, onSale, category } =
+      args.product;
 
     const newProduct = await Product.create({
       name,
@@ -18,11 +19,11 @@ module.exports = {
       category,
     });
 
-    newProduct.category.forEach( async (id) => {
+    newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
       path.products.push(newProduct._id);
       await path.save();
-    })
+    });
 
     console.log('Added new product to MongoDB: ', newProduct);
     return newProduct;
@@ -38,25 +39,30 @@ module.exports = {
 
   getAllProducts: async (args, parent, info) => {
     const data = await Product.find().populate('category');
-    console.log(data)
-    return data
+    console.log(data);
+    return data;
   },
 
   getProductsBy: async (args, parent, info) => {
-    const { category } = args; 
+    const t1 = Date.now();
+    const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
+    console.log(cache.content); // list of category/key nodes
     if (cacheRes) {
-      return cacheRes;
+      const t2 = Date.now();
+      console.log('Got result from cache: ', cacheRes);
+      console.log(t2 - t1, 'ms');
+      return cacheRes; // array of products
     } // if exists, returns the array of products
-    console.log(cacheRes);
-    console.log(cache.content);
-    const dbRes = await Category.findOne({ name: category }).populate('products');
-    cache.listCreate(category, dbRes.products); // sets products array into cache under the name of category
-    console.log(dbRes);
-    return dbRes.products
+    const dbRes = await Category.findOne({ name: category }).populate(
+      'products'
+    );
+    const t3 = Date.now();
+    cache.listCreate(category, ...dbRes.products); // sets products array into cache under the name of category
+    console.log('MongoDB Response: ', dbRes);
+    console.log(t3 - t1, 'ms');
+    return dbRes.products;
   },
-
-
 };
 //
 // getAllProducts = async (req, res, next) => {
