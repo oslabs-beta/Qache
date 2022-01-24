@@ -199,18 +199,20 @@ class Cache {
   }
   
   //for item lists, we will have unique cache keys per list.
-  listPush(listKey, ...item) {
+  listPushItem(item, ...listKeys) {
     //Remind user that a key is required for this method
-    if (listKey === undefined) {
-      console.log('Error, listPush requires a unique cache key');
+    if (listKeys === undefined) {
+      console.log('Error, listPush requires atleast one unique cache key');
     } else {
       //Check if a list exists for this key, if not, create one.
-      if (this.content[listKey] === undefined) {
-        return null
+      for (const listKey of listKeys){
+        if (this.content[listKey] === undefined) {
+          return null
+        }
+        //We push that item into cache, THEN refresh expiration.
+        this.content[listKey].data.push(item);
+        this.content[listKey].expires = Date.now() + this.TTL;
       }
-      // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].data.push(n));
-      this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
   // Support for Delete Mutations to keep cache fresher longer
@@ -218,7 +220,8 @@ class Cache {
   // It should be every list the item belongs to, ideally.
   // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
   // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
-  listRemove(filterObject, ...listKey){
+  
+  listRemoveItem(filterObject, ...listKey){
     // Option to specify if each list only contains the item once.
     let unique = false
     if (filterObject.hasOwnProperty("unique")){
@@ -231,6 +234,17 @@ class Cache {
     }
     //Loops through each listKey
     for (const key of listKey){
+
+      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
+      this.cleanUp(key);
+      if(this.content[key] !== undefined) {
+        this.content[key].expires = Date.now() + this.TTL;
+      } else {
+        // If key is undefined, skip key.
+        continue;
+      }
+      // **Cleanup protocol**
+
       //Loops through each list to find the item. using a unique identifier, such as the items id
       const currentList = this.content[key].data
       for (const item of currentList){
@@ -268,6 +282,15 @@ class Cache {
     }
     //Loops through each listKey
     for (const key of listKey){
+      // **Cleanup protocol** - remove item if past expiration, if not, refresh expiration.
+      this.cleanUp(key);
+      if(this.content[key] !== undefined) {
+        this.content[key].expires = Date.now() + this.TTL;
+      } else {
+        // If key is undefined, skip key.
+        continue;
+      }
+      // **Cleanup protocol**
       //Loops through each list to find the item. using a unique identifier, such as the items id
       const currentList = this.content[key].data
       for (const item of currentList){
@@ -313,8 +336,12 @@ class Cache {
         returnList.push(item);
       }
     }
+    //refresh list expiration since it has been accessed
+    this.content[listKey].expires = Date.now() + this.TTL;
+
     //if filtered list is empty, return null
     if (returnList.length === 0) return null;
+
     //if non empty return results
     return returnList;
   }
