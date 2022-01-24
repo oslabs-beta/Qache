@@ -33,24 +33,45 @@ class Cache {
       this._removeFromQueue(nodeInCache);
       this.size--;
     }
-    // when the cache is full, we delete the node from the cache and the queue
+    // when the cache is full, we dequeue the head from the cache/queue
     else if (this.size === this.maxSize) {
       this._removeFromQueueAndCache(this.head);
     }
 
-    // insert new node at tail of the linked list (queue)
-    if (this.tail) {
-      const node = new Node(value);
-      node.next = this.tail;
-      this.tail.prev = node;
-      this.tail = node;
-    }
-    // queue is empty. point head & tail ➡ new Node
-    else this.tail = this.head = new Node(value);
+    // enqueue node if it exists, otherwise enqueue new node with value
+    this._enqueue(nodeInCache || new Node(value));
 
     // add node to cache (enqueue)
     this.content[key] = this.tail;
     this.size++;
+  }
+
+  /**
+   * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
+   * @param {object} key
+   */
+  _refresh(key) {
+    const existingNode = this.content[key];
+    if (existingNode) {
+      this._removeFromQueue(existingNode);
+      this._enqueue(existingNode);
+    }
+  }
+
+  /**
+   * Add node to the tail of the DLL (enqueue it)
+   * When we call enqueue, we assume we are enqueing a new node or existing node that is "floating" without pointing to any other nodes
+   * @param {object} key
+   */
+  _enqueue(node) {
+    // insert new node at tail of the linked list (queue)
+    if (this.tail) {
+      node.prev = this.tail;
+      this.tail.next = node;
+      this.tail = node;
+    }
+    // queue is empty. point head & tail ➡ new Node
+    else this.tail = this.head = node;
   }
 
   /**
@@ -72,24 +93,6 @@ class Cache {
     this._detachNeighbor(node, 'prev');
     // point node's `next` pointer to the appropriate node
     this._detachNeighbor(node, 'next');
-  }
-
-  _getDataFromQueue(key) {
-    try {
-      const nodeInCache = this.content[key];
-      if (!nodeInCache) {
-        console.log(`There is no key: ${key} in the cache.`);
-        return null;
-      }
-      // put newly accessed node at the tail of the list
-      if (this.tail !== nodeInCache) {
-        // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
-        this._addToQueueAndCache(key, nodeInCache.value);
-      }
-      return nodeInCache.value.data;
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   /**
@@ -119,7 +122,7 @@ class Cache {
    * 		- If node.prev points to another node (current node is not the most recent thing to be added to the queue), point that node's `next` to the next node after the current node being deleted.
    * 		- Otherwise, node.prev does not point to a node (current node must be the most recent addition to the queue), thus we point the tail at the next node because we are at the tail of the queue.
    *
-   * When called with thue/f e 'next' string passed in:
+   * When called with the 'next' string passed in:
    * 		- If node.next points to another node (current node is not the least used node in the cache), point that node's `prev` to the node before the current node being deleted in the queue.
    * 		- Otherwise, node.next does not point to a node (current node must be the oldest item in the queue), thus we point the head at the previous node because we are at the head of the queue.
    *
@@ -132,6 +135,24 @@ class Cache {
     const neighbor = node[p1];
     if (neighbor) neighbor[p2] = node[p2];
     else this[end] = node[p2];
+  }
+
+  _getDataFromQueue(key) {
+    try {
+      const nodeInCache = this.content[key];
+      if (!nodeInCache) {
+        console.log(`There is no key: ${key} in the cache.`);
+        return null;
+      }
+      // put newly accessed node at the tail of the list
+      if (this.tail !== nodeInCache) {
+        // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
+        this._addToQueueAndCache(key, nodeInCache.value);
+      }
+      return nodeInCache.value.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   get(key) {
@@ -236,10 +257,13 @@ class Cache {
         if (!missing) {
           const index = currentList.indexOf(item);
           array.splice(index, 1);
-          this.size--;
           if (unique) break;
         }
       }
+      // remove from queue and then enqueue it for each list
+      // i.e. even if item not found in current list, this category was still accessed so requeue it
+      // TODO: add refresh method
+      this._addToQueueAndCache(key, this.content[key].value);
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
