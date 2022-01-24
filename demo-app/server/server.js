@@ -2,12 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
+require('dotenv').config();
 
 const schema = require('./typeDefs/schema');
 const resolvers = require('./resolvers/resolvers');
 
 const port = 3000;
 const app = express();
+const PASSWORD='JSTRZP1jsNgPeRAA'
 
 const productsRouter = require('./routes/products.js');
 const roomsRouter = require('./routes/rooms.js');
@@ -17,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
-mongoose.connect('mongodb+srv://sdu1278:zTsku1BXZh8M6yRv@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb+srv://sdu1278:${PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });
@@ -27,7 +29,6 @@ app.use('/products', productsRouter);
 app.use('/rooms', roomsRouter);
 app.use('/deals', dealsRouter);
 
-const productController = require('./controllers/productController');
 app.use(
   '/graphql',
   graphqlHTTP({

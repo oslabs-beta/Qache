@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/ProductModel.js');
-const productController = require('../controllers/productController.js');
 
 // router sends user to given "section" under products heading on sidebar -- e.g. Bedroom, Living Room, Kitchen, etc.
 // should read the section from the req.params, and use that in its database request and display the associated data
