@@ -1,9 +1,13 @@
 const express = require('express');
-const app = express();
-const path = require('path');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { graphqlHTTP } = require('express-graphql');
+
+const schema = require('./typeDefs/schema');
+const resolvers = require('./resolvers/resolvers');
+
 const port = 3000;
+const app = express();
 
 const productsRouter = require('./routes/products.js');
 const roomsRouter = require('./routes/rooms.js');
@@ -13,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
-mongoose.connect('', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://sdu1278:zTsku1BXZh8M6yRv@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });
@@ -24,6 +28,14 @@ app.use('/rooms', roomsRouter);
 app.use('/deals', dealsRouter);
 
 const productController = require('./controllers/productController');
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    rootValue: resolvers,
+    graphiql: true,
+  })
+);
 
 app.get('/', (req, res) => {
   res.status(200).send('Welcome to Demo App server!');

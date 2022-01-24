@@ -36,8 +36,8 @@ export const SidebarData = [
         icon: <BiIcons.BiCabinet />,
       },
       {
-        title: 'Kitchenware',
-        path: '/products/kitchenware',
+        title: 'Appliances',
+        path: '/products/appliances',
         icon: <GiIcons.GiKnifeFork />,
       },
       {
