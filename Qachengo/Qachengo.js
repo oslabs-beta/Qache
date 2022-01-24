@@ -39,7 +39,7 @@ class Cache {
     }
 
     // enqueue node if it exists, otherwise enqueue new node with value
-    this._enqueue(nodeInCache || new Node(value));
+    this._enqueue(nodeInCache || new Node(key, value));
 
     // add node to cache (enqueue)
     this.content[key] = this.tail;
@@ -401,20 +401,22 @@ class Cache {
       }
     }
   }
-  //count amount of keys
-  size() {
-    return this.size;
-  }
-
-  _isSizeValid() {
-    return this.size === Object.keys(this.content).length;
-  }
 
   // wipe the cache
   clear() {
     this.content = {};
     this.size = 0;
     this.tail = this.head = null;
+  }
+
+  _isSizeValid() {
+    return this.size === Object.keys(this.content).length;
+  }
+
+  log() {
+    console.log(this.content);
+    console.log(`Size: ${this.size}`);
+    console.log(`Size is valid: ${this._isSizeValid()}`);
   }
 
   // **         SIDELINED         **
