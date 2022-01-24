@@ -174,12 +174,10 @@ const rootValue = {
   },
   getUserByUsername: async (args, parent, info) => {
     const t1 = Date.now();
-    console.log(cache.content)
     const { username } = args;
     //Attempt direct key lookup - constant time
     const cacheKeyLookup = cache.get(username);
     if (cacheKeyLookup){
-      console.log("cacheKeyLookup",cacheKeyLookup)
       console.log(`This call took ${Date.now() - t1}ms, coming from cacheKeyLookup or cache.get`);
       return cacheKeyLookup;
     }

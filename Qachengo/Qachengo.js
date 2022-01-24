@@ -289,7 +289,6 @@ class Cache {
     }
     // If list does exist, loop through list and find item by filter Object
     for (const item of this.content[listKey].value.data) {
-      console.log(item)
       //create a flag to set off if  a filter is not matching
       let missing = false;
       //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -375,9 +374,7 @@ class Cache {
   _storeData(fields, dbResponse) {
     const isObject = (x) => typeof x === 'object' && x !== null;
 
-    console.log('dbRes:', dbResponse, '\n', 'fields:', fields);
     if (fields.length === 1) {
-      console.log('field: ', fields[0], '\n');
       this._addToQueueAndCache(fields[0], {
         data: dbResponse,
         expires: Date.now() + this.TTL,
