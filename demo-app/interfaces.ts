@@ -1,5 +1,5 @@
 export interface Product {
-  id? : string;
+  id?: string;
   name: string;
   description: string;
   imageUrl: string;
@@ -7,4 +7,11 @@ export interface Product {
   price: number;
   onSale: boolean;
   category: string;
+}
+
+export interface Metric {
+  Bedroom: {
+    labels: string[];
+    data: number[];
+  };
 }
