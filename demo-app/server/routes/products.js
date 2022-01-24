@@ -9,6 +9,7 @@ const resolvers = require('../resolvers/resolvers.js');
 // will also cache the fetched data using QachenGo for faster fetching if request is made again
 router.get('/:section', async (req, res) => {
     const section = req.params.section;
+    // resolvers.getProductsBy()
     // will send request to mongoose database to find all relevant furniture/other items and display on web page
     // e.g., if user clicks on the 'Mattresses' tab under the 'Products' header, this sends a request to the '/products/mattresses' route
     // will use the known route 'products' and the const section, which in this case will have the value 'mattresses', both will be passed into the Mongo query

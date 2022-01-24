@@ -5,9 +5,12 @@ const Category = require('../models/CategoryModel');
 const cache = new Cache();
 
 module.exports = {
+
+  // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
     const { name, description, imageUrl, quantity, price, onSale, category } = args.product;
 
+    // creates new product in DB
     const newProduct = await Product.create({
       name,
       description,
@@ -18,6 +21,7 @@ module.exports = {
       category,
     });
 
+    // adds newly created product to its category(s) array of products
     newProduct.category.forEach( async (id) => {
       const path = await Category.findById(id);
       path.products.push(newProduct._id);
@@ -28,27 +32,50 @@ module.exports = {
     return newProduct;
   },
 
+  // creates new category and adds it to DB
   addCategory: async (args, parent, info) => {
     const { name, products } = args.category;
-
     const newCategory = await Category.create({ name, products });
     console.log('Added new category to MongoDB: ', newCategory);
     return newCategory;
   },
 
+  // returns all existing products in DB
   getAllProducts: async (args, parent, info) => {
-    const data = await Product.find().populate('category');
-    console.log(data)
-    return data
+
+    const dbRes = await Product.find().populate('category');
+    return dbRes;
   },
 
+  // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    const category = await Category.findOne({ name: args.category }).populate('products');
+    const {category} = args;
+    const cacheRes = cache.listRange(category);
+    if (cacheRes) return cacheRes;
+    const dbRes = await Category.findOne({ category: args.category }).populate('products');
     console.log(category);
-    return category.products
+    cache.listCreate(category, dbRes.products);
+    console.log(dbRes);
+    return category.products;
   },
 
+  // resolvers to create:
 
+  // returns all existing categories in DB
+  getCategories: async (args, parent, info) => {
+    const data = await Category.find().populate();
+    console.log('here are all the categories in store: ', data);
+    return data;
+  },
+  // getCategoryBy
+  // returns existing category in DB with corresponding ID
+  getCategoryBy: async (args, parent, info) => {
+    const data = await Category.findOne({id: args.id}).populate();
+    console.log('here is the category with that id: ', data);
+    return data;
+  }
+
+  // addProductToCategory
 };
 //
 // getAllProducts = async (req, res, next) => {
