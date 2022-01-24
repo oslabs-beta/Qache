@@ -9,11 +9,9 @@ class Cache {
   constructor(options = { timeToLive: 1000 * 60 * 10, maxSize: 5 }) {
     //set timeToLive in options or default to 10min
     this.TTL = options.timeToLive; //10 minute default timeToLive
-    //Prevents excessive cleanups
     this.maxSize = options.maxSize;
-    this.lastCleanup = 0;
     // Where data, and key specific data lives
-    this.content = {}; // STORE OFue/f  DATA
+    this.content = {}; // STORE OF DATA
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
@@ -142,7 +140,7 @@ class Cache {
     return end ? data.slice(start, end) : data.slice(start);
   }
 
-  //for item lists, we will have unique cache keys per list.
+  // Push a newly created item to ONE OR MANY lists
   listPush(item, ...listKeys) {
     //Remind user that a key is required for this method
     if (listKeys === undefined) {
@@ -159,12 +157,12 @@ class Cache {
       }
     }
   }
+
   // Support for Delete Mutations to keep cache fresher longer
   // The array of listKeys should be every key the developer wants to remove a specific item from.
   // It should be every list the item belongs to, ideally.
   // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
   // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
-
   listRemoveItem(filterObject, ...listKey) {
     // Option to specify if each list only contains the item once.
     let unique = false;
@@ -213,7 +211,7 @@ class Cache {
       }
     }
   }
-
+  //Very similar to listRemoveItem but updates the item instead of deleting it from list
   listUpdate(filterObject, newItem, ...listKey) {
     // Option to specify if each list only contains the item once.
     let unique = false;
@@ -301,6 +299,7 @@ class Cache {
       //if flag was never set off, add item to filtered list
       if (!missing) {
         returnList.push(item);
+        if(unique) break;
       }
     }
     //refresh list expiration since it has been accessed
@@ -362,107 +361,107 @@ class Cache {
 
   // Store data into Cache
   // FLOW : store ➡ getRefs ➡ _storeData
-  store(info, dbResponse) {
-    const { fields } = this._getRefs(info);
-    this._storeData(fields, dbResponse);
-  }
+  // store(info, dbResponse) {
+  //   const { fields } = this._getRefs(info);
+  //   this._storeData(fields, dbResponse);
+  // }
 
-  _getRefs(info) {
-    return this.parseQuery(info.operation.selectionSet.selections);
-  }
+  // _getRefs(info) {
+  //   return this.parseQuery(info.operation.selectionSet.selections);
+  // }
 
-  _storeData(fields, dbResponse) {
-    const isObject = (x) => typeof x === 'object' && x !== null;
+  // _storeData(fields, dbResponse) {
+  //   const isObject = (x) => typeof x === 'object' && x !== null;
 
-    if (fields.length === 1) {
-      this._addToQueueAndCache(fields[0], {
-        data: dbResponse,
-        expires: Date.now() + this.TTL,
-      });
-    } else {
-      for (const field in dbResponse) {
-        if (isObject(dbResponse[field])) {
-          this._storeData(fields, dbResponse[field]);
-        } else {
-          this._addToQueueAndCache(field, {
-            data: dbResponse[field],
-            expires: Date.now() + this.TTL,
-          });
-        }
-      }
-    }
-  }
+  //   if (fields.length === 1) {
+  //     this._addToQueueAndCache(fields[0], {
+  //       data: dbResponse,
+  //       expires: Date.now() + this.TTL,
+  //     });
+  //   } else {
+  //     for (const field in dbResponse) {
+  //       if (isObject(dbResponse[field])) {
+  //         this._storeData(fields, dbResponse[field]);
+  //       } else {
+  //         this._addToQueueAndCache(field, {
+  //           data: dbResponse[field],
+  //           expires: Date.now() + this.TTL,
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
 
-  check(info) {
-    let { selections, fields, queryObj } = this._getRefs(info);
-    let isMissingData = false;
+  // check(info) {
+  //   let { selections, fields, queryObj } = this._getRefs(info);
+  //   let isMissingData = false;
 
-    for (const field of fields) {
-      //cleans stale data out of corresponding field
-      this.cleanUp(field);
-      if (this.content.hasOwnProperty(field)) {
-        if (typeof queryObj === 'string') {
-          queryObj = this._getDataFromQueue(field);
-        } else {
-          this._addToQueryObj(field, this.content[field].value.data, queryObj);
-        }
-      } else {
-        isMissingData = true;
-        break;
-      }
-    }
-    return isMissingData ? null : queryObj;
-  }
-  _addToQueryObj(field, value, queryObj) {
-    const isObject = (x) => typeof x === 'object' && x !== null;
-    for (let key in queryObj) {
-      if (isObject(queryObj[key])) {
-        this._addToQueryObj(field, value, queryObj[key]);
-      } else if (queryObj[key] === field) {
-        queryObj[key] = value;
-        return;
-      }
-    }
-  }
+  //   for (const field of fields) {
+  //     //cleans stale data out of corresponding field
+  //     this.cleanUp(field);
+  //     if (this.content.hasOwnProperty(field)) {
+  //       if (typeof queryObj === 'string') {
+  //         queryObj = this._getDataFromQueue(field);
+  //       } else {
+  //         this._addToQueryObj(field, this.content[field].value.data, queryObj);
+  //       }
+  //     } else {
+  //       isMissingData = true;
+  //       break;
+  //     }
+  //   }
+  //   return isMissingData ? null : queryObj;
+  // }
+  // _addToQueryObj(field, value, queryObj) {
+  //   const isObject = (x) => typeof x === 'object' && x !== null;
+  //   for (let key in queryObj) {
+  //     if (isObject(queryObj[key])) {
+  //       this._addToQueryObj(field, value, queryObj[key]);
+  //     } else if (queryObj[key] === field) {
+  //       queryObj[key] = value;
+  //       return;
+  //     }
+  //   }
+  // }
 
-  /**
-   * @param {object[]} selectionSet
-   * @return {object} fields
-   */
-  parseQuery(selections, isTopLevel = true) {
-    //Create a fields array to hold all REQUESTED FIELDS from GQL QUERY
-    const fields = [];
+  // /**
+  //  * @param {object[]} selectionSet
+  //  * @return {object} fields
+  //  */
+  // parseQuery(selections, isTopLevel = true) {
+  //   //Create a fields array to hold all REQUESTED FIELDS from GQL QUERY
+  //   const fields = [];
 
-    //Create a queryObj, to be the template for our return Obj
-    const queryObj = {};
-    // Loop through GraphQL field selections
-    for (const selection of selections) {
-      //if current field selection has subFields
-      if (selection.selectionSet !== undefined) {
-        //Parse through subfields, and deconstruct the fields and queryObj
-        const result = this.parseQuery(
-          selection.selectionSet.selections,
-          false
-        );
-        const key = selection.name.value;
-        //add subfields to final queryObj and Fields
-        queryObj[key] = result.queryObj;
-        fields.push(...result.fields);
-      } else {
-        // no selection set, so must be basic primitive field
-        // Add to fields and queryObj
-        const key = selection.name.value;
-        queryObj[key] = selection.name.value;
-        fields.push(selection.name.value);
-      }
-    }
-    // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
-    const topLevelField = selections[0].name.value;
-    //The topLevel Object is expected to not be included, so we add logic to omit
-    return isTopLevel
-      ? { fields, queryObj: queryObj[topLevelField] }
-      : { fields, queryObj };
-  }
+  //   //Create a queryObj, to be the template for our return Obj
+  //   const queryObj = {};
+  //   // Loop through GraphQL field selections
+  //   for (const selection of selections) {
+  //     //if current field selection has subFields
+  //     if (selection.selectionSet !== undefined) {
+  //       //Parse through subfields, and deconstruct the fields and queryObj
+  //       const result = this.parseQuery(
+  //         selection.selectionSet.selections,
+  //         false
+  //       );
+  //       const key = selection.name.value;
+  //       //add subfields to final queryObj and Fields
+  //       queryObj[key] = result.queryObj;
+  //       fields.push(...result.fields);
+  //     } else {
+  //       // no selection set, so must be basic primitive field
+  //       // Add to fields and queryObj
+  //       const key = selection.name.value;
+  //       queryObj[key] = selection.name.value;
+  //       fields.push(selection.name.value);
+  //     }
+  //   }
+  //   // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
+  //   const topLevelField = selections[0].name.value;
+  //   //The topLevel Object is expected to not be included, so we add logic to omit
+  //   return isTopLevel
+  //     ? { fields, queryObj: queryObj[topLevelField] }
+  //     : { fields, queryObj };
+  // }
 }
 
 module.exports = Cache;
