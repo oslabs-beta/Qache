@@ -199,7 +199,7 @@ class Cache {
   }
   
   //for item lists, we will have unique cache keys per list.
-  listPushItem(item, ...listKeys) {
+  listPush(item, ...listKeys) {
     //Remind user that a key is required for this method
     if (listKeys === undefined) {
       console.log('Error, listPush requires atleast one unique cache key');
@@ -220,7 +220,7 @@ class Cache {
   // It should be every list the item belongs to, ideally.
   // EX. cache.listRemove({name: "Fancy Chair"}, "livingRoomFurniture", "kitchenFurniture"})
   // removes all items with name === "Fancy Chair" from cache lists with keys "livingRoomFurniture" and "kitchenFurniture"
-  
+
   listRemoveItem(filterObject, ...listKey){
     // Option to specify if each list only contains the item once.
     let unique = false
