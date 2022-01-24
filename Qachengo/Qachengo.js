@@ -358,7 +358,7 @@ class Cache {
     this.tail = this.head = null;
   }
 
-  // **Unused**
+  // **         SIDELINED         **
 
   // Store data into Cache
   // FLOW : store ➡ getRefs ➡ _storeData

@@ -48,13 +48,13 @@ const fakeGetAllUsers = () =>
     setTimeout(() => {
       // if (err) reject('failed');
       resolve(JSON.stringify(userList));
-    }, 2000);
+    }, 195);
   });
 const fakeGetUser = (username) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(JSON.stringify(getUser(username)));
-    }, 2000);
+    }, 187);
   });
 };
 const fakeSevenDayLookup = () =>
@@ -107,7 +107,7 @@ const rootValue = {
   hello: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.check(info);
+    const cachedResponse = cache.get('hello');
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -116,7 +116,7 @@ const rootValue = {
     //some database lookup
     const normalResponse = await fakeDBLookup();
 
-    cache.store(info, normalResponse);
+    cache.set("hello", normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
@@ -124,7 +124,7 @@ const rootValue = {
   sevenDayTemp: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.check(info);
+    const cachedResponse = cache.get("sevenDayTemp");
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -134,7 +134,7 @@ const rootValue = {
 
     const normalResponse = await fakeSevenDayLookup();
     const parsedResponse = JSON.parse(normalResponse);
-    cache.store(info, parsedResponse);
+    cache.set("sevenDayTemp", parsedResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return parsedResponse;
   },
@@ -142,7 +142,7 @@ const rootValue = {
   weather: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.check(info);
+    const cachedResponse = cache.get("weather");
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
       return cachedResponse;
@@ -151,7 +151,7 @@ const rootValue = {
     const jsonResponse = await fakeWeatherLookup();
     const normalResponse = JSON.parse(jsonResponse);
 
-    cache.store(info, normalResponse);
+    cache.set("weather", normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },
