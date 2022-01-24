@@ -11,10 +11,6 @@ const resolvers = require('./resolvers/resolvers');
 const port = 3000;
 const app = express();
 
-const productsRouter = require('./routes/products.js');
-const roomsRouter = require('./routes/rooms.js');
-const dealsRouter = require('./routes/deals.js');
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
@@ -23,11 +19,6 @@ mongoose.connect(`mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.m
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });
-
-// sending to routers upon request
-app.use('/products', productsRouter);
-app.use('/rooms', roomsRouter);
-app.use('/deals', dealsRouter);
 
 app.use(
   '/graphql',
