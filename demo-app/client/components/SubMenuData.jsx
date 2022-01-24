@@ -1,11 +1,36 @@
 import '../styles/SubMenuData.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const SubMenu = ({ item, sidebar }) => {
+const SubMenu = ({
+  item,
+  sidebar,
+  productMenu,
+  setProductMenu,
+  roomMenu,
+  setRoomMenu,
+}) => {
   const [subnav, setSubnav] = useState(false);
 
   const showSubNav = () => setSubnav(!subnav);
+
+  useEffect(() => {
+    setSubnav(false);
+    setProductMenu(false);
+    setRoomMenu(false);
+  }, [sidebar]);
+
+  useEffect(() => {
+    if (item.title === 'Products') {
+      setSubnav(true);
+    }
+  }, [productMenu]);
+
+  useEffect(() => {
+    if (item.title === 'Rooms') {
+      setSubnav(true);
+    }
+  }, [roomMenu]);
 
   return (
     <div>

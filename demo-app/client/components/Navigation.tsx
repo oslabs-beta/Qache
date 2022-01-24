@@ -9,8 +9,16 @@ import SubMenu from './SubMenuData';
 
 const Navigation = () => {
   const [sidebar, setSidebar] = useState(false);
+  const [productMenu, setProductMenu] = useState(false);
+  const [roomMenu, setRoomMenu] = useState(false);
 
-  const showSidebar = () => setSidebar(!sidebar);
+  const showSidebar = () => setSidebar(true);
+  const hideSidebar = () => setSidebar(false);
+
+  const showSubMenu = (title: String) => {
+    if (title === 'Products') setProductMenu(true);
+    if (title === 'Rooms') setRoomMenu(true);
+  };
 
   return (
     <>
@@ -21,10 +29,24 @@ const Navigation = () => {
               <FaIcons.FaBars onClick={showSidebar} />
             </Link>
             <Link to='/'>Demo App</Link>
-            <a onClick={showSidebar}>Products</a>
-            <a onClick={showSidebar}>Rooms</a>
+            <a
+              onClick={() => {
+                showSidebar();
+                showSubMenu('Products');
+              }}
+            >
+              Products
+            </a>
+            <a
+              onClick={() => {
+                showSidebar();
+                showSubMenu('Rooms');
+              }}
+            >
+              Rooms
+            </a>
             <a onClick={showSidebar}>Deals</a>
-
+            {/* change deals to link to deals page */}
             <FaIcons.FaSearch className='search' />
             <input
               id='search'
@@ -36,14 +58,22 @@ const Navigation = () => {
 
           <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
             <ul className='nav-menu-items'>
-              <li className='navbar-toggle' onClick={showSidebar}>
+              <li className='navbar-toggle' onClick={hideSidebar}>
                 <Link to='#' className='menu-bars'>
                   <AiIcons.AiOutlineClose />
                 </Link>
               </li>
               {SidebarData.map((item, index) => {
                 return (
-                  <SubMenu item={item} key={'item' + index} sidebar={sidebar} />
+                  <SubMenu
+                    item={item}
+                    key={'item' + index}
+                    sidebar={sidebar}
+                    productMenu={productMenu}
+                    setProductMenu={setProductMenu}
+                    roomMenu={roomMenu}
+                    setRoomMenu={setRoomMenu}
+                  />
                 );
               })}
             </ul>
