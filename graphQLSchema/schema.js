@@ -160,7 +160,7 @@ const rootValue = {
   getAllUsers: async (parent, args, info) => {
     const t1 = Date.now();
 
-    const cachedResponse = cache.listRange('allUsers');
+    const cachedResponse = cache.listRange('users');
 
     if (cachedResponse) {
       console.log(`This call took ${Date.now() - t1}ms, coming from cache`);
@@ -170,7 +170,7 @@ const rootValue = {
     const jsonResponse = await fakeGetAllUsers();
     const normalResponse = JSON.parse(jsonResponse);
 
-    cache.listPush('allUsers', ...normalResponse);
+    cache.listCreate('users', ...normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
     return normalResponse;
   },

@@ -186,15 +186,16 @@ class Cache {
         });
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].data.push(n));
+      item.forEach((n) => this.content[listKey].value.data.push(n));
       this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
   listRange(listKey, start = 0, end) {
     this.cleanUp(listKey);
+    console.log(this.content[listKey])
     if (this.content[listKey] === undefined) return null;
-    const { data } = this.content[listKey];
+    const { data } = this.content[listKey].value;
     return end ? data.slice(start, end) : data.slice(start);
   }
   
