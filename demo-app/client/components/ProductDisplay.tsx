@@ -51,7 +51,6 @@ const ProductDisplay = ({ props }: { props: any }) => {
       });
   }, []);
 
-  console.log(typeof category, category);
   console.log('Product state: ', productData);
   console.log('Speed ', speed);
 
