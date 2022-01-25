@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-const LineGraph = ({ metrics }) => {
+const LineGraph = ({ metrics, width, height }) => {
   const state = {
     labels: [],
     datasets: [
@@ -55,7 +55,7 @@ const LineGraph = ({ metrics }) => {
 
   return (
     <div>
-      <Line width={500} height={400} data={state} options={options} />
+      <Line width={width} height={height} data={state} options={options} />
     </div>
   );
 };
