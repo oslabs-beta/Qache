@@ -24,6 +24,7 @@ module.exports = {
 
     newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
+      cache.listPush(newProduct ,category.name)
       path.products.push(newProduct._id);
       await path.save();
     });
@@ -68,7 +69,6 @@ module.exports = {
     console.log(t3 - t1, 'ms');
     return dbRes.products;
   },
-    // resolvers to create:
 
   // returns all existing categories in DB
   getCategories: async (args, parent, info) => {
@@ -82,9 +82,19 @@ module.exports = {
     const data = await Category.findOne({id: args.id}).populate('products');
     console.log('here is the category with that id: ', data);
     return data;
-  }
+  },
 
-  // addProductToCategory
+  // deletes existing Product in DB with corresponding ID
+  deleteProduct: async (args, parent, info) => {
+    await Product.deleteOne({_id: args.id});
+    return;
+  },
+
+  // deletes existing Category in DB with corresponding ID
+  deleteCategory: async (args, parent, info) => {
+    await Category.deleteOne({_id: args.id});
+    return;
+  }
 };
 //
 // getAllProducts = async (req, res, next) => {

@@ -41,8 +41,8 @@ export const SidebarData = [
         icon: <GiIcons.GiKnifeFork />,
       },
       {
-        title: 'Bathroom',
-        path: '/products/bathroom',
+        title: 'Couches',
+        path: '/products/couches',
         icon: <FaIcons.FaToiletPaper />,
       },
     ],

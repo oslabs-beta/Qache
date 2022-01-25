@@ -1,20 +1,29 @@
+* {
+  overflow-x: hidden;
+}
 .productDisplay-container {
   display: flex;
   flex-direction: column;
-  padding-left: 15rem;
-  padding-right: 15rem;
-
+  padding-left: 5%;
+  padding-right: 5%;
+  
   h1 {
     width: 100%;
     text-align: center;
   }
-
+  
   img {
-    width: 50%;
+    width: 100%;
   }
-
+  
   .cache-line {
+    justify-content: space-evenly;
     display: flex;
+    width: 80%;
+
+    div {
+      width: 50%;
+    }
   }
 }
 

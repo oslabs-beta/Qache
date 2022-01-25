@@ -49,8 +49,9 @@ const ProductDisplay = ({ props }: { props: any }) => {
         setProductData(data.data.getProductsBy);
         console.log(t2 - t1, 'ms'); // time after axios post finished
       });
-  }, []);
-
+  }, [category]);
+  
+  console.log(typeof category, category);
   console.log('Product state: ', productData);
   console.log('Speed ', speed);
 
@@ -71,12 +72,14 @@ const ProductDisplay = ({ props }: { props: any }) => {
     <div className='productDisplay-container'>
       <h1>{category}</h1>
       <div className='cache-line'>
+        <div>
         <img src={images.Bedroom} />
-        <LineGraph metrics={metrics.Bedroom} width={500} height={500} />
+        </div>
+        <LineGraph metrics={metrics[category]} width={500} height={500} />
       </div>
       {productData ? (
         <ProductDetails productData={productData} />
-      ) : (
+        ) : (
         <span>No items found</span>
       )}
     </div>
