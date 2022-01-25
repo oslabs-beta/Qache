@@ -22,6 +22,8 @@ const LandingPage = () => {
                 labels: ['1', '2', '3', '4', '5', '6'],
                 data: [645, 272, 80, 81, 80, 79],
               }}
+              width={500}
+              height={400}
             />
           </div>
         </div>

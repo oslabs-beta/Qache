@@ -31,12 +31,13 @@ $offwhite: #fafafa;
       text-decoration: none;
       color: black;
       cursor: pointer;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
     }
 
-    a:hover,
-    a:focus {
-      text-decoration: underline;
-    }
 
     .search {
       position: relative;

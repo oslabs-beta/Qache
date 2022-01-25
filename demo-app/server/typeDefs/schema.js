@@ -2,9 +2,9 @@ const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
   type Query {
-    getAllProducts: [PopulatedProducts!]
+    getAllProducts: [PopulatedProducts]
     getProductsBy(category: String!): [Product]
-    getCategories: [PopulatedCategories!]
+    getCategories: [PopulatedCategories]
     getCategoryBy(id: ID!): Category
   }
 

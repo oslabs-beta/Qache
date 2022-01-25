@@ -71,14 +71,14 @@ module.exports = {
 
   // returns all existing categories in DB
   getCategories: async (args, parent, info) => {
-    const data = await Category.find().populate();
+    const data = await Category.find().populate("products");
     console.log('here are all the categories in store: ', data);
     return data;
   },
   // getCategoryBy
   // returns existing category in DB with corresponding ID
   getCategoryBy: async (args, parent, info) => {
-    const data = await Category.findOne({id: args.id}).populate();
+    const data = await Category.findOne({id: args.id}).populate('products');
     console.log('here is the category with that id: ', data);
     return data;
   },

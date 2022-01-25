@@ -1,0 +1,21 @@
+.productDisplay-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15rem;
+  padding-right: 15rem;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  img {
+    width: 50%;
+  }
+
+  .cache-line {
+    display: flex;
+    
+  }
+}
+
