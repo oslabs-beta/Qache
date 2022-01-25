@@ -82,9 +82,19 @@ module.exports = {
     const data = await Category.findOne({id: args.id}).populate();
     console.log('here is the category with that id: ', data);
     return data;
-  }
+  },
 
-  // addProductToCategory
+  // deletes existing Product in DB with corresponding ID
+  deleteProduct: async (args, parent, info) => {
+    await Product.deleteOne({_id: args.id});
+    return;
+  },
+
+  // deletes existing Category in DB with corresponding ID
+  deleteCategory: async (args, parent, info) => {
+    await Category.deleteOne({_id: args.id});
+    return;
+  }
 };
 //
 // getAllProducts = async (req, res, next) => {
