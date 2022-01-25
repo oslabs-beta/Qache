@@ -72,12 +72,14 @@ const ProductDisplay = ({ props }: { props: any }) => {
     <div className='productDisplay-container'>
       <h1>{category}</h1>
       <div className='cache-line'>
+        <div>
         <img src={images.Bedroom} />
+        </div>
         <LineGraph metrics={metrics[category]} width={500} height={500} />
       </div>
       {productData ? (
         <ProductDetails productData={productData} />
-      ) : (
+        ) : (
         <span>No items found</span>
       )}
     </div>

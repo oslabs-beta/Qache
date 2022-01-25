@@ -1,12 +1,15 @@
 .products-wrap {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  justify-content: space-evenly;
 
   .product-container {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    align-items: center;
+    width: 22%;
+    margin: 1%;
+    background-color: white;
 
     .product-info {
       display: flex;
