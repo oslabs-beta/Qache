@@ -386,7 +386,6 @@ class Cache {
   cleanUp(key) {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
-      console.log(this.printTimeLeft(key));
       if (this.content[key].expires < Date.now()) {
         delete this.content[key];
         this.size--;

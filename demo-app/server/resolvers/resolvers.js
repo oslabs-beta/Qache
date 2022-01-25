@@ -24,6 +24,7 @@ module.exports = {
 
     newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
+      cache.listPush(newProduct ,category.name)
       path.products.push(newProduct._id);
       await path.save();
     });
