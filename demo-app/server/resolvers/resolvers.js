@@ -68,7 +68,6 @@ module.exports = {
     console.log(t3 - t1, 'ms');
     return dbRes.products;
   },
-    // resolvers to create:
 
   // returns all existing categories in DB
   getCategories: async (args, parent, info) => {
