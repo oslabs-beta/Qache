@@ -50,7 +50,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
         console.log(t2 - t1, 'ms'); // time after axios post finished
       });
   }, []);
-
+  
   console.log(typeof category, category);
   console.log('Product state: ', productData);
   console.log('Speed ', speed);
