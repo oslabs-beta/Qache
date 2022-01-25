@@ -29,29 +29,6 @@ app.use(
   })
 );
 
-// function that sends fetch request to graphql server 
-// cuts down on boilerplate
-// query is the graphql query as a string (can copypaste exactly from graphiql)
-// variables is an object containing the interchangable variables that can be passed into the query
-async function queryFetch(query, variables) {
-  return fetch('/graphql', {
-    method: 'POST',
-    headers: {'Content-Type' : 'application/json'},
-    body: JSON.stringify({
-      query: query,
-      variables: variables
-    })
-  }).then(res => res.json());
-};
-
-// sends graphql query to fetch all products with given section (e.g. 'furniture', 'storage') in their categories
-// 
-app.post('/products/:section', async (req, res) => {
-  const section = req.params.section;
-  const data = await queryFetch(`
-  `)
-});
-
 app.get('/', (req, res) => {
   res.status(200).send('Welcome to Demo App server!');
 });
