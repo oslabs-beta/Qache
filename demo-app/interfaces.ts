@@ -10,7 +10,7 @@ export interface Product {
 }
 
 export interface Metric {
-  Bedroom: {
+  [Bedroom:string]: {
     labels: string[];
     data: number[];
   };
