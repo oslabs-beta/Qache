@@ -21,38 +21,41 @@ ChartJS.register(
   Legend
 );
 
-const state = {
-  labels: ['1', '2', '3', '4', '5', '6'],
-  datasets: [
-    {
-      label: ' ms',
-      fill: false,
-      lineTension: 0.35,
-      backgroundColor: 'rgba(75,192,192,1)',
-      borderColor: 'rgba(0,0,0,1)',
-      borderWidth: 2,
-      data: [645, 272, 80, 81, 80, 79],
-    },
-  ],
-};
+const LineGraph = ({ metrics, width, height }) => {
+  const state = {
+    labels: [],
+    datasets: [
+      {
+        label: ' ms',
+        fill: false,
+        lineTension: 0.35,
+        backgroundColor: 'rgba(75,192,192,1)',
+        borderColor: 'rgba(0,0,0,1)',
+        borderWidth: 2,
+        data: [],
+      },
+    ],
+  };
 
-const options = {
-  responsive: true,
-  plugins: {
-    title: {
-      display: true,
-      text: 'Cache Speed',
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Cache Speed',
+      },
+      legend: {
+        display: false,
+      },
     },
-    legend: {
-      display: false,
-    },
-  },
-};
+  };
 
-const LineGraph = () => {
+  state.labels = metrics.labels;
+  state.datasets[0].data = metrics.data;
+
   return (
     <div>
-      <Line width={500} height={400} data={state} options={options} />
+      <Line width={width} height={height} data={state} options={options} />
     </div>
   );
 };

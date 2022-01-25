@@ -9,7 +9,7 @@
   font-size: 2rem;
   color: black;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 
@@ -33,7 +33,7 @@
   font-size: 1.5rem;
   color: black;
 
-  :hover {
+  &:hover {
     text-decoration: underline;
   }
 }
