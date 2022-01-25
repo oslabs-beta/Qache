@@ -6,19 +6,20 @@
   flex-direction: column;
   padding-left: 5%;
   padding-right: 5%;
-
+  
   h1 {
     width: 100%;
     text-align: center;
   }
-
+  
   img {
     width: 100%;
   }
-
+  
   .cache-line {
+    justify-content: space-evenly;
     display: flex;
-    width: 100%;
+    width: 80%;
 
     div {
       width: 50%;
