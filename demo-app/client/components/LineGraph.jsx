@@ -55,7 +55,11 @@ const LineGraph = ({ metrics, width, height }) => {
 
   return (
     <div>
+<<<<<<< HEAD
       <Line width={width} height={height} data={state} options={options} />
+=======
+      <Line width={500} height={400} data={state} options={options} />
+>>>>>>> dev
     </div>
   );
 };

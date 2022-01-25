@@ -19,20 +19,24 @@ const ProductDisplay = ({ props }: { props: any }) => {
   const [speed, setSpeed] = useState(0);
 
   const body = {
-    query: `{getProductsBy(category: "${category}") {
-      name
-      description
-      imageUrl
-      quantity
-      price
-      onSale
-      category
-    }}`,
+    query: `
+    {
+      getProductsBy(category: "${category}") {
+        name
+        description
+        imageUrl
+        quantity
+        price
+        onSale
+        category
+      }
+    }`,
   };
 
   const images = {
-    Bedroom: "https://www.ikea.com/us/en/images/products/morgedal-foam-mattress-firm-dark-gray__0382427_ph100120_s5.jpg?f=xl",
-  }
+    Bedroom:
+      'https://www.ikea.com/us/en/images/products/morgedal-foam-mattress-firm-dark-gray__0382427_ph100120_s5.jpg?f=xl',
+  };
 
   useEffect(() => {
     const t1: number = Date.now(); // time before axios post starts
@@ -53,12 +57,11 @@ const ProductDisplay = ({ props }: { props: any }) => {
 
   useEffect(() => {
     if (speed > 0) {
-      const newMetrics = JSON.parse(JSON.stringify(metrics));
-      console.log(newMetrics);
-      console.log(category);
+      const newMetrics = { ...metrics };
+      console.log('newMetrics', newMetrics);
       let prevLabel =
         newMetrics[category].labels[newMetrics[category].labels.length - 1];
-      if (prevLabel === undefined) prevLabel = 0;
+      if (prevLabel === undefined) prevLabel = '0';
       newMetrics[category].labels.push(String(Number(prevLabel) + 1));
       newMetrics[category].data.push(speed);
       setMetrics(newMetrics);
@@ -69,10 +72,14 @@ const ProductDisplay = ({ props }: { props: any }) => {
     <div className='productDisplay-container'>
       <h1>{category}</h1>
       <div className='cache-line'>
-        <img src={images.Bedroom}/>
-        <LineGraph metrics={metrics.Bedroom} width={500} height={500}/>
+        <img src={images.Bedroom} />
+        <LineGraph metrics={metrics.Bedroom} width={500} height={500} />
       </div>
-      {productData ? <ProductDetails productData={productData}/> : <span>No items found</span>}
+      {productData ? (
+        <ProductDetails productData={productData} />
+      ) : (
+        <span>No items found</span>
+      )}
     </div>
   );
 };
