@@ -55,7 +55,7 @@ const LineGraph = ({ metrics }) => {
 
   return (
     <div>
-      <Line width={'500px'} height={'400px'} data={state} options={options} />
+      <Line width={500} height={400} data={state} options={options} />
     </div>
   );
 };
