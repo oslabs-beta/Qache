@@ -3,6 +3,7 @@ class Node {
     this.keyRef = keyRef;
     this.value = value;
     this.prev = this.next = null;
+    this.expires = Infinity;
   }
 }
 
@@ -42,7 +43,7 @@ class Cache {
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
-  listRange(listKey, start = 0, end) {
+  listRange(listKey, start = 0, end = Infinity) {
     this.cleanUp(listKey);
     if (this.content[listKey] === undefined) return null;
     const { value } = this.content[listKey];
@@ -242,16 +243,14 @@ class Cache {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
-        delete this.content[key];
-        this.size--;
+        this._removeFromQueueAndCache(this.content[key]);
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
         if (this.content[key].expires < Date.now()) {
-          delete this.content[key];
-          this.size--;
+          this._removeFromQueueAndCache(this.content[key]);
         }
       }
     }
@@ -259,10 +258,6 @@ class Cache {
   //count amount of keys
   size() {
     return this.size;
-  }
-
-  _isSizeValid() {
-    return this.size === Object.keys(this.content).length;
   }
 
   // wipe the cache
@@ -347,7 +342,9 @@ class Cache {
     this.size--;
   }
   _removeFromQueue(node) {
-    if (!node.next) {
+    if (!node.next && !node.prev) {
+      this.head = this.tail = null;
+    } else if (!node.next) {
       node.prev.next = null;
       this.tail = node.prev;
     } else if (!node.prev) {
@@ -369,6 +366,10 @@ class Cache {
     // put newly accessed node at the tail of the list
     this._refresh(key);
     return nodeInCache.value;
+  }
+
+  _isSizeValid() {
+    return this.size === Object.keys(this.content).length;
   }
 }
 
