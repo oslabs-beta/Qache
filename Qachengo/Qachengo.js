@@ -11,8 +11,8 @@ class Cache {
     //set timeToLive in options or default to 10min
     this.TTL = options.timeToLive; //10 minute default timeToLive
     this.maxSize = options.maxSize;
-    // Where data, and key specific data lives
-    this.content = {}; // STORE OF DATA
+
+    this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
@@ -26,7 +26,8 @@ class Cache {
    * @param {object} value
    */
   _addToQueueAndCache(key, value) {
-    const nodeInCache = this.content[key];
+    let nodeInCache;
+    nodeInCache = this.content[key];
     // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
     if (nodeInCache) {
       // we only remove from queue and NOT cache since we are just enqueueing this node
@@ -37,10 +38,12 @@ class Cache {
     else if (this.size === this.maxSize) {
       this._removeFromQueueAndCache(this.head);
     }
-
+    if (nodeInCache === undefined){
+      nodeInCache = new Node(key, value)
+      nodeInCache.expires = Date.now() + this.TTL
+    }
     // enqueue node if it exists, otherwise enqueue new node with value
-    this._enqueue(nodeInCache || new Node(key, value));
-
+    this._enqueue(nodeInCache);
     // add node to cache (enqueue)
     this.content[key] = this.tail;
     this.size++;
@@ -80,79 +83,33 @@ class Cache {
    */
   _removeFromQueueAndCache(node) {
     delete this.content[node.keyRef];
-    this._removeFromQueue(node);
+    this._removeFromQueue(node)
     this.size--;
   }
-
-  /**
-   * Deletes a node from the queue
-   * @param {object} node
-   */
   _removeFromQueue(node) {
-    // point node's `prev` pointer to the appropriate node
-    this._detachNeighbor(node, 'prev');
-    // point node's `next` pointer to the appropriate node
-    this._detachNeighbor(node, 'next');
+    if(!node.next){
+      node.prev.next = null
+      this.tail = node.prev
+    } else if(!node.prev){
+      node.next.prev = null
+      this.head = node.next
+    } else {
+      node.next.prev = node.prev
+      node.prev.next = node.next
+    }
   }
 
-  /**
-   * Removes a node from the queue and deletes the corresponding data from the cache
-   * @param {object} key
-   */
-  _removeFromQueueAndCache(node) {
-    delete this.content[node.keyRef];
-    this._removeFromQueue(node);
-    this.size--;
-  }
-
-  /**
-   * Deletes a node from the queue
-   * @param {object} node
-   */
-  _removeFromQueue(node) {
-    // point node's `prev` pointer to the appropriate node
-    this._detachNeighbor(node, 'prev');
-    // point node's `next` pointer to the appropriate node
-    this._detachNeighbor(node, 'next');
-  }
-
-  /**
-   * This helper function juggles pointers on either the head or tail of the queue.
-   * When called with the 'prev' string passed in:
-   * 		- If node.prev points to another node (current node is not the most recent thing to be added to the queue), point that node's `next` to the next node after the current node being deleted.
-   * 		- Otherwise, node.prev does not point to a node (current node must be the most recent addition to the queue), thus we point the tail at the next node because we are at the tail of the queue.
-   *
-   * When called with the 'next' string passed in:
-   * 		- If node.next points to another node (current node is not the least used node in the cache), point that node's `prev` to the node before the current node being deleted in the queue.
-   * 		- Otherwise, node.next does not point to a node (current node must be the oldest item in the queue), thus we point the head at the previous node because we are at the head of the queue.
-   *
-   * @param {object} node
-   * @param {string} p1
-   */
-  _detachNeighbor(node, p1) {
-    const p2 = p1 === 'prev' ? 'next' : 'prev'; // pointer for the opposite direction passed in
-    const end = p1 === 'prev' ? 'tail' : 'head'; // pointer for which end of queue we are removing from
-    const neighbor = node[p1];
-    if (neighbor) neighbor[p2] = node[p2];
-    else this[end] = node[p2];
-  }
 
   _getDataFromQueue(key) {
-    try {
-      const nodeInCache = this.content[key];
-      if (!nodeInCache) {
-        console.log(`There is no key: ${key} in the cache.`);
-        return null;
-      }
-      // put newly accessed node at the tail of the list
-      if (this.tail !== nodeInCache) {
-        // recall that _addToQueueAndCache will remove existing node and add the node back at the tail of the queue
-        this._addToQueueAndCache(key, nodeInCache.value);
-      }
-      return nodeInCache.value.data;
-    } catch (error) {
-      console.error(error);
+    const nodeInCache = this.content[key];
+
+    if (!nodeInCache) {
+      console.log(`There is no key: ${key} in the cache.`);
+      return null;
     }
+    // put newly accessed node at the tail of the list
+    this._refresh(key);
+    return nodeInCache.value
   }
 
   get(key) {
@@ -160,10 +117,7 @@ class Cache {
   }
 
   set(key, value) {
-    this._addToQueueAndCache(key, {
-      data: value,
-      expires: Date.now() + this.TTL,
-    });
+    this._addToQueueAndCache(key, value);
   }
 
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
@@ -174,22 +128,19 @@ class Cache {
     } else {
       //Check if a list exists for this key, if not, create one.
       if (this.content[listKey] === undefined) {
-        this._addToQueueAndCache(listKey, {
-          data: [],
-          expires: Date.now() + this.TTL,
-        });
+        console.log("adding to queue and cache")
+        this._addToQueueAndCache(listKey, []);
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].value.data.push(n));
-      this.content[listKey].expires = Date.now() + this.TTL;
+      item.forEach((n) => this.content[listKey].value.push(n));
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
   listRange(listKey, start = 0, end) {
     this.cleanUp(listKey);
     if (this.content[listKey] === undefined) return null;
-    const { data } = this.content[listKey].value;
-    return end ? data.slice(start, end) : data.slice(start);
+    const { value } = this.content[listKey]
+    return end ? value.slice(start, end) : value.slice(start);
   }
 
   // Push a newly created item to ONE OR MANY lists
@@ -204,7 +155,7 @@ class Cache {
           return null;
         }
         //We push that item into cache, THEN refresh expiration.
-        this.content[listKey].value.data.push(item);
+        this.content[listKey].value.push(item);
         this.content[listKey].expires = Date.now() + this.TTL;
       }
     }
@@ -243,7 +194,7 @@ class Cache {
       // **Cleanup protocol**
 
       //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].value.data;
+      const currentList = this.content[key].value
       for (const item of currentList) {
         let missing = false;
         //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -260,10 +211,7 @@ class Cache {
           if (unique) break;
         }
       }
-      // remove from queue and then enqueue it for each list
-      // i.e. even if item not found in current list, this category was still accessed so requeue it
-      // TODO: add refresh method
-      this._addToQueueAndCache(key, this.content[key].value);
+      this._refresh(key);
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
@@ -296,7 +244,7 @@ class Cache {
       }
       // **Cleanup protocol**
       //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].value.data;
+      const currentList = this.content[key].value
       for (const item of currentList) {
         let missing = false;
         //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -340,7 +288,7 @@ class Cache {
       delete filterObject.unique;
     }
     // If list does exist, loop through list and find item by filter Object
-    for (const item of this.content[listKey].value.data) {
+    for (const item of this.content[listKey].value) {
       //create a flag to set off if  a filter is not matching
       let missing = false;
       //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -417,112 +365,6 @@ class Cache {
     console.log(`Size: ${this.size}`);
     console.log(`Size is valid: ${this._isSizeValid()}`);
   }
-
-  // **         SIDELINED         **
-
-  // Store data into Cache
-  // FLOW : store ➡ getRefs ➡ _storeData
-  // store(info, dbResponse) {
-  //   const { fields } = this._getRefs(info);
-  //   this._storeData(fields, dbResponse);
-  // }
-
-  // _getRefs(info) {
-  //   return this.parseQuery(info.operation.selectionSet.selections);
-  // }
-
-  // _storeData(fields, dbResponse) {
-  //   const isObject = (x) => typeof x === 'object' && x !== null;
-
-  //   if (fields.length === 1) {
-  //     this._addToQueueAndCache(fields[0], {
-  //       data: dbResponse,
-  //       expires: Date.now() + this.TTL,
-  //     });
-  //   } else {
-  //     for (const field in dbResponse) {
-  //       if (isObject(dbResponse[field])) {
-  //         this._storeData(fields, dbResponse[field]);
-  //       } else {
-  //         this._addToQueueAndCache(field, {
-  //           data: dbResponse[field],
-  //           expires: Date.now() + this.TTL,
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
-
-  // check(info) {
-  //   let { selections, fields, queryObj } = this._getRefs(info);
-  //   let isMissingData = false;
-
-  //   for (const field of fields) {
-  //     //cleans stale data out of corresponding field
-  //     this.cleanUp(field);
-  //     if (this.content.hasOwnProperty(field)) {
-  //       if (typeof queryObj === 'string') {
-  //         queryObj = this._getDataFromQueue(field);
-  //       } else {
-  //         this._addToQueryObj(field, this.content[field].value.data, queryObj);
-  //       }
-  //     } else {
-  //       isMissingData = true;
-  //       break;
-  //     }
-  //   }
-  //   return isMissingData ? null : queryObj;
-  // }
-  // _addToQueryObj(field, value, queryObj) {
-  //   const isObject = (x) => typeof x === 'object' && x !== null;
-  //   for (let key in queryObj) {
-  //     if (isObject(queryObj[key])) {
-  //       this._addToQueryObj(field, value, queryObj[key]);
-  //     } else if (queryObj[key] === field) {
-  //       queryObj[key] = value;
-  //       return;
-  //     }
-  //   }
-  // }
-
-  // /**
-  //  * @param {object[]} selectionSet
-  //  * @return {object} fields
-  //  */
-  // parseQuery(selections, isTopLevel = true) {
-  //   //Create a fields array to hold all REQUESTED FIELDS from GQL QUERY
-  //   const fields = [];
-
-  //   //Create a queryObj, to be the template for our return Obj
-  //   const queryObj = {};
-  //   // Loop through GraphQL field selections
-  //   for (const selection of selections) {
-  //     //if current field selection has subFields
-  //     if (selection.selectionSet !== undefined) {
-  //       //Parse through subfields, and deconstruct the fields and queryObj
-  //       const result = this.parseQuery(
-  //         selection.selectionSet.selections,
-  //         false
-  //       );
-  //       const key = selection.name.value;
-  //       //add subfields to final queryObj and Fields
-  //       queryObj[key] = result.queryObj;
-  //       fields.push(...result.fields);
-  //     } else {
-  //       // no selection set, so must be basic primitive field
-  //       // Add to fields and queryObj
-  //       const key = selection.name.value;
-  //       queryObj[key] = selection.name.value;
-  //       fields.push(selection.name.value);
-  //     }
-  //   }
-  //   // if we are in the inital call before any recursion, we remove the top of the property associated with the returning query object to match the response from the database.
-  //   const topLevelField = selections[0].name.value;
-  //   //The topLevel Object is expected to not be included, so we add logic to omit
-  //   return isTopLevel
-  //     ? { fields, queryObj: queryObj[topLevelField] }
-  //     : { fields, queryObj };
-  // }
 }
 
 module.exports = Cache;
