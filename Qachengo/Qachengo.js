@@ -409,18 +409,17 @@ class Cache {
     return this.size === Object.keys(this.content).length;
   }
 
-<<<<<<< HEAD
   // wipe the cache
   clear() {
     this.content = {};
     this.size = 0;
     this.tail = this.head = null;
-=======
+  }
+
   log() {
     console.log(Object.keys(this.content));
     console.log(`Size: ${this.size}`);
     console.log(`Size is valid: ${this._isSizeValid()}`);
->>>>>>> 4e500af7c27d285d34372728e569b11adf933de0
   }
 
   // **         SIDELINED         **
