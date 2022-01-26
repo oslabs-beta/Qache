@@ -26,7 +26,8 @@ class Cache {
    * @param {object} value
    */
   _addToQueueAndCache(key, value) {
-    const nodeInCache = this.content[key];
+    let nodeInCache;
+    nodeInCache = this.content[key];
     // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
     if (nodeInCache) {
       // we only remove from queue and NOT cache since we are just enqueueing this node
@@ -37,7 +38,7 @@ class Cache {
     else if (this.size === this.maxSize) {
       this._removeFromQueueAndCache(this.head);
     }
-    if (!nodeInCache){
+    if (nodeInCache === undefined){
       nodeInCache = new Node(key, value)
       nodeInCache.expires = Date.now() + this.TTL
     }
@@ -127,6 +128,7 @@ class Cache {
     } else {
       //Check if a list exists for this key, if not, create one.
       if (this.content[listKey] === undefined) {
+        console.log("adding to queue and cache")
         this._addToQueueAndCache(listKey, []);
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
@@ -209,10 +211,7 @@ class Cache {
           if (unique) break;
         }
       }
-      // remove from queue and then enqueue it for each list
-      // i.e. even if item not found in current list, this category was still accessed so requeue it
-      // TODO: add refresh method
-      this._addToQueueAndCache(key, this.content[key].value);
+      this._refresh(key);
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list

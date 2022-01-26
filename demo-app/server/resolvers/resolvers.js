@@ -46,11 +46,9 @@ module.exports = {
 
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    console.log(cache.content)
     cache.log()
     console.log("~~~~~~~~~~~~~~~~~~")
-    console.log("HEAD",cache.head,"TAIL", cache.tail)
-    const t1 = Date.now();
+    const t1 = Date.now()
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
