@@ -319,7 +319,6 @@ class Cache {
   //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
   listFetch(listKey, filterObject) {
     this.cleanUp(listKey);
-    console.log(listKey, filterObject);
     // Check if list exists, if not return null.
     if (this.content[listKey] === undefined) return null;
 
@@ -414,7 +413,7 @@ class Cache {
   }
 
   log() {
-    console.log(this.content);
+    console.log(Object.keys(this.content));
     console.log(`Size: ${this.size}`);
     console.log(`Size is valid: ${this._isSizeValid()}`);
   }
