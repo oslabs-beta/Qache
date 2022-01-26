@@ -94,27 +94,6 @@ class Cache {
   }
 
   /**
-   * Removes a node from the queue and deletes the corresponding data from the cache
-   * @param {object} key
-   */
-  _removeFromQueueAndCache(node) {
-    delete this.content[node.keyRef];
-    this._removeFromQueue(node);
-    this.size--;
-  }
-
-  /**
-   * Deletes a node from the queue
-   * @param {object} node
-   */
-  _removeFromQueue(node) {
-    // point node's `prev` pointer to the appropriate node
-    this._detachNeighbor(node, 'prev');
-    // point node's `next` pointer to the appropriate node
-    this._detachNeighbor(node, 'next');
-  }
-
-  /**
    * This helper function juggles pointers on either the head or tail of the queue.
    * When called with the 'prev' string passed in:
    * 		- If node.prev points to another node (current node is not the most recent thing to be added to the queue), point that node's `next` to the next node after the current node being deleted.
