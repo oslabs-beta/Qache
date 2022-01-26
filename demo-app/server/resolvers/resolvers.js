@@ -1,6 +1,7 @@
 const Cache = require('../../../Qachengo/Qachengo');
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
+const { description } = require('../typeDefs/schema');
 
 const cache = new Cache();
 
@@ -88,5 +89,30 @@ module.exports = {
   deleteCategory: async (args, parent, info) => {
     await Category.deleteOne({_id: args.id});
     return;
+  },
+
+  // patches existing Product in DB with corresponding ID, replacing chosen field(s) with inputted info
+  updateProduct: async (args, parent, info) => {
+    let {id, name, description, imageURL, quantity, price, onSale, category} = args;
+    let updatedProduct = await Product.findById(id);
+    if (name) updatedProduct.name = name;
+    if (description) updatedProduct.description = description;
+    if (imageURL) updatedProduct.imageURL = imageURL;
+    if (quantity) updatedProduct.quantity = quantity;
+    if (price) updatedProduct.price = price;
+    if (onSale) updatedProduct.onSale = onSale;
+    if (category) updatedProduct.category = category;
+    await Product.findOneAndUpdate({_id : id}, updatedProduct, {new: true});
+    return updatedProduct;
+  },
+
+  // patches existing Category in DB with corresponding ID, replacing chosen field(s) with inputted info
+  updateCategory: async (args, parent, info) => {
+    let {id, name, products} = args;
+    let updatedCategory = await Category.findById(id);
+    if (name) updatedCategory.name = name;
+    if (products) updatedCategory.products = products;
+    await Category.findOneAndUpdate({_id: id}, updatedCategory, {new: true});
+    return updatedCategory;
   }
 };
