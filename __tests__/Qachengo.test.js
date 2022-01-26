@@ -1,35 +1,46 @@
-const Qachengo = require('../Qachengo/Qachengo');
+const Cache = require('../Qachengo/Qachengo');
+const Node = require('../Qachengo/Node');
 
-describe('Queue Tests', () => {
-  const myQueue = new Queue();
+describe('Qachengo Tests', () => {
+  let myCache;
 
-  it('should consist of two Stacks', () => {
-    expect(myQueue.stack1).toBeDefined();
-    expect(myQueue.stack1).toBeInstanceOf(Stack);
-    expect(myQueue.stack2).toBeDefined();
-    expect(myQueue.stack2).toBeInstanceOf(Stack);
+  beforeEach(() => {
+    myCache = new Cache();
+  });
+
+  it('should have properties for: TTL, maxSize, content, size, head, tail', () => {
+    expect(myCache.TTL).toBeDefined();
+    expect(myCache.maxSize).toBeDefined();
+    expect(myCache.content).toBeDefined();
+    expect(myCache.size).toBeDefined();
+    expect(myCache.head).toBeDefined();
+    expect(myCache.tail).toBeDefined();
+  });
+
+  it('should store data in the content property as an instance of Node', () => {
+    expect(myCache.content['asdf']).toBeInstanceOf(Node);
   });
 
   it('should have an enqueue method', () => {
-    expect(myQueue.enqueue).toBeDefined();
-    expect(typeof myQueue.enqueue).toBe('function');
+    expect(myCache.enqueue).toBeDefined();
+    expect(typeof myCache.enqueue).toBe('function');
   });
 
   it('should have a dequeue method', () => {
-    expect(myQueue.dequeue).toBeDefined();
-    expect(typeof myQueue.dequeue).toBe('function');
+    expect(myCache.dequeue).toBeDefined();
+    expect(typeof myCache.dequeue).toBe('function');
   });
 
   it('should return undefined if nothing to dequeue', () => {
-    expect(myQueue.dequeue()).toBeUndefined();
+    expect(myCache.dequeue()).toBeUndefined();
   });
 
   it('should add and remove values from queue based on first in, first out rule', () => {
-    myQueue.enqueue(1);
-    myQueue.enqueue(2);
-    myQueue.enqueue(3);
-    expect(myQueue.dequeue()).toBe(1);
-    expect(myQueue.dequeue()).toBe(2);
-    expect(myQueue.dequeue()).toBe(3);
+    myCache.enqueue(1);
+    myCache.enqueue(2);
+    myCache.enqueue(3);
+    expect(myCache.dequeue()).toBe(1);
+    expect(myCache.dequeue()).toBe(2);
+    expect(myCache.dequeue()).toBe(3);
   });
 });
