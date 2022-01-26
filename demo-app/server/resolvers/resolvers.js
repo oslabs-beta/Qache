@@ -56,7 +56,7 @@ module.exports = {
     if (cacheRes) {
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
-      return cacheRes; // array of products
+      return cacheRes;
     } // if exists, returns the array of products
     const dbRes = await Category.findOne({ name: category }).populate(
       'products'
