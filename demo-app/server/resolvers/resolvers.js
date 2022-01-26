@@ -52,6 +52,7 @@ module.exports = {
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
+      console.log(cacheRes);
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
       return cacheRes;
@@ -91,26 +92,25 @@ module.exports = {
 
   // patches existing Product in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateProduct: async (args, parent, info) => {
-    let {id, name, description, imageURL, quantity, price, onSale, category} = args;
-    let updatedProduct = await Product.findById(id);
-    if (name) updatedProduct.name = name;
-    if (description) updatedProduct.description = description;
-    if (imageURL) updatedProduct.imageURL = imageURL;
-    if (quantity) updatedProduct.quantity = quantity;
-    if (price) updatedProduct.price = price;
-    if (onSale) updatedProduct.onSale = onSale;
-    if (category) updatedProduct.category = category;
-    await Product.findOneAndUpdate({_id : id}, updatedProduct, {new: true});
+    let { id } = args;
+    const updatedProduct = await Product.findOneAndUpdate({ _id: id }, args, {
+      new: true,
+    }).populate('category');
+    const categoryNames = [];
+    updatedProduct.category.forEach((obj) => categoryNames.push(obj.name));
+    cache.listUpdate({ id }, args, ...categoryNames);
     return updatedProduct;
   },
 
   // patches existing Category in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateCategory: async (args, parent, info) => {
-    let {id, name, products} = args;
+    let { id, name, products } = args;
     let updatedCategory = await Category.findById(id);
     if (name) updatedCategory.name = name;
     if (products) updatedCategory.products = products;
-    await Category.findOneAndUpdate({_id: id}, updatedCategory, {new: true});
+    await Category.findOneAndUpdate({ _id: id }, updatedCategory, {
+      new: true,
+    });
     return updatedCategory;
-  }
+  },
 };
