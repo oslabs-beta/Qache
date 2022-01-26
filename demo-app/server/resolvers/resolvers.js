@@ -5,7 +5,6 @@ const Category = require('../models/CategoryModel');
 const cache = new Cache();
 
 module.exports = {
-
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
     const { name, description, imageUrl, quantity, price, onSale, category } =
@@ -24,7 +23,7 @@ module.exports = {
 
     newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
-      cache.listPush(newProduct ,category.name)
+      cache.listPush(newProduct, category.name);
       path.products.push(newProduct._id);
       await path.save();
     });
@@ -46,9 +45,9 @@ module.exports = {
 
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    cache.log()
-    console.log("~~~~~~~~~~~~~~~~~~")
-    const t1 = Date.now()
+    cache.log();
+    console.log('~~~~~~~~~~~~~~~~~~');
+    const t1 = Date.now();
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
@@ -62,30 +61,30 @@ module.exports = {
     const t3 = Date.now();
     cache.listCreate(category, ...dbRes.products); // sets products array into cache under the name of category
     console.log(t3 - t1, 'ms');
-    return dbRes.products
+    return dbRes.products;
   },
 
   // returns all existing categories in DB
   getCategories: async (args, parent, info) => {
-    const data = await Category.find().populate("products");
+    const data = await Category.find().populate('products');
     return data;
   },
   // getCategoryBy
   // returns existing category in DB with corresponding ID
   getCategoryBy: async (args, parent, info) => {
-    const data = await Category.findOne({id: args.id}).populate('products');
+    const data = await Category.findOne({ id: args.id }).populate('products');
     return data;
   },
 
   // deletes existing Product in DB with corresponding ID
   deleteProduct: async (args, parent, info) => {
-    await Product.deleteOne({_id: args.id});
+    await Product.deleteOne({ _id: args.id });
     return;
   },
 
   // deletes existing Category in DB with corresponding ID
   deleteCategory: async (args, parent, info) => {
-    await Category.deleteOne({_id: args.id});
+    await Category.deleteOne({ _id: args.id });
     return;
-  }
+  },
 };

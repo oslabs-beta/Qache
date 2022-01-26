@@ -10,11 +10,13 @@ class Cache {
   constructor(options = { timeToLive: 1000 * 60 * 10, maxSize: 5 }) {
     //set timeToLive in options or default to 10min
     this.TTL = options.timeToLive; //10 minute default timeToLive
-    this.maxSize = options.maxSize;
+    this.maxSize = options.maxSize; // 5 node default maximum size
 
+    
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
+    console.log("Qachengo Cache Starting Up")
   }
 
   /**
