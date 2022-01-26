@@ -80,19 +80,17 @@ class Cache {
    */
   _removeFromQueueAndCache(node) {
     delete this.content[node.keyRef];
-    this._removeFromQueue(node);
+    if(!node.next){
+      node.prev.next = null
+      this.tail = node.prev
+    } else if(!node.prev){
+      node.next.prev = null
+      this.head = node.next
+    } else {
+      node.next.prev = node.prev
+      node.prev.next = node.next
+    }
     this.size--;
-  }
-
-  /**
-   * Deletes a node from the queue
-   * @param {object} node
-   */
-  _removeFromQueue(node) {
-    // point node's `prev` pointer to the appropriate node
-    this._detachNeighbor(node, 'prev');
-    // point node's `next` pointer to the appropriate node
-    this._detachNeighbor(node, 'next');
   }
 
   /**
@@ -181,7 +179,6 @@ class Cache {
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
       item.forEach((n) => this.content[listKey].value.data.push(n));
-      this.content[listKey].expires = Date.now() + this.TTL;
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
