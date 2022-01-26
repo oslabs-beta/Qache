@@ -46,16 +46,15 @@ module.exports = {
 
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    console.log("~~~~~~~~~~~~~~~~~~")
     cache.log()
     console.log("~~~~~~~~~~~~~~~~~~")
-    const t1 = Date.now();
+    const t1 = Date.now()
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
-      return cacheRes; // array of products
+      return cacheRes;
     } // if exists, returns the array of products
     const dbRes = await Category.findOne({ name: category }).populate(
       'products'
@@ -63,7 +62,7 @@ module.exports = {
     const t3 = Date.now();
     cache.listCreate(category, ...dbRes.products); // sets products array into cache under the name of category
     console.log(t3 - t1, 'ms');
-    return dbRes.products;
+    return dbRes.products
   },
 
   // returns all existing categories in DB
