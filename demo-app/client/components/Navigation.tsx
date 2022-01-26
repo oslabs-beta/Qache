@@ -47,13 +47,16 @@ const Navigation = () => {
             </a>
             <a onClick={showSidebar}>Deals</a>
             {/* change deals to link to deals page */}
-            <FaIcons.FaSearch className='search' />
-            <input
+            <div className='search'>
+              <input
               id='search'
               name='search'
               type='text'
               placeholder='What are you looking for?'
-            />
+              />
+              <FaIcons.FaSearch className='icon'/>
+            </div>
+            
           </div>
 
           <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
@@ -73,6 +76,7 @@ const Navigation = () => {
                     setProductMenu={setProductMenu}
                     roomMenu={roomMenu}
                     setRoomMenu={setRoomMenu}
+                    hideSidebar={hideSidebar}
                   />
                 );
               })}

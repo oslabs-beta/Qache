@@ -21,6 +21,16 @@ export const SidebarData = [
     iconOpened: <RiIcons.RiArrowDownSFill />,
     subNav: [
       {
+        title: 'Appliances',
+        path: '/products/appliances',
+        icon: <GiIcons.GiKnifeFork />,
+      },
+      {
+        title: 'Couches',
+        path: '/products/couches',
+        icon: <FaIcons.FaToiletPaper />,
+      },
+      {
         title: 'Furniture',
         path: '/products/furnitures',
         icon: <FaIcons.FaCouch />,
@@ -35,16 +45,6 @@ export const SidebarData = [
         path: '/products/storage',
         icon: <BiIcons.BiCabinet />,
       },
-      {
-        title: 'Appliances',
-        path: '/products/appliances',
-        icon: <GiIcons.GiKnifeFork />,
-      },
-      {
-        title: 'Bathroom',
-        path: '/products/bathroom',
-        icon: <FaIcons.FaToiletPaper />,
-      },
     ],
     cName: 'nav-text',
   },
@@ -56,14 +56,14 @@ export const SidebarData = [
     iconOpened: <RiIcons.RiArrowDownSFill />,
     subNav: [
       {
+        title: 'Bathroom',
+        path: '/rooms/bathroom',
+        icon: <FaIcons.FaToilet />,
+      },
+      {
         title: 'Bedroom',
         path: '/rooms/bedroom',
         icon: <FaIcons.FaBed />,
-      },
-      {
-        title: 'Living Room',
-        path: '/rooms/living-room',
-        icon: <GiIcons.GiSofa />,
       },
       {
         title: 'Kitchen',
@@ -71,9 +71,9 @@ export const SidebarData = [
         icon: <MdIcons.MdKitchen />,
       },
       {
-        title: 'Bathroom',
-        path: '/rooms/bathroom',
-        icon: <FaIcons.FaToilet />,
+        title: 'Living Room',
+        path: '/rooms/living-room',
+        icon: <GiIcons.GiSofa />,
       },
     ],
     cName: 'nav-text',

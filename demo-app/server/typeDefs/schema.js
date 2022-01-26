@@ -50,6 +50,8 @@ module.exports = buildSchema(`
   type Mutation {
     addProduct(product: AddProductInput): Product!
     addCategory(category: AddCategoryInput): Category!
+    deleteProduct(id: ID!): Boolean
+    deleteCategory(id: ID!): Boolean
   }
 
   input AddProductInput {

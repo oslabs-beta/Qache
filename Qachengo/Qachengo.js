@@ -319,7 +319,6 @@ class Cache {
   //              FILTEROBJECT - looks like - {username: "xyz", age: 23}
   listFetch(listKey, filterObject) {
     this.cleanUp(listKey);
-    console.log(listKey, filterObject);
     // Check if list exists, if not return null.
     if (this.content[listKey] === undefined) return null;
 
@@ -386,7 +385,6 @@ class Cache {
   cleanUp(key) {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
-      console.log(this.printTimeLeft(key));
       if (this.content[key].expires < Date.now()) {
         delete this.content[key];
         this.size--;
@@ -411,11 +409,18 @@ class Cache {
     return this.size === Object.keys(this.content).length;
   }
 
+<<<<<<< HEAD
   // wipe the cache
   clear() {
     this.content = {};
     this.size = 0;
     this.tail = this.head = null;
+=======
+  log() {
+    console.log(Object.keys(this.content));
+    console.log(`Size: ${this.size}`);
+    console.log(`Size is valid: ${this._isSizeValid()}`);
+>>>>>>> 4e500af7c27d285d34372728e569b11adf933de0
   }
 
   // **         SIDELINED         **
