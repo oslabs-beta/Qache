@@ -9,6 +9,7 @@ const SubMenu = ({
   setProductMenu,
   roomMenu,
   setRoomMenu,
+  hideSidebar,
 }) => {
   const [subnav, setSubnav] = useState(false);
 
@@ -37,7 +38,7 @@ const SubMenu = ({
       <Link
         className='sidebarLink'
         to={item.path}
-        onClick={item.subNav && showSubNav}
+        onClick={item.path === '#' ? item.subNav && showSubNav : hideSidebar}
       >
         <div>
           {item.icon}
@@ -59,6 +60,7 @@ const SubMenu = ({
               className='dropdownLink'
               to={item.path}
               key={'subItem' + index}
+              onClick={hideSidebar}
             >
               <span>{item.title}</span>
             </Link>

@@ -76,6 +76,7 @@ const Navigation = () => {
                     setProductMenu={setProductMenu}
                     roomMenu={roomMenu}
                     setRoomMenu={setRoomMenu}
+                    hideSidebar={hideSidebar}
                   />
                 );
               })}

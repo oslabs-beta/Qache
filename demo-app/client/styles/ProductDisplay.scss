@@ -3,6 +3,8 @@
 }
 .productDisplay-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   padding-left: 5%;
   padding-right: 5%;
@@ -13,11 +15,10 @@
   }
   
   img {
-    width: 100%;
+    width: 75%;
   }
   
   .cache-line {
-    justify-content: space-evenly;
     display: flex;
     width: 80%;
 
