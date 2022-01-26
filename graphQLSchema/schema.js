@@ -178,6 +178,7 @@ const rootValue = {
 
     cache.listCreate('users', ...normalResponse);
     console.log(`This call took ${Date.now() - t1}ms, coming from database`);
+    console.log(cache.head.value);
     return normalResponse;
   },
   getUserByUsername: async (args, parent, info) => {
