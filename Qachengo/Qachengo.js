@@ -3,7 +3,6 @@ class Node {
     this.keyRef = keyRef;
     this.value = value;
     this.prev = this.next = null;
-    this.expires = Date.now() + this.TTL;
   }
 }
 
@@ -12,8 +11,8 @@ class Cache {
     //set timeToLive in options or default to 10min
     this.TTL = options.timeToLive; //10 minute default timeToLive
     this.maxSize = options.maxSize;
-    // Where data, and key specific data lives
-    this.content = {}; // STORE OF DATA
+
+    this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
   }
@@ -38,10 +37,12 @@ class Cache {
     else if (this.size === this.maxSize) {
       this._removeFromQueueAndCache(this.head);
     }
-
+    if (!nodeInCache){
+      nodeInCache = new Node(key, value)
+      nodeInCache.expires = Date.now() + this.TTL
+    }
     // enqueue node if it exists, otherwise enqueue new node with value
-    this._enqueue(nodeInCache || new Node(key, value));
-
+    this._enqueue(nodeInCache);
     // add node to cache (enqueue)
     this.content[key] = this.tail;
     this.size++;

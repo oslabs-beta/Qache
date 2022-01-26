@@ -47,8 +47,8 @@ module.exports = {
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
     console.log(cache.content)
-    console.log("~~~~~~~~~~~~~~~~~~")
     cache.log()
+    console.log("~~~~~~~~~~~~~~~~~~")
     console.log("HEAD",cache.head,"TAIL", cache.tail)
     const t1 = Date.now();
     const { category } = args;
