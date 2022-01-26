@@ -53,7 +53,7 @@ module.exports = buildSchema(`
     deleteProduct(id: ID!): Boolean
     deleteCategory(id: ID!): Boolean
     updateProduct(id: ID!, name: String, description: String, imageUrl: String,
-      quantity: Int, price: Float, onSale: Boolean, category: [String!]): Product
+      quantity: Int, price: Float, onSale: Boolean, category: [String!]): PopulatedProducts
     updateCategory(id: ID!, name: String, products: [String]): Category
   }
 
