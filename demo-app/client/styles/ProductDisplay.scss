@@ -11,13 +11,13 @@
 
   h1 {
     width: 100%;
+    margin: 5px;
     text-align: center;
   }
 
   .cache-line {
     display: flex;
     width: 100%;
-    margin-top: 20px;
     justify-content: space-evenly;
 
     .lineGraphContainer{
