@@ -92,19 +92,23 @@ module.exports = {
 
   // patches existing Product in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateProduct: async (args, parent, info) => {
-    let { id } = args;
-    const updatedProduct = await Product.findOneAndUpdate({ _id: id }, args, {
-      new: true,
-    }).populate('category');
+    let { id } = args.product;
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: id },
+      args.product,
+      {
+        new: true,
+      }
+    ).populate('category');
     const categoryNames = [];
     updatedProduct.category.forEach((obj) => categoryNames.push(obj.name));
-    cache.listUpdate({ id }, args, ...categoryNames);
+    cache.listUpdate({ id }, args.products, ...categoryNames);
     return updatedProduct;
   },
 
   // patches existing Category in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateCategory: async (args, parent, info) => {
-    let { id, name, products } = args;
+    let { id, name, products } = args.category;
     let updatedCategory = await Category.findById(id);
     if (name) updatedCategory.name = name;
     if (products) updatedCategory.products = products;
