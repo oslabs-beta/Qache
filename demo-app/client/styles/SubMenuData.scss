@@ -8,16 +8,13 @@
   border-radius: 0.25rem;
   font-size: 2rem;
   color: black;
-
   &:hover {
     text-decoration: underline;
   }
-
   svg {
     position: relative;
     top: 0.25rem;
   }
-
   span {
     margin-left: 1rem;
   }
