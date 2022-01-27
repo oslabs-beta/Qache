@@ -134,7 +134,7 @@ class Qache {
         //if flag was never set off, remove item from list
         if (!missing) {
           const index = currentList.indexOf(item);
-          array.splice(index, 1);
+          currentList.splice(index, 1);
           if (unique) break;
         }
       }
