@@ -70,7 +70,7 @@ const config = {
     new HtmlWebpackPlugin({
       templateContent: ({ htmlWebpackPlugin }) =>
         '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' +
-        'Qachengo' +
+        'Qache' +
         '</title></head><body><div id="app"></div></body></html>',
       filename: 'index.html',
     }),

@@ -1,4 +1,4 @@
-const Cache = require('../../../Qachengo/Qachengo');
+const Cache = require('../../../Qache/Qache');
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 const { description } = require('../typeDefs/schema');

@@ -1,8 +1,8 @@
 const { buildSchema } = require('graphql');
-const Cache = require('../Qachengo/Qachengo');
+const Qache = require('../Qache/Qache');
 const gql = require('graphql-tag');
 
-const cache = new Cache();
+const cache = new Qache();
 
 const fakeTimeout = 1000;
 

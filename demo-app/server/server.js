@@ -7,7 +7,6 @@ require('dotenv').config();
 const schema = require('./typeDefs/schema');
 const resolvers = require('./resolvers/resolvers');
 
-
 const port = 3000;
 const app = express();
 
@@ -15,7 +14,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
-mongoose.connect(`mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'qachengo' });
+mongoose.connect(
+  `mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+  { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'qachengo' }
+);
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB!');
 });

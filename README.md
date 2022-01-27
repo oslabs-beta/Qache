@@ -1,7 +1,7 @@
-# Qachengo
+# Qache
 
-## What is Qachengo?
-Qachengo is a utility for handling server side caching of MongoDB queries made with GraphQL.
+## What is Qache?
+Qache is a utility class for handling server side caching of MongoDB queries made with GraphQL.
 
 ## Setting up the Dev Server, Demo, and Mongo DB
 1. Clone this repo.
