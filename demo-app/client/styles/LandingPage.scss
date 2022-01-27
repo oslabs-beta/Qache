@@ -17,7 +17,6 @@
     overflow: hidden;
     width: 50%;
   }
-
   img {
     object-fit: cover;
     flex-shrink: 0;
@@ -33,7 +32,6 @@
     top: 80%;
     height: 5rem;
     backdrop-filter: blur(25px);
-
     h2 {
       font-weight: 300;
     }
@@ -43,7 +41,6 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-
     h2 {
       margin: 0;
       font-size: 2rem;
