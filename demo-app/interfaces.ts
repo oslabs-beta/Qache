@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component } from 'react';
 
 export interface Product {
   id?: string;
@@ -18,43 +18,43 @@ export interface Metric {
   Bedroom?: {
     labels: string[];
     data: number[];
-  },
+  };
   Mattresses?: {
     labels: string[];
     data: number[];
-  },
+  };
   Furniture?: {
     labels: string[];
     data: number[];
-  },
+  };
   Storage?: {
     labels: string[];
     data: number[];
-  },
+  };
   'Living Room'?: {
     labels: string[];
     data: number[];
-  },
+  };
   Kitchen?: {
     labels: string[];
     data: number[];
-  },
+  };
   Bathroom?: {
     labels: string[];
     data: number[];
-  },
+  };
   Appliances?: {
     labels: string[];
     data: number[];
-  },
+  };
   Couches?: {
     labels: string[];
     data: number[];
-  },
+  };
   Deals?: {
     labels: string[];
     data: number[];
-  }
+  };
 }
 
 export interface Item {

@@ -50,7 +50,7 @@ const App = () => {
     Deals: {
       labels: [],
       data: [],
-    }
+    },
   });
 
   return (

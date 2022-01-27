@@ -13,18 +13,20 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
               <span>
                 <strong>$</strong>
                 <strong>
-                  <span className='onSale'>{(product.price).toFixed(2)}</span>
+                  <span className='onSale'>{product.price.toFixed(2)}</span>
                 </strong>
 
                 <strong className='newPrice'> $</strong>
                 <strong>
-                  <span className='newPrice'>{(Math.floor(((product.price)/2) * 100) / 100).toFixed(2)}</span>
+                  <span className='newPrice'>
+                    {(Math.floor((product.price / 2) * 100) / 100).toFixed(2)}
+                  </span>
                 </strong>
               </span>
             ) : (
               <strong className='noSale'>
                 <span>$</span>
-                {(product.price).toFixed(2)}
+                {product.price.toFixed(2)}
               </strong>
             )}
             {product.quantity ? (

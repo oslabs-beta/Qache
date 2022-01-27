@@ -34,7 +34,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
         category
       }
     }`,
-  };  
+  };
 
   useEffect(() => {
     if (category === 'Deals') {
@@ -51,18 +51,19 @@ const ProductDisplay = ({ props }: { props: any }) => {
             onSale
           }
         }`,
-      }
+      };
     }
     const t1 = Date.now(); // time before axios post starts
-    console.log('body inside useeffect', body)
+    console.log('body inside useeffect', body);
     axios
       .post<Product[]>('http://localhost:3000/graphql', body)
       .then(({ data }: AxiosResponse<any>) => {
-        console.log(data)
+        console.log(data);
         const t2 = Date.now();
         setSpeed([...speed, t2 - t1]);
         if (data.data.getProductsBy) setProductData(data.data.getProductsBy);
-        else if (data.data.filterProductsBy) setProductData(data.data.filterProductsBy);
+        else if (data.data.filterProductsBy)
+          setProductData(data.data.filterProductsBy);
         // setProductData(data.data.getProductsBy);
         console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
@@ -82,7 +83,6 @@ const ProductDisplay = ({ props }: { props: any }) => {
 
   return (
     <div className='productDisplay-container'>
-      
       <div className='cache-line'>
         <div className='lineGraphContainer'>
           <strong className='yLabel'>Server Latency</strong>
@@ -91,14 +91,29 @@ const ProductDisplay = ({ props }: { props: any }) => {
           <LineGraph metrics={metrics[category]} width={1000} height={500} />
         </div>
         <div className='talkingPoints'>
-          This Chart represents the <em>latency</em> to the server, where the content for this page was <em>fetched</em> from.<br/><br/>
-          When the server needs to receive data from the database, these fetches can take very <em>long</em> times.<br/><br/>
-          Feel free to click the refresh button at the top right, and experience the <em>speeds</em> our caching solution provides.<br/><br/>
-          Our library allows <em>caching data</em> per page, category, single pieces of information, whatever you need!<br/><br/>
-          In addition we allow support for mutations including <em>create, delete,</em> and <em>update</em> - where only the relevant data in the cache is updated, <em>immediately</em>!
+          This Chart represents the <em>latency</em> to the server, where the
+          content for this page was <em>fetched</em> from.
+          <br />
+          <br />
+          When the server needs to receive data from the database, these fetches
+          can take very <em>long</em> times.
+          <br />
+          <br />
+          Feel free to click the refresh button at the top right, and experience
+          the <em>speeds</em> our caching solution provides.
+          <br />
+          <br />
+          Our library allows <em>caching data</em> per page, category, single
+          pieces of information, whatever you need!
+          <br />
+          <br />
+          In addition we allow support for mutations including{' '}
+          <em>create, delete,</em> and <em>update</em> - where only the relevant
+          data in the cache is updated, <em>immediately</em>!
         </div>
       </div>
-      <br/><br/>
+      <br />
+      <br />
       {productData ? (
         <ProductDetails productData={productData} />
       ) : (
