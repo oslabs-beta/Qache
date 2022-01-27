@@ -366,4 +366,4 @@ class Qache {
   }
 }
 
-module.exports = Cache;
+module.exports = Qache;
