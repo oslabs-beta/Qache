@@ -6,7 +6,7 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
     <div className='products-wrap'>
       {productData.map((product, key) => (
         <div key={key} className='product-container'>
-          <img src={product.imageUrl} alt={product.name + ' product'} />
+          {<img src={product.imageUrl} alt={product.name + ' product'} />}
           <div className='product-info'>
             <h2>{product.name}</h2>
             {product.onSale ? (

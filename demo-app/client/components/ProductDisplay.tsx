@@ -54,17 +54,14 @@ const ProductDisplay = ({ props }: { props: any }) => {
       };
     }
     const t1 = Date.now(); // time before axios post starts
-    console.log('body inside useeffect', body);
     axios
       .post<Product[]>('http://localhost:3000/graphql', body)
       .then(({ data }: AxiosResponse<any>) => {
-        console.log(data);
         const t2 = Date.now();
         setSpeed([...speed, t2 - t1]);
         if (data.data.getProductsBy) setProductData(data.data.getProductsBy);
         else if (data.data.filterProductsBy)
           setProductData(data.data.filterProductsBy);
-        // setProductData(data.data.getProductsBy);
         console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
   }, [category, refresh]);
@@ -107,9 +104,9 @@ const ProductDisplay = ({ props }: { props: any }) => {
           pieces of information, whatever you need!
           <br />
           <br />
-          In addition we allow support for mutations including{' '}
-          <em>create, delete,</em> and <em>update</em> - where only the relevant
-          data in the cache is updated, <em>immediately</em>!
+          In addition we allow support for mutations including
+          <em> create, delete,</em> and <em>update</em> - where only the
+          relevant data in the cache is updated, <em>immediately!</em>
         </div>
       </div>
       <br />
@@ -117,7 +114,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
       {productData ? (
         <ProductDetails productData={productData} />
       ) : (
-        <h2>No items found</h2>
+        <strong>No items found</strong>
       )}
     </div>
   );
