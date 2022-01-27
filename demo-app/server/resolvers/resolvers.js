@@ -1,7 +1,6 @@
 const Qache = require('../../../Qache/Qache');
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
-const { description } = require('../typeDefs/schema');
 
 const cache = new Qache();
 
@@ -71,7 +70,7 @@ module.exports = {
     const data = await Category.find().populate('products');
     return data;
   },
-  // getCategoryBy
+
   // returns existing category in DB with corresponding ID
   getCategoryBy: async (args, parent, info) => {
     const data = await Category.findOne({ id: args.id }).populate('products');
@@ -92,19 +91,28 @@ module.exports = {
 
   // patches existing Product in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateProduct: async (args, parent, info) => {
-    let { id } = args;
-    const updatedProduct = await Product.findOneAndUpdate({ _id: id }, args, {
-      new: true,
-    }).populate('category');
+    let { id } = args.product;
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: id },
+      args.product,
+      {
+        new: true,
+      }
+    ).populate('category');
+
+    if (updatedProduct.onSale)
+      cache.listUpdate({ id }, updatedProduct, 'onSale');
+    else cache.listRemoveItem({ id }, 'onSale');
+
     const categoryNames = [];
     updatedProduct.category.forEach((obj) => categoryNames.push(obj.name));
-    cache.listUpdate({ id }, args, ...categoryNames);
+    cache.listUpdate({ id }, args.product, ...categoryNames);
     return updatedProduct;
   },
 
   // patches existing Category in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateCategory: async (args, parent, info) => {
-    let { id, name, products } = args;
+    let { id, name, products } = args.category;
     let updatedCategory = await Category.findById(id);
     if (name) updatedCategory.name = name;
     if (products) updatedCategory.products = products;
@@ -112,5 +120,17 @@ module.exports = {
       new: true,
     });
     return updatedCategory;
+  },
+
+  // filters existing Products based on onSale field
+  filterProductsBy: async (args, parent, info) => {
+    const { onSale } = args.filter;
+    const cacheRes = cache.listRange('onSale');
+    if (cacheRes) {
+      return cacheRes;
+    }
+    const filteredProducts = await Product.find({ onSale });
+    cache.listCreate('onSale', ...filteredProducts);
+    return filteredProducts;
   },
 };

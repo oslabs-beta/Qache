@@ -14,7 +14,7 @@ const Navigation = ({ props }: { props: any }) => {
     setRefresh,
     sidebar,
     setSidebar,
-    hideSidebar
+    hideSidebar,
   }: {
     refresh: boolean;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
@@ -60,8 +60,7 @@ const Navigation = ({ props }: { props: any }) => {
             >
               Rooms
             </a>
-            <a onClick={showSidebar}>Deals</a>
-            {/* change deals to link to deals page */}
+            <Link to='/deals'>Deals</Link>
             <div className='search'>
               <input
                 id='search'
