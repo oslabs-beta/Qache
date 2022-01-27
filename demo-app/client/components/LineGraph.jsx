@@ -54,9 +54,9 @@ const LineGraph = ({ metrics, width, height }) => {
   state.datasets[0].data = metrics.data;
 
   return (
-    <div>
+    <>
       <Line width={width} height={height} data={state} options={options} />
-    </div>
+    </>
   );
 };
 
