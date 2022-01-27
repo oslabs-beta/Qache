@@ -20,7 +20,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
   } = props;
   const [productData, setProductData] = useState<Product[]>([]);
   const [speed, setSpeed] = useState<number[]>([]);
-
+  const [imgurl, setimgurl] = useState<string>("")
   const body = {
     query: `
     {
@@ -56,6 +56,9 @@ const ProductDisplay = ({ props }: { props: any }) => {
     Storage:
       'https://www.ikea.com/ext/ingkadam/m/4ed152760bdcc582/original/PH180604.jpg?f=xl',
   };
+  useEffect(()=>{
+    setimgurl(images[category])
+  },[])
 
   useEffect(() => {
     const t1 = Date.now(); // time before axios post starts
@@ -86,7 +89,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
       <h1>{category}</h1>
       <div className='cache-line'>
         <div className='image-container'>
-          <img src={images[category]} alt={category + ' picture'} />
+          <img src={imgurl} alt={category + ' picture'} />
         </div>
         <LineGraph metrics={metrics[category]} width={500} height={500} />
       </div>

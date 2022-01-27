@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
+    "jest": "^27.4.7",
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "nodemon server"
+    "start": "nodemon server",
+    "test": "jest --watchAll"
   },
   "repository": {
     "type": "git",

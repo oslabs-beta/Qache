@@ -1,16 +1,26 @@
 .landingPage-container {
   display: flex;
   flex-direction: column;
-  padding-left: 15rem;
-  padding-right: 15rem;
-
+  
   .section-container {
     display: flex;
+    width: 90%;
+    justify-content: space-evenly;
     flex-direction: row;
+    padding: 0 5%;
   }
-
+  .imageContainer{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 50%;
+  }
   img {
-    width: 65%;
+    object-fit: cover;
+    flex-shrink: 0;
+    height: 80%;
   }
 
   .img-caption {
@@ -18,13 +28,10 @@
     justify-content: flex-start;
     align-items: center;
     position: absolute;
-    top: 37rem;
-    left: 20rem;
-    padding-left: 1rem;
-    padding-right: 5rem;
+    overflow: hidden;
+    top: 80%;
     height: 5rem;
     backdrop-filter: blur(25px);
-
     h2 {
       font-weight: 300;
     }
@@ -33,9 +40,7 @@
   .graph-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-
+    align-items: stretch;
     h2 {
       margin: 0;
       font-size: 2rem;

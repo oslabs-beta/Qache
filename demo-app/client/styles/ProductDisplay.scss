@@ -17,7 +17,10 @@
   .cache-line {
     display: flex;
     width: 100%;
+    margin-top: 20px;
     min-height: 300px;
+    max-height: 500px;
+    overflow: hidden;
     justify-content: space-around;
 
     .image-container {
@@ -25,15 +28,12 @@
       justify-content: center;
       align-items: center;
       overflow-y: hidden;
+      border-radius: 3px;
 
       img {
         width: 70%;
         object-fit: fill;
       }
-    }
-
-    div {
-      width: 40%;
     }
   }
 
