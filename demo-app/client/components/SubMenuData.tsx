@@ -68,6 +68,7 @@ const SubMenu = ({
                 key={'subItem' + index}
                 onClick={hideSidebar}
               >
+                <div className='subIcon'>{item.icon}</div>
                 <span>{item.title}</span>
               </Link>
             );

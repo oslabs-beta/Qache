@@ -1,10 +1,11 @@
-import { FaChair, FaToilet, FaToiletPaper, FaCouch, FaBed } from 'react-icons/fa';
+import { FaChair, FaToilet, FaCouch, FaBed } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';
 import { IoMdFlash } from 'react-icons/io';
 import { RiArrowUpSFill, RiArrowDownSFill } from 'react-icons/ri';
 import { BiCabinet } from 'react-icons/bi';
 import { GiKnifeFork, GiSofa } from 'react-icons/gi';
 import { MdKitchen } from 'react-icons/md';
+import { FiMonitor } from 'react-icons/fi';
 
 export const SidebarData = [
   {
@@ -28,7 +29,7 @@ export const SidebarData = [
       {
         title: 'Couches',
         path: '/products/couches',
-        icon: <FaToiletPaper />,
+        icon: <GiSofa />,
       },
       {
         title: 'Furniture',
@@ -73,7 +74,7 @@ export const SidebarData = [
       {
         title: 'Living Room',
         path: '/rooms/living-room',
-        icon: <GiSofa />,
+        icon: <FiMonitor />,
       },
     ],
     cName: 'nav-text',
