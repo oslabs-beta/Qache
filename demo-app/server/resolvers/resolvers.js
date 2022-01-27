@@ -1,9 +1,9 @@
-const Cache = require('../../../Qachengo/Qachengo');
+const Qache = require('../../../Qache/Qache');
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 const { description } = require('../typeDefs/schema');
 
-const cache = new Cache();
+const cache = new Qache();
 
 module.exports = {
   // creates new product and adds it to DB
