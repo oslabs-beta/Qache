@@ -1,13 +1,22 @@
 import { useState } from 'react';
 import '../styles/Navigation.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
+import { IoMdRefresh } from 'react-icons/io';
 import { SidebarData } from './SidebarData';
 import { IconContext } from 'react-icons';
 import SubMenu from './SubMenuData';
 
-const Navigation = () => {
+const Navigation = ({ props }: { props: any }) => {
+  const {
+    refresh,
+    setRefresh,
+  }: {
+    refresh: boolean;
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  } = props;
+
   const [sidebar, setSidebar] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
   const [roomMenu, setRoomMenu] = useState(false);
@@ -19,6 +28,8 @@ const Navigation = () => {
     if (title === 'Products') setProductMenu(true);
     if (title === 'Rooms') setRoomMenu(true);
   };
+
+  let location = useLocation();
 
   return (
     <>
@@ -49,14 +60,20 @@ const Navigation = () => {
             {/* change deals to link to deals page */}
             <div className='search'>
               <input
-              id='search'
-              name='search'
-              type='text'
-              placeholder='What are you looking for?'
+                id='search'
+                name='search'
+                type='text'
+                placeholder='What are you looking for?'
               />
-              <FaIcons.FaSearch className='icon'/>
+              <FaIcons.FaSearch className='icon' />
             </div>
-            
+            <button
+              className={location.pathname !== '/' ? 'active' : 'not-active'}
+              onClick={() => setRefresh(!refresh)}
+            >
+              <IoMdRefresh className='spinner' />
+              <span className='tooltip'>Qache more</span>
+            </button>
           </div>
 
           <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>

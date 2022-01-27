@@ -218,8 +218,6 @@ const rootValue = {
     cache.listPush(normalResponse, 'users');
     //set a key, username, to equal the user object
     cache.set(user.username, normalResponse);
-    // TODO: Currently, we are able to add a new node that will make cache.size > cache.maxSize, and we are appropriately removing the first entry to the cache. However, the node that becomes the head, has it's .next pointing to the new node inserted at the tail, instead of what was previously it's .next. Fix this!
-    cache.log();
     return normalResponse;
   },
 };

@@ -3,6 +3,7 @@ class Node {
     this.keyRef = keyRef;
     this.value = value;
     this.prev = this.next = null;
+    this.expires = Infinity;
   }
 }
 
@@ -12,15 +13,11 @@ class Cache {
     this.TTL = options.timeToLive; //10 minute default timeToLive
     this.maxSize = options.maxSize; // 5 node default maximum size
 
-    
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
-    console.log("Qachengo Cache Starting Up")
+    console.log('Qachengo Cache Starting Up');
   }
-
-
-
 
   get(key) {
     return this._getDataFromQueue(key);
@@ -38,7 +35,7 @@ class Cache {
     } else {
       //Check if a list exists for this key, if not, create one.
       if (this.content[listKey] === undefined) {
-        console.log("adding to queue and cache")
+        console.log('adding to queue and cache');
         this._addToQueueAndCache(listKey, []);
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
@@ -46,10 +43,10 @@ class Cache {
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
-  listRange(listKey, start = 0, end) {
+  listRange(listKey, start = 0, end = Infinity) {
     this.cleanUp(listKey);
     if (this.content[listKey] === undefined) return null;
-    const { value } = this.content[listKey]
+    const { value } = this.content[listKey];
     return end ? value.slice(start, end) : value.slice(start);
   }
 
@@ -104,7 +101,7 @@ class Cache {
       // **Cleanup protocol**
 
       //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].value
+      const currentList = this.content[key].value;
       for (const item of currentList) {
         let missing = false;
         //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -155,7 +152,7 @@ class Cache {
       }
       // **Cleanup protocol**
       //Loops through each list to find the item. using a unique identifier, such as the items id
-      const currentList = this.content[key].value
+      const currentList = this.content[key].value;
       for (const item of currentList) {
         let missing = false;
         //Loop through filterObject, and if one filter is missing set off flag, and skip to next item in list.
@@ -168,7 +165,7 @@ class Cache {
         //if flag was never set off, update item in list
         if (!missing) {
           Object.assign(item, newItem);
-          console.log(item)
+          console.log(item);
           if (unique) break;
         }
       }
@@ -246,19 +243,21 @@ class Cache {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
-        delete this.content[key];
-        this.size--;
+        this._removeFromQueueAndCache(this.content[key]);
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
         if (this.content[key].expires < Date.now()) {
-          delete this.content[key];
-          this.size--;
+          this._removeFromQueueAndCache(this.content[key]);
         }
       }
     }
+  }
+  //count amount of keys
+  size() {
+    return this.size;
   }
 
   // wipe the cache
@@ -266,10 +265,6 @@ class Cache {
     this.content = {};
     this.size = 0;
     this.tail = this.head = null;
-  }
-
-  _isSizeValid() {
-    return this.size === Object.keys(this.content).length;
   }
 
   log() {
@@ -287,28 +282,28 @@ class Cache {
    * @param {object} value
    */
   _addToQueueAndCache(key, value) {
-  let nodeInCache;
-  nodeInCache = this.content[key];
-  // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
-  if (nodeInCache) {
-    // we only remove from queue and NOT cache since we are just enqueueing this node
-    this._removeFromQueue(nodeInCache);
-    this.size--;
+    let nodeInCache;
+    nodeInCache = this.content[key];
+    // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
+    if (nodeInCache) {
+      // we only remove from queue and NOT cache since we are just enqueueing this node
+      this._removeFromQueue(nodeInCache);
+      this.size--;
+    }
+    // when the cache is full, we dequeue the head from the cache/queue
+    else if (this.size === this.maxSize) {
+      this._removeFromQueueAndCache(this.head);
+    }
+    if (nodeInCache === undefined) {
+      nodeInCache = new Node(key, value);
+      nodeInCache.expires = Date.now() + this.TTL;
+    }
+    // enqueue node if it exists, otherwise enqueue new node with value
+    this._enqueue(nodeInCache);
+    // add node to cache (enqueue)
+    this.content[key] = this.tail;
+    this.size++;
   }
-  // when the cache is full, we dequeue the head from the cache/queue
-  else if (this.size === this.maxSize) {
-    this._removeFromQueueAndCache(this.head);
-  }
-  if (nodeInCache === undefined){
-    nodeInCache = new Node(key, value)
-    nodeInCache.expires = Date.now() + this.TTL
-  }
-  // enqueue node if it exists, otherwise enqueue new node with value
-  this._enqueue(nodeInCache);
-  // add node to cache (enqueue)
-  this.content[key] = this.tail;
-  this.size++;
-}
 
   /**
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
@@ -337,28 +332,29 @@ class Cache {
     // queue is empty. point head & tail ➡ new Node
     else this.tail = this.head = node;
   }
-    /**
+  /**
    * Removes a node from the queue and deletes the corresponding data from the cache
    * @param {object} key
    */
-    _removeFromQueueAndCache(node) {
+  _removeFromQueueAndCache(node) {
     delete this.content[node.keyRef];
-    this._removeFromQueue(node)
+    this._removeFromQueue(node);
     this.size--;
   }
   _removeFromQueue(node) {
-    if(!node.next){
-      node.prev.next = null
-      this.tail = node.prev
-    } else if(!node.prev){
-      node.next.prev = null
-      this.head = node.next
+    if (!node.next && !node.prev) {
+      this.head = this.tail = null;
+    } else if (!node.next) {
+      node.prev.next = null;
+      this.tail = node.prev;
+    } else if (!node.prev) {
+      node.next.prev = null;
+      this.head = node.next;
     } else {
-      node.next.prev = node.prev
-      node.prev.next = node.next
+      node.next.prev = node.prev;
+      node.prev.next = node.next;
     }
   }
-
 
   _getDataFromQueue(key) {
     const nodeInCache = this.content[key];
@@ -369,7 +365,11 @@ class Cache {
     }
     // put newly accessed node at the tail of the list
     this._refresh(key);
-    return nodeInCache.value
+    return nodeInCache.value;
+  }
+
+  _isSizeValid() {
+    return this.size === Object.keys(this.content).length;
   }
 }
 

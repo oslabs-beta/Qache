@@ -6,48 +6,50 @@ import LandingPage from './components/LandingPage';
 import ProductDisplay from './components/ProductDisplay';
 
 const App = () => {
+  const [refresh, setRefresh] = useState(false);
+
   const [metrics, setMetrics] = useState<Metric>({
     Bedroom: {
       labels: [],
-      data: []
+      data: [],
     },
     Mattresses: {
       labels: [],
-      data: []
+      data: [],
     },
     Furniture: {
       labels: [],
-      data: []
+      data: [],
     },
     Storage: {
       labels: [],
-      data: []
+      data: [],
     },
-    "Living Room": {
+    'Living Room': {
       labels: [],
-      data: []
+      data: [],
     },
     Kitchen: {
       labels: [],
-      data: []
+      data: [],
     },
     Bathroom: {
       labels: [],
-      data: []
+      data: [],
     },
     Appliances: {
       labels: [],
-      data: []
+      data: [],
     },
     Couches: {
       labels: [],
-      data: []
-    }
+      data: [],
+    },
   });
 
   return (
     <>
-      <Navigation />
+      <Navigation props={{ refresh, setRefresh }} />
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route
@@ -55,9 +57,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Couches",
+                category: 'Couches',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -70,6 +73,7 @@ const App = () => {
                 category: 'Mattresses',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -79,9 +83,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Bedroom",
+                category: 'Bedroom',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -91,9 +96,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Furniture",
+                category: 'Furniture',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -103,9 +109,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Storage",
+                category: 'Storage',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -115,9 +122,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Appliances",
+                category: 'Appliances',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -127,9 +135,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Bathroom",
+                category: 'Bathroom',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -139,9 +148,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Living Room",
+                category: 'Living Room',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -151,9 +161,10 @@ const App = () => {
           element={
             <ProductDisplay
               props={{
-                category: "Kitchen",
+                category: 'Kitchen',
                 setMetrics,
                 metrics,
+                refresh,
               }}
             />
           }
@@ -162,7 +173,5 @@ const App = () => {
     </>
   );
 };
-// bedroom category : [ mem foam bed, spring bed, pillow, blanket, desk, nightstand]
-// mattresses category : [ mem foam bed, spring bed]
-// mem foam bed product: category: [ bedroomid, mattressesid ]
+
 export default App;
