@@ -16,7 +16,7 @@
     "url": "git+https://github.com/oslabs-beta/Qache.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/oslabs-beta/Qache/issues"
   },
