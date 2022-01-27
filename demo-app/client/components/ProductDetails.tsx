@@ -10,7 +10,9 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
           <div className='product-info'>
             <h2>{product.name}</h2>
             {product.quantity ? (
-              <span><strong>{product.quantity}</strong> in stock</span>
+              <span>
+                <strong>{product.quantity}</strong> in stock
+              </span>
             ) : (
               <strong>Out of stock</strong>
             )}

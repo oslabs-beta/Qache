@@ -4,7 +4,6 @@ import { Product, Metric } from '../../interfaces';
 import ProductDetails from './ProductDetails';
 import LineGraph from './LineGraph';
 import '../styles/ProductDisplay.scss';
-import { IoMdRefresh } from 'react-icons/io';
 
 const ProductDisplay = ({ props }: { props: any }) => {
   const {
@@ -91,9 +90,6 @@ const ProductDisplay = ({ props }: { props: any }) => {
     <div className='productDisplay-container'>
       
       <div className='cache-line'>
-        {/* <div className='image-container'>
-          <img src={imgurl} alt={category + ' picture'} />
-        </div> */}
         <div className='lineGraphContainer'>
           <strong className='yLabel'>Server Latency</strong>
           <strong className='xLabel'>Fetches</strong>

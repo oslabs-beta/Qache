@@ -4,10 +4,12 @@ import { Metric } from '../interfaces';
 import Navigation from './components/Navigation';
 import LandingPage from './components/LandingPage';
 import ProductDisplay from './components/ProductDisplay';
+import '../client/styles/Navigation.scss';
 
 const App = () => {
+  const [sidebar, setSidebar] = useState(false);
   const [refresh, setRefresh] = useState(false);
-
+  const hideSidebar = () => setSidebar(false);
   const [metrics, setMetrics] = useState<Metric>({
     Bedroom: {
       labels: [],
@@ -49,7 +51,20 @@ const App = () => {
 
   return (
     <>
-      <Navigation props={{ refresh, setRefresh }} />
+      <div
+        onClick={
+          sidebar
+            ? () => {
+                console.log('clicked');
+                hideSidebar();
+              }
+            : undefined
+        }
+        className={sidebar ? 'sidebar-overlay' : ''}
+      />
+      <Navigation
+        props={{ refresh, setRefresh, sidebar, setSidebar, hideSidebar }}
+      />
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route

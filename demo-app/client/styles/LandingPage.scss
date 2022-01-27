@@ -6,10 +6,8 @@
   }
   .section-container {
     display: flex;
-    width: 90%;
     justify-content: space-evenly;
     flex-direction: row;
-    padding: 0 5%;
   }
   .imageContainer{
     display: flex;
@@ -31,7 +29,7 @@
     align-items: center;
     position: absolute;
     overflow: hidden;
-    top: 80%;
+    top: 75%;
     height: 5rem;
     backdrop-filter: blur(25px);
     h2 {
