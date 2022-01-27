@@ -1,6 +1,6 @@
 {
   "name": "qache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Qache is a utility class for handling server side caching of MongoDB queries made with GraphQL.",
   "main": "Qache.js",
   "scripts": {
