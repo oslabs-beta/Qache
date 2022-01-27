@@ -11,14 +11,14 @@
     "url": "git+https://github.com/oslabs-beta/Qache.git"
   },
   "keywords": [
-    "['cache'",
-    "'qache'",
-    "'graphql'",
-    "'graphql-cache'",
-    "'simple",
-    "cache'",
-    "'oslabs'",
-    "'os-labs']"
+    "cache",
+    "qache",
+    "graphql",
+    "graphql-cache",
+    "simple",
+    "cache",
+    "oslabs",
+    "os-labs"
   ],
   "author": "Qache",
   "license": "MIT",
