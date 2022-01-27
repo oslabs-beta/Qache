@@ -101,7 +101,7 @@ module.exports = {
     ).populate('category');
 
     if (updatedProduct.onSale)
-      cache.listUpdate({ id }, updatedProduct, 'onSale');
+      cache.listUpsert(updatedProduct, { id }, 'onSale');
     else cache.listRemoveItem({ id }, 'onSale');
 
     const categoryNames = [];
