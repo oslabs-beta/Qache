@@ -6,7 +6,6 @@ const { description } = require('../typeDefs/schema');
 const cache = new Cache();
 
 module.exports = {
-
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
     const { name, description, imageUrl, quantity, price, onSale, category } =
@@ -25,7 +24,7 @@ module.exports = {
 
     newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
-      cache.listPush(newProduct ,category.name)
+      cache.listPush(newProduct, category.name);
       path.products.push(newProduct._id);
       await path.save();
     });
@@ -47,12 +46,13 @@ module.exports = {
 
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    cache.log()
-    console.log("~~~~~~~~~~~~~~~~~~")
-    const t1 = Date.now()
+    cache.log();
+    console.log('~~~~~~~~~~~~~~~~~~');
+    const t1 = Date.now();
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
+      console.log(cacheRes);
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
       return cacheRes;
@@ -63,55 +63,54 @@ module.exports = {
     const t3 = Date.now();
     cache.listCreate(category, ...dbRes.products); // sets products array into cache under the name of category
     console.log(t3 - t1, 'ms');
-    return dbRes.products
+    return dbRes.products;
   },
 
   // returns all existing categories in DB
   getCategories: async (args, parent, info) => {
-    const data = await Category.find().populate("products");
+    const data = await Category.find().populate('products');
     return data;
   },
   // getCategoryBy
   // returns existing category in DB with corresponding ID
   getCategoryBy: async (args, parent, info) => {
-    const data = await Category.findOne({id: args.id}).populate('products');
+    const data = await Category.findOne({ id: args.id }).populate('products');
     return data;
   },
 
   // deletes existing Product in DB with corresponding ID
   deleteProduct: async (args, parent, info) => {
-    await Product.deleteOne({_id: args.id});
+    await Product.deleteOne({ _id: args.id });
     return;
   },
 
   // deletes existing Category in DB with corresponding ID
   deleteCategory: async (args, parent, info) => {
-    await Category.deleteOne({_id: args.id});
+    await Category.deleteOne({ _id: args.id });
     return;
   },
 
   // patches existing Product in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateProduct: async (args, parent, info) => {
-    let {id, name, description, imageURL, quantity, price, onSale, category} = args;
-    let updatedProduct = await Product.findById(id);
-    if (name) updatedProduct.name = name;
-    if (description) updatedProduct.description = description;
-    if (imageURL) updatedProduct.imageURL = imageURL;
-    if (quantity) updatedProduct.quantity = quantity;
-    if (price) updatedProduct.price = price;
-    if (onSale) updatedProduct.onSale = onSale;
-    if (category) updatedProduct.category = category;
-    await Product.findOneAndUpdate({_id : id}, updatedProduct, {new: true});
+    let { id } = args;
+    const updatedProduct = await Product.findOneAndUpdate({ _id: id }, args, {
+      new: true,
+    }).populate('category');
+    const categoryNames = [];
+    updatedProduct.category.forEach((obj) => categoryNames.push(obj.name));
+    cache.listUpdate({ id }, args, ...categoryNames);
     return updatedProduct;
   },
 
   // patches existing Category in DB with corresponding ID, replacing chosen field(s) with inputted info
   updateCategory: async (args, parent, info) => {
-    let {id, name, products} = args;
+    let { id, name, products } = args;
     let updatedCategory = await Category.findById(id);
     if (name) updatedCategory.name = name;
     if (products) updatedCategory.products = products;
-    await Category.findOneAndUpdate({_id: id}, updatedCategory, {new: true});
+    await Category.findOneAndUpdate({ _id: id }, updatedCategory, {
+      new: true,
+    });
     return updatedCategory;
-  }
+  },
 };
