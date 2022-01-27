@@ -30,14 +30,14 @@ canvas{
     height: 110vh;
     top: -800px;
     left: 800px;
-	  transform: translateZ(-75px) scale(6);
+	  transform: translateZ(-60px) scale(5);
     z-index: -4;
   }
   .mountains{
     position: absolute;
     height: 100vh;
     top: 500px;
-    transform: translateZ(-50px) scale(5);
+    transform: translateZ(-40px) scale(5);
     z-index: -3;
   }
   .trees{
