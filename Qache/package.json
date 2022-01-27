@@ -1,0 +1,29 @@
+{
+  "name": "qache",
+  "version": "1.0.0",
+  "description": "Qache is a utility class for handling server side caching of MongoDB queries made with GraphQL.",
+  "main": "Qache.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oslabs-beta/Qache.git"
+  },
+  "keywords": [
+    "['cache'",
+    "'qache'",
+    "'graphql'",
+    "'graphql-cache'",
+    "'simple",
+    "cache'",
+    "'oslabs'",
+    "'os-labs']"
+  ],
+  "author": "Qache",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oslabs-beta/Qache/issues"
+  },
+  "homepage": "https://github.com/oslabs-beta/Qache#readme"
+}
