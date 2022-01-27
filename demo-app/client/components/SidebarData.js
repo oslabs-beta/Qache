@@ -1,49 +1,49 @@
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
-import * as IoIcons from 'react-icons/io';
-import * as RiIcons from 'react-icons/ri';
-import * as BiIcons from 'react-icons/bi';
-import * as GiIcons from 'react-icons/gi';
-import * as MdIcons from 'react-icons/md';
+import { FaChair, FaToilet, FaToiletPaper, FaCouch, FaBed } from 'react-icons/fa';
+import { AiFillHome } from 'react-icons/ai';
+import { IoMdFlash } from 'react-icons/io';
+import { RiArrowUpSFill, RiArrowDownSFill } from 'react-icons/ri';
+import { BiCabinet } from 'react-icons/bi';
+import { GiKnifeFork, GiSofa } from 'react-icons/gi';
+import { MdKitchen } from 'react-icons/md';
 
 export const SidebarData = [
   {
     title: 'Home',
     path: '/',
-    icon: <AiIcons.AiFillHome />,
+    icon: <AiFillHome />,
     cName: 'nav-text',
   },
   {
     title: 'Products',
     path: '#',
-    icon: <FaIcons.FaChair />,
-    iconClosed: <RiIcons.RiArrowUpSFill />,
-    iconOpened: <RiIcons.RiArrowDownSFill />,
+    icon: <FaChair />,
+    iconClosed: <RiArrowUpSFill />,
+    iconOpened: <RiArrowDownSFill />,
     subNav: [
       {
         title: 'Appliances',
         path: '/products/appliances',
-        icon: <GiIcons.GiKnifeFork />,
+        icon: <GiKnifeFork />,
       },
       {
         title: 'Couches',
         path: '/products/couches',
-        icon: <FaIcons.FaToiletPaper />,
+        icon: <FaToiletPaper />,
       },
       {
         title: 'Furniture',
         path: '/products/furnitures',
-        icon: <FaIcons.FaCouch />,
+        icon: <FaCouch />,
       },
       {
         title: 'Mattresses',
         path: '/products/mattresses',
-        icon: <FaIcons.FaBed />,
+        icon: <FaBed />,
       },
       {
         title: 'Storage',
         path: '/products/storage',
-        icon: <BiIcons.BiCabinet />,
+        icon: <BiCabinet />,
       },
     ],
     cName: 'nav-text',
@@ -51,29 +51,29 @@ export const SidebarData = [
   {
     title: 'Rooms',
     path: '#',
-    icon: <FaIcons.FaBed />,
-    iconClosed: <RiIcons.RiArrowUpSFill />,
-    iconOpened: <RiIcons.RiArrowDownSFill />,
+    icon: <FaBed />,
+    iconClosed: <RiArrowUpSFill />,
+    iconOpened: <RiArrowDownSFill />,
     subNav: [
       {
         title: 'Bathroom',
         path: '/rooms/bathroom',
-        icon: <FaIcons.FaToilet />,
+        icon: <FaToilet />,
       },
       {
         title: 'Bedroom',
         path: '/rooms/bedroom',
-        icon: <FaIcons.FaBed />,
+        icon: <FaBed />,
       },
       {
         title: 'Kitchen',
         path: '/rooms/kitchen',
-        icon: <MdIcons.MdKitchen />,
+        icon: <MdKitchen />,
       },
       {
         title: 'Living Room',
         path: '/rooms/living-room',
-        icon: <GiIcons.GiSofa />,
+        icon: <GiSofa />,
       },
     ],
     cName: 'nav-text',
@@ -81,7 +81,7 @@ export const SidebarData = [
   {
     title: 'Deals',
     path: '/deals',
-    icon: <IoIcons.IoMdFlash />,
+    icon: <IoMdFlash />,
     cName: 'nav-text',
   },
 ];

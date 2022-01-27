@@ -11,6 +11,8 @@ import {
 
 import { Line } from 'react-chartjs-2';
 
+import { Metric, Dataset } from '../../interfaces';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,8 +23,19 @@ ChartJS.register(
   Legend
 );
 
-const LineGraph = ({ metrics, width, height }) => {
-  const state = {
+const LineGraph = ({
+  metrics,
+  width,
+  height,
+}: {
+  metrics: Metric;
+  width: number;
+  height: number;
+}) => {
+  const state: {
+    labels: string[] | undefined;
+    datasets: Dataset[];
+  } = {
     labels: [],
     datasets: [
       {

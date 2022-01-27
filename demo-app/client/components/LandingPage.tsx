@@ -22,7 +22,7 @@ const LandingPage = () => {
             <LineGraph
               metrics={{
                 labels: ['1', '2', '3', '4', '5', '6'],
-                data: [645, 272, 80, 81, 80, 79],
+                data: [225, 20, 33, 25, 14, 20],
               }}
               width={500}
               height={400}
