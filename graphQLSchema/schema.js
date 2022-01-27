@@ -1,5 +1,5 @@
 const { buildSchema } = require('graphql');
-const Qache = require('../Qachengo/Qachengo');
+const Qache = require('../Qache/Qache');
 const gql = require('graphql-tag');
 
 const cache = new Qache();

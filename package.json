@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oslabs-beta/QachenGo.git"
+    "url": "git+https://github.com/oslabs-beta/Qache.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oslabs-beta/QachenGo/issues"
+    "url": "https://github.com/oslabs-beta/Qache/issues"
   },
-  "homepage": "https://github.com/oslabs-beta/QachenGo#readme",
+  "homepage": "https://github.com/oslabs-beta/Qache#readme",
   "dependencies": {
     "express": "^4.17.2",
     "express-graphql": "^0.12.0",

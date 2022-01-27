@@ -23,7 +23,7 @@ const testUsers = [
   { username: 'stebed', firstName: 'steven', lastName: 'du', age: 26 },
 ];
 
-describe('Qachengo Tests', () => {
+describe('Qache Tests', () => {
   describe('Node', () => {
     let node;
     beforeEach(() => {
