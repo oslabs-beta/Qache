@@ -97,12 +97,18 @@ const ProductDisplay = ({ props }: { props: any }) => {
         <div className='lineGraphContainer'>
           <strong className='yLabel'>Server Latency</strong>
           <strong className='xLabel'>Fetches</strong>
-          <strong className='title'>Cache Speed</strong>
+          <strong className='title'>Cache Speed for {category}</strong>
           <LineGraph metrics={metrics[category]} width={1000} height={500} />
         </div>
-        <div className='talkingPoints'>Hi everyone, my name is Steven, and I would like to introduce you to our modular caching system</div>
+        <div className='talkingPoints'>
+          This Chart represents the <em>latency</em> to the server, where the content for this page was <em>fetched</em> from.<br/><br/>
+          When the server needs to receive data from the database, these fetches can take very <em>long</em> times.<br/><br/>
+          Feel free to click the refresh button at the top right, and experience the <em>speeds</em> our caching solution provides.<br/><br/>
+          Our library allows <em>caching data</em> per page, category, single pieces of information, whatever you need!<br/><br/>
+          In addition we allow support for mutations including <em>create, delete,</em> and <em>update</em> - where only the relevant data in the cache is updated, <em>immediately</em>!
+        </div>
       </div>
-      <h1>{category}</h1>
+      <br/><br/>
       {productData ? (
         <ProductDetails productData={productData} />
       ) : (
