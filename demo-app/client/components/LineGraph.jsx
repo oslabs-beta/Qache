@@ -54,7 +54,7 @@ const LineGraph = ({ metrics, width, height }) => {
   state.datasets[0].data = metrics.data;
 
   return (
-    <div>
+    <div style={{overflow: "hidden"}}>
       <Line width={width} height={height} data={state} options={options} />
     </div>
   );

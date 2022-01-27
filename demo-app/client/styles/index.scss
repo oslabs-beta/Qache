@@ -15,7 +15,10 @@ body {
   width: 100vw;
   background-color: rgb(42, 58, 69);
 }
-
+canvas{
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
 #app{
   height: 100vh;
   overflow-x: hidden;
