@@ -1,11 +1,4 @@
-class Node {
-  constructor(keyRef, value) {
-    this.keyRef = keyRef;
-    this.value = value;
-    this.prev = this.next = null;
-    this.expires = Infinity;
-  }
-}
+const Node = require('./Node');
 
 class Cache {
   constructor(options = { timeToLive: 1000 * 60 * 10, maxSize: 5 }) {
