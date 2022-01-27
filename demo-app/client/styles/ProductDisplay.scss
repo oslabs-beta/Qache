@@ -16,11 +16,17 @@
 
   .cache-line {
     display: flex;
-    width: 100%;
-    min-height: 300px;
-    max-height: 500px;
     overflow: hidden;
-    justify-content: space-around;
+    width: 100%;
+    justify-content: space-evenly;
+
+    .lineGraphContainer{
+      overflow: hidden;
+      canvas{
+        width: 400px;
+        height: 400px;
+      }
+    }
 
     .image-container {
       display: flex;
@@ -30,8 +36,9 @@
       border-radius: 3px;
 
       img {
-        width: 70%;
-        object-fit: fill;
+        object-fit: cover;
+        width: 400px;
+        height: 400px;
       }
     }
   }
