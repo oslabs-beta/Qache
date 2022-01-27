@@ -12,5 +12,5 @@
     "jsx": "react-jsx",
     "suppressImplicitAnyIndexErrors": true,
   },
-  "include": ["client/*/*", "src", "index.d.ts"]
+  "include": ["client/*", "src", "index.d.ts"]
 }

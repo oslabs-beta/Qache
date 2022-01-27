@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import '../styles/Navigation.scss';
 import { Link, useLocation } from 'react-router-dom';
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
+import { FaBars, FaSearch } from 'react-icons/fa';
+import { AiOutlineClose } from 'react-icons/ai';
 import { IoMdRefresh } from 'react-icons/io';
 import { SidebarData } from './SidebarData';
 import { IconContext } from 'react-icons';
@@ -12,17 +12,21 @@ const Navigation = ({ props }: { props: any }) => {
   const {
     refresh,
     setRefresh,
+    sidebar,
+    setSidebar,
+    hideSidebar
   }: {
     refresh: boolean;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    sidebar: boolean;
+    setSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+    hideSidebar: () => void;
   } = props;
 
-  const [sidebar, setSidebar] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
   const [roomMenu, setRoomMenu] = useState(false);
 
   const showSidebar = () => setSidebar(true);
-  const hideSidebar = () => setSidebar(false);
 
   const showSubMenu = (title: String) => {
     if (title === 'Products') setProductMenu(true);
@@ -37,7 +41,7 @@ const Navigation = ({ props }: { props: any }) => {
         <nav id='nav-container'>
           <div className='navbar'>
             <Link to='#' className='menu-bars'>
-              <FaIcons.FaBars onClick={showSidebar} />
+              <FaBars onClick={showSidebar} />
             </Link>
             <Link to='/'>Demo App</Link>
             <a
@@ -65,7 +69,7 @@ const Navigation = ({ props }: { props: any }) => {
                 type='text'
                 placeholder='What are you looking for?'
               />
-              <FaIcons.FaSearch className='icon' />
+              <FaSearch className='icon' />
             </div>
             <button
               className={location.pathname !== '/' ? 'active' : 'not-active'}
@@ -80,10 +84,10 @@ const Navigation = ({ props }: { props: any }) => {
             <ul className='nav-menu-items'>
               <li className='navbar-toggle' onClick={hideSidebar}>
                 <Link to='#' className='menu-bars'>
-                  <AiIcons.AiOutlineClose />
+                  <AiOutlineClose />
                 </Link>
               </li>
-              {SidebarData.map((item, index) => {
+              {SidebarData.map((item: any, index: number) => {
                 return (
                   <SubMenu
                     item={item}

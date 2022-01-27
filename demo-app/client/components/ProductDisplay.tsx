@@ -4,7 +4,6 @@ import { Product, Metric } from '../../interfaces';
 import ProductDetails from './ProductDetails';
 import LineGraph from './LineGraph';
 import '../styles/ProductDisplay.scss';
-import { IoMdRefresh } from 'react-icons/io';
 
 const ProductDisplay = ({ props }: { props: any }) => {
   const {

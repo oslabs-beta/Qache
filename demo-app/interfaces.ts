@@ -1,3 +1,5 @@
+import { Component } from "react";
+
 export interface Product {
   id?: string;
   name: string;
@@ -10,40 +12,63 @@ export interface Product {
 }
 
 export interface Metric {
-  [Bedroom:string]: {
+  labels?: string[];
+  data?: number[];
+
+  Bedroom?: {
     labels: string[];
     data: number[];
   },
-  Mattresses: {
+  Mattresses?: {
     labels: string[];
     data: number[];
   },
-  Furniture: {
+  Furniture?: {
     labels: string[];
     data: number[];
   },
-  Storage: {
+  Storage?: {
     labels: string[];
     data: number[];
   },
-  "Living Room": {
+  'Living Room'?: {
     labels: string[];
     data: number[];
   },
-  Kitchen: {
+  Kitchen?: {
     labels: string[];
     data: number[];
   },
-  Bathroom: {
+  Bathroom?: {
     labels: string[];
     data: number[];
   },
-  Appliances: {
+  Appliances?: {
     labels: string[];
     data: number[];
   },
-  Couches: {
+  Couches?: {
     labels: string[];
     data: number[];
   }
+}
+
+export interface Item {
+  title: string;
+  path: string;
+  icon: Component;
+  cName?: string;
+  iconClosed?: Component;
+  iconOpened?: Component;
+  subNav?: Item[] | undefined;
+}
+
+export interface Dataset {
+  label: string;
+  fill: boolean;
+  lineTension: number;
+  backgroundColor: string;
+  borderColor: string;
+  borderWidth: number;
+  data: number[] | undefined;
 }

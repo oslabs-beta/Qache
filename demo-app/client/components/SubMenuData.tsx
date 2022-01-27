@@ -1,6 +1,7 @@
 import '../styles/SubMenuData.scss';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Item } from '../../interfaces';
 
 const SubMenu = ({
   item,
@@ -10,6 +11,14 @@ const SubMenu = ({
   roomMenu,
   setRoomMenu,
   hideSidebar,
+}: {
+  item: Item;
+  sidebar: boolean;
+  productMenu: boolean;
+  setProductMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  roomMenu: boolean;
+  setRoomMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  hideSidebar: () => void;
 }) => {
   const [subnav, setSubnav] = useState(false);
 
@@ -22,15 +31,11 @@ const SubMenu = ({
   }, [sidebar]);
 
   useEffect(() => {
-    if (item.title === 'Products') {
-      setSubnav(true);
-    }
+    if (item.title === 'Products') setSubnav(true);
   }, [productMenu]);
 
   useEffect(() => {
-    if (item.title === 'Rooms') {
-      setSubnav(true);
-    }
+    if (item.title === 'Rooms') setSubnav(true);
   }, [roomMenu]);
 
   return (
@@ -53,19 +58,21 @@ const SubMenu = ({
         </div>
       </Link>
 
-      {subnav &&
-        item.subNav.map((item, index) => {
-          return (
-            <Link
-              className='dropdownLink'
-              to={item.path}
-              key={'subItem' + index}
-              onClick={hideSidebar}
-            >
-              <span>{item.title}</span>
-            </Link>
-          );
-        })}
+      {item.subNav
+        ? subnav &&
+          item.subNav.map((item: Item, index: number) => {
+            return (
+              <Link
+                className='dropdownLink'
+                to={item.path}
+                key={'subItem' + index}
+                onClick={hideSidebar}
+              >
+                <span>{item.title}</span>
+              </Link>
+            );
+          })
+        : null}
     </div>
   );
 };
