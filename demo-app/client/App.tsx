@@ -5,6 +5,9 @@ import Navigation from './components/Navigation';
 import LandingPage from './components/LandingPage';
 import ProductDisplay from './components/ProductDisplay';
 import '../client/styles/Navigation.scss';
+import moon from './images/p0.png';
+import mountains from './images/p2.png';
+import trees from './images/p3.png';
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -51,6 +54,9 @@ const App = () => {
 
   return (
     <>
+      <img className="layer1" src={moon} alt='Moon' />
+      <img className="layer2" src={mountains} alt='Mountains' />
+      <img className="layer3" src={trees} alt='Tree' /> 
       <div
         onClick={
           sidebar

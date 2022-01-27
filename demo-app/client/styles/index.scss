@@ -21,5 +21,43 @@ canvas{
 }
 
 #app{
-  height: 100%;
+  height: 100vh;
+  perspective: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: rgb(42,58,69);
+
+  .layer1{
+    z-index: -10;
+    transform: translateZ(-20px) scale(6);
+    position: absolute;
+    top: -200px;
+    left: 1600px;
+    opacity: .75;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .layer2{
+    z-index: -10;
+    transform: translateZ(-7px) scale(3);
+    top: 750px;
+    position: absolute;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .layer3{
+    z-index: -10;
+    transform: translateZ(-4px) scale(3) scaleY(1.5);
+    top: 1000px;
+    left: 250px;
+    position: absolute;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
