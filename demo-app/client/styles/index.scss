@@ -14,3 +14,11 @@ body {
   height: 100%;
   width: 100vw;
 }
+
+#app{
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  perspective: 10px;
+  z-index: -1;
+}
