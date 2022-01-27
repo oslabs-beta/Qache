@@ -44,7 +44,7 @@ class Qache {
   }
 
   // Push a newly created item to ONE OR MANY lists
-  listPush(item, ...listKeys) {
+  listPush(item, ...listKeys, upsert = {upsert: false}, filterObj) {
     //Remind user that a key is required for this method
     if (listKeys === undefined) {
       console.log('Error, listPush requires atleast one unique cache key');
@@ -55,7 +55,20 @@ class Qache {
           return null;
         }
         //We push that item into cache, THEN refresh expiration.
-        this.content[listKey].value.push(item);
+        if (upsert){
+          let found = false
+          for(const oldItem of this.content[listKey].value){
+            for (const key in filterObj){
+              if (item[key] === filterObj[key]){
+                found = true;
+                Object.assign(oldItem, item);
+              }
+            }
+          }
+          if(!found) this.content[listKey].value.push(item)
+        } else {
+          this.content[listKey].value.push(item);
+        }
         this.content[listKey].expires = Date.now() + this.TTL;
       }
     }
