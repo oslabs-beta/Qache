@@ -5,24 +5,25 @@ Qache is a utility class for handling server side caching of MongoDB queries mad
 
 ## Installation
 Using npm:
-```
+```shell
 $ npm i qache
 ```
 In Node.js:
-```
+
+```js
 // Load the Qache class
 var Qache = require('qache');
 
 // Instantiate a cache
 var cache = new Qache();
 ```
-## Properties
+## Qache Properties
 - `content`
 - `size`
 - `maxSize`
 - `TTL`
 
-## Methods
+## Qache Methods
 - `get(key)`
 - `set(key, value)`
 - `listCreate(listKey, ...item)`
