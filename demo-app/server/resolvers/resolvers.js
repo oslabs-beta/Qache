@@ -100,9 +100,14 @@ module.exports = {
       }
     ).populate('category');
 
-    if (updatedProduct.onSale)
-      cache.listUpdate({ id }, updatedProduct, 'onSale');
-    else cache.listRemoveItem({ id }, 'onSale');
+    if (updatedProduct.onSale){
+      console.log('upserting')
+      cache.listUpsert(updatedProduct, { id }, 'onSale');
+    }
+    else {
+      console.log('removing from cache');
+      cache.listRemoveItem({ id }, 'onSale');
+    }
 
     const categoryNames = [];
     updatedProduct.category.forEach((obj) => categoryNames.push(obj.name));
