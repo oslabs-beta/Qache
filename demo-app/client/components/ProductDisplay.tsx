@@ -89,15 +89,20 @@ const ProductDisplay = ({ props }: { props: any }) => {
 
   return (
     <div className='productDisplay-container'>
-      <h1>{category}</h1>
+      
       <div className='cache-line'>
-        <div className='image-container'>
+        {/* <div className='image-container'>
           <img src={imgurl} alt={category + ' picture'} />
-        </div>
+        </div> */}
         <div className='lineGraphContainer'>
-          <LineGraph metrics={metrics[category]} width={500} height={500} />
+          <strong className='yLabel'>Server Latency</strong>
+          <strong className='xLabel'>Fetches</strong>
+          <strong className='title'>Cache Speed</strong>
+          <LineGraph metrics={metrics[category]} width={1000} height={500} />
         </div>
+        <div className='talkingPoints'>Hi everyone, my name is Steven, and I would like to introduce you to our modular caching system</div>
       </div>
+      <h1>{category}</h1>
       {productData ? (
         <ProductDetails productData={productData} />
       ) : (

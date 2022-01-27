@@ -50,9 +50,6 @@ const App = () => {
   return (
     <>
       <Navigation props={{ refresh, setRefresh }} />
-      <img src="https://s.electerious.com/parallaxscene/p0.png" className='moon'/>
-      <img src="https://s.electerious.com/parallaxscene/p1.png" className='mountains'/>
-      <img src="https://s.electerious.com/parallaxscene/p3.png" className='trees'/>
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route

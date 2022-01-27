@@ -9,12 +9,11 @@ $offwhite: #fafafa;
   overflow: hidden;
   
   .navbar {
-    position: fixed;
-    top: 0;
+
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    height: 10%;
+    height: 100%;
     width: 100%;
     padding-left: 5%;
     padding-right: 5%;
@@ -65,13 +64,19 @@ $offwhite: #fafafa;
 
     .active {
       visibility: visible;
-      background: transparent;
+      background-color: transparent;
       border: none;
       cursor: pointer;
       font-size: xx-large;
 
       &:active {
         transform: translateY(1.5px);
+        background: none;
+        background-color: transparent;
+      }
+      
+      &:active .tooltip {
+        box-shadow: none;
       }
 
       .tooltip {
@@ -103,21 +108,6 @@ $offwhite: #fafafa;
           left: 50%;
           top: -1px;
           z-index: 400;
-        }
-
-        &:before {
-          content: '';
-          display: block;
-          position: absolute;
-          width: 10px;
-          height: 10px;
-          transform-origin: 50% 50%;
-          transform: rotate(45deg) translateX(-50%) translateZ(-1px);
-          background-color: #fff;
-          left: 50%;
-          top: 0px;
-          z-index: -1;
-          box-shadow: -1px -1px 20px #aaa;
         }
       }
 
