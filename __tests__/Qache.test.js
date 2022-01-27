@@ -1,5 +1,5 @@
-const Cache = require('../Qachengo/Qachengo');
-const Node = require('../Qachengo/Node');
+const Cache = require('../Qache/Qache');
+const Node = require('../Qache/Node');
 
 const testUsers = [
   {
