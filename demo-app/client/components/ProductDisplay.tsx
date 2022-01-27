@@ -20,9 +20,8 @@ const ProductDisplay = ({ props }: { props: any }) => {
   } = props;
   const [productData, setProductData] = useState<Product[]>([]);
   const [speed, setSpeed] = useState<number[]>([]);
-  const [imgurl, setimgurl] = useState<string>("")
 
-  const body = {
+  let body = {
     query: `
     {
       getProductsBy(category: "${category}") {
@@ -35,41 +34,36 @@ const ProductDisplay = ({ props }: { props: any }) => {
         category
       }
     }`,
-  };
-
-  const images = {
-    Appliances:
-      'https://www.ikea.com/ext/ingkadam/m/2dfd300945eee2a1/original/PH174849-crop001.jpg?f=xl',
-    Bathroom:
-      'https://www.ikea.com/ext/ingkadam/m/6594abb0e040ea4a/original/PH172455-crop001.jpg?f=xl',
-    Bedroom:
-      'https://www.ikea.com/ext/ingkadam/m/2ba55c1b7b299161/original/PH183297-crop001.jpg?f=xl',
-    Couches:
-      'https://www.ikea.com/ext/ingkadam/m/7bdf5ea5adddffed/original/PE833223-crop002.jpg?f=xl',
-    Furniture:
-      'https://www.ikea.com/images/paerup-series-e2badb03ddfba7881a1484dac6b39cc5.jpg?f=s',
-    Kitchen:
-      'https://www.ikea.com/ext/ingkadam/m/64edbbd36641ef7f/original/PH168793-crop001.jpg?f=m',
-    'Living Room':
-      'https://www.ikea.com/images/a-3-seat-sofa-with-chaise-lounge-a-shelving-unit-with-doors--04d392ffcd855db85a5373f188230c66.jpg',
-    Mattresses:
-      'https://www.ikea.com/us/en/images/products/morgedal-foam-mattress-firm-dark-gray__0382427_ph100120_s5.jpg?f=xl',
-    Storage:
-      'https://www.ikea.com/ext/ingkadam/m/4ed152760bdcc582/original/PH180604.jpg?f=xl',
-  };
-
-  useEffect(()=>{
-    setimgurl(images[category])
-  },[category])
+  };  
 
   useEffect(() => {
+    if (category === 'Deals') {
+      body = {
+        query: `{
+          filterProductsBy(filter: {
+            onSale: true
+          }) {
+            name
+            description
+            imageUrl
+            quantity
+            price
+            onSale
+          }
+        }`,
+      }
+    }
     const t1 = Date.now(); // time before axios post starts
+    console.log('body inside useeffect', body)
     axios
       .post<Product[]>('http://localhost:3000/graphql', body)
       .then(({ data }: AxiosResponse<any>) => {
+        console.log(data)
         const t2 = Date.now();
         setSpeed([...speed, t2 - t1]);
-        setProductData(data.data.getProductsBy);
+        if (data.data.getProductsBy) setProductData(data.data.getProductsBy);
+        else if (data.data.filterProductsBy) setProductData(data.data.filterProductsBy);
+        // setProductData(data.data.getProductsBy);
         console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
   }, [category, refresh]);

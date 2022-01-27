@@ -50,6 +50,10 @@ export interface Metric {
   Couches?: {
     labels: string[];
     data: number[];
+  },
+  Deals?: {
+    labels: string[];
+    data: number[];
   }
 }
 

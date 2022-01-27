@@ -19,8 +19,25 @@
 
     .product-info {
       display: flex;
-      width: 90%;
+      width: 100%;
       flex-direction: column;
+
+      strong {
+        color: red;
+
+        .onSale {
+          text-decoration: line-through;
+        }
+
+        
+      }
+      .newPrice {
+        color: green;
+      }
+
+      .noSale {
+        color: black;
+      }
     }
   }
 }
