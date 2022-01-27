@@ -1,13 +1,9 @@
 .landingPage-container {
   display: flex;
   flex-direction: column;
-  padding-left: 15rem;
-  padding-right: 15rem;
-  
-  h1 {
+  h1{
     text-align: center;
   }
-
   .section-container {
     display: flex;
     justify-content: space-evenly;

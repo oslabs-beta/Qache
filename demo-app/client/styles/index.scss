@@ -13,39 +13,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
-  // background-color: rgb(42, 58, 69);
 }
 
-// canvas{
-//   background-color: rgba(255, 255, 255, 0.8);
-//   z-index: 1;
-// }
-// #app{
-//   height: 100vh;
-//   overflow-x: hidden;
-//   overflow-y: auto;
-//   perspective: 10px;
-//   z-index: -1;
-//   .moon{
-//     position: absolute;
-//     height: 110vh;
-//     top: -800px;
-//     left: 800px;
-// 	  transform: translateZ(-75px) scale(6);
-//     z-index: -4;
-//   }
-//   .mountains{
-//     position: absolute;
-//     height: 100vh;
-//     top: 500px;
-//     transform: translateZ(-50px) scale(5);
-//     z-index: -3;
-//   }
-//   .trees{
-//     position: absolute;
-//     height: 100vh;
-//     top: -200px;
-//     transform: translateZ(-30px) scale(6);
-//     z-index: -2;
-//   }
-// }
+canvas{
+  background-color: #fafafa;
+  z-index: 1;
+}
+
+#app{
+  height: 100%;
+}

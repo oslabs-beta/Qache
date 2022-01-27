@@ -53,10 +53,6 @@ const LineGraph = ({
   const options = {
     responsive: true,
     plugins: {
-      title: {
-        display: true,
-        text: 'Cache Speed',
-      },
       legend: {
         display: false,
       },
