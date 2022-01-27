@@ -8,23 +8,36 @@
   flex-direction: column;
   padding-left: 5%;
   padding-right: 5%;
-  
+
   h1 {
     width: 100%;
     text-align: center;
   }
-  
-  img {
-    width: 75%;
-  }
-  
+
   .cache-line {
     display: flex;
-    width: 80%;
+    width: 100%;
+    min-height: 300px;
+    justify-content: space-around;
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-y: hidden;
+
+      img {
+        width: 70%;
+        object-fit: fill;
+      }
+    }
 
     div {
-      width: 50%;
+      width: 40%;
     }
   }
-}
 
+  img {
+    width: 100%;
+  }
+}
