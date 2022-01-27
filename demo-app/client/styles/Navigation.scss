@@ -140,14 +140,14 @@ $offwhite: #fafafa;
     left: -100%;
     transition: 750ms;
     background-color: $offwhite;
+    overflow-y: scroll !important;
   }
 
   .nav-menu.active {
-    padding-top: 1.5rem;
+    padding-top: 1.5%;
     left: 0;
     z-index: 10;
     transition: 250ms;
-    overflow: scroll;
   }
 
   ::-webkit-scrollbar {
