@@ -47,6 +47,10 @@ const App = () => {
       labels: [],
       data: [],
     },
+    Deals: {
+      labels: [],
+      data: [],
+    }
   });
 
   return (
@@ -177,6 +181,19 @@ const App = () => {
             <ProductDisplay
               props={{
                 category: 'Kitchen',
+                setMetrics,
+                metrics,
+                refresh,
+              }}
+            />
+          }
+        />
+        <Route
+          path='/deals'
+          element={
+            <ProductDisplay
+              props={{
+                category: 'Deals',
                 setMetrics,
                 metrics,
                 refresh,

@@ -4,6 +4,7 @@ module.exports = buildSchema(`
   type Query {
     getAllProducts: [PopulatedProducts]
     getProductsBy(category: String!): [Product]
+    filterProductsBy(filter: FilterProductsInput): [Product]
     getCategories: [PopulatedCategories]
     getCategoryBy(id: ID!): Category
   }
@@ -86,5 +87,9 @@ module.exports = buildSchema(`
     id: ID!
     name: String
     products: [String]
+  }
+
+  input FilterProductsInput {
+    onSale: Boolean
   }
 `);

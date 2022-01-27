@@ -9,14 +9,29 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
           <img src={product.imageUrl} alt={product.name + ' product'} />
           <div className='product-info'>
             <h2>{product.name}</h2>
-            {product.quantity ? (
+            {product.onSale ? (
               <span>
-                <strong>{product.quantity}</strong> in stock
+                <strong>$</strong>
+                <strong>
+                  <span className='onSale'>{(product.price).toFixed(2)}</span>
+                </strong>
+
+                <strong className='newPrice'> $</strong>
+                <strong>
+                  <span className='newPrice'>{(Math.floor(((product.price)/2) * 100) / 100).toFixed(2)}</span>
+                </strong>
               </span>
+            ) : (
+              <strong className='noSale'>
+                <span>$</span>
+                {(product.price).toFixed(2)}
+              </strong>
+            )}
+            {product.quantity ? (
+              <span>{product.quantity} in stock</span>
             ) : (
               <strong>Out of stock</strong>
             )}
-            <strong>${product.price}</strong>
             <p>{product.description}</p>
           </div>
         </div>
