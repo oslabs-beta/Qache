@@ -42,33 +42,46 @@ class Qache {
     const { value } = this.content[listKey];
     return end ? value.slice(start, end) : value.slice(start);
   }
-
-  // Push a newly created item to ONE OR MANY lists
-  listPush(item, ...listKeys, upsert = {upsert: false}, filterObj) {
+  //**Update an item if found, push item if not found.**
+  listUpsert(item, filterObj, ...listKeys){
     //Remind user that a key is required for this method
     if (listKeys === undefined) {
       console.log('Error, listPush requires atleast one unique cache key');
     } else {
-      //Check if a list exists for this key, if not, create one.
-      for (const listKey of listKeys) {
-        if (this.content[listKey] === undefined) {
-          return null;
-        }
-        //We push that item into cache, THEN refresh expiration.
-        if (upsert){
+        //Check if a list exists for this key, if not skip
+        for (const listKey of listKeys) {
+          if (this.content[listKey] === undefined) {
+            continue;
+          }
+          //We push that item into cache, THEN refresh expiration.
           let found = false
           for(const oldItem of this.content[listKey].value){
             for (const key in filterObj){
-              if (item[key] === filterObj[key]){
+              if (oldItem[key] === filterObj[key]){
                 found = true;
                 Object.assign(oldItem, item);
               }
             }
           }
           if(!found) this.content[listKey].value.push(item)
-        } else {
-          this.content[listKey].value.push(item);
+          this.content[listKey].expires = Date.now() + this.TTL;
         }
+      }
+    }
+  }
+  // Push a newly created item to ONE OR MANY lists
+  listPush(item, ...listKeys) {
+    //Remind user that a key is required for this method
+    if (listKeys === undefined) {
+      console.log('Error, listPush requires atleast one unique cache key');
+    } else {
+      //Check if a list exists for this key, if not, skip
+      for (const listKey of listKeys) {
+        if (this.content[listKey] === undefined) {
+          continue;
+        }
+        //We push that item into cache, THEN refresh expiration.
+        this.content[listKey].value.push(item);
         this.content[listKey].expires = Date.now() + this.TTL;
       }
     }
