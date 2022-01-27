@@ -50,10 +50,18 @@ const App = () => {
   });
 
   return (
-    <div
-      onClick={sidebar ? hideSidebar : undefined}
-      className={sidebar ? 'sidebar-overlay' : ''}
-    >
+    <>
+      <div
+        onClick={
+          sidebar
+            ? () => {
+                console.log('clicked');
+                hideSidebar();
+              }
+            : undefined
+        }
+        className={sidebar ? 'sidebar-overlay' : ''}
+      />
       <Navigation
         props={{ refresh, setRefresh, sidebar, setSidebar, hideSidebar }}
       />
@@ -180,7 +188,7 @@ const App = () => {
           }
         />
       </Routes>
-    </div>
+    </>
   );
 };
 

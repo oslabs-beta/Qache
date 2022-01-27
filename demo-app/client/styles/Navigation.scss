@@ -172,9 +172,10 @@ $offwhite: #fafafa;
       justify-content: flex-start;
       align-items: center;
       height: 5rem;
-      margin-left: 2rem;
+      margin-left: 1rem;
       font-size: 2rem;
       background-color: $offwhite;
+      cursor: pointer;
     }
   }
 }
@@ -188,5 +189,5 @@ $offwhite: #fafafa;
   background-color: rgba(0, 0, 0, 0.5);
   left: 0;
   top: 0;
-  z-index: auto;
+  z-index: 10;
 }
