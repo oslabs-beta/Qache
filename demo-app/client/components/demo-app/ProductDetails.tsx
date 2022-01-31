@@ -1,12 +1,23 @@
-import { Product } from '../../interfaces';
-import '../styles/ProductDetails.scss';
+import { Product } from '../../../interfaces';
+import '../../styles/demo-styles/ProductDetails.scss';
 
 const ProductDetails = ({ productData }: { productData: Product[] }) => {
   return (
     <div className='products-wrap'>
       {productData.map((product, key) => (
         <div key={key} className='product-container'>
-          {<img src={product.imageUrl} alt={product.name + ' product'} />}
+          {product.onSale ? (
+            <>
+              <span className='sale'>
+                <strong>50% OFF</strong>
+              </span>
+              <img src={product.imageUrl} alt={product.name + ' product'} />
+            </>
+          ) : (
+            <>
+              <img src={product.imageUrl} alt={product.name + ' product'} />
+            </>
+          )}
           <div className='product-info'>
             <h2>{product.name}</h2>
             {product.onSale ? (

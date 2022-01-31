@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
-import { Product, Metric } from '../../interfaces';
+import { Product, Metric } from '../../../interfaces';
 import ProductDetails from './ProductDetails';
 import LineGraph from './LineGraph';
-import '../styles/ProductDisplay.scss';
+import '../../styles/demo-styles/ProductDisplay.scss';
 
 const ProductDisplay = ({ props }: { props: any }) => {
   const {
