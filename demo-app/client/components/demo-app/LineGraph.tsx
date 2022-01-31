@@ -11,7 +11,7 @@ import {
 
 import { Line } from 'react-chartjs-2';
 
-import { Metric, Dataset } from '../../interfaces';
+import { Metric, Dataset } from '../../../interfaces';
 
 ChartJS.register(
   CategoryScale,

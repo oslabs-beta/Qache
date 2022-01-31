@@ -1,6 +1,6 @@
-import '../styles/LandingPage.scss';
+import '../../styles/demo-styles/LandingPage.scss';
 import LineGraph from './LineGraph';
-import storage from '../images/storage.jpg';
+import storage from '../../images/storage.jpg';
 
 const LandingPage = () => {
   return (
