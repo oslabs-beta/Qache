@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Metric } from '../interfaces';
-import Navigation from './components/Navigation';
-import LandingPage from './components/LandingPage';
-import ProductDisplay from './components/ProductDisplay';
-import '../client/styles/Navigation.scss';
+import Navigation from './components/demo-app/Navigation';
+import LandingPage from './components/demo-app/LandingPage';
+import ProductDisplay from './components/demo-app/ProductDisplay';
+import '../client/styles/demo-styles/Navigation.scss';
+import Navbar from './components/home/Navbar';
+import Introduction from './components/home/Introduction';
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -50,12 +52,17 @@ const App = () => {
     Deals: {
       labels: [],
       data: [],
-    }
+    },
   });
 
   return (
     <>
-      <div
+    <Navbar />
+    <Routes>
+      <Route path='/' element={<Introduction />} />
+    </Routes>
+    </>)
+      {/* <div
         onClick={
           sidebar
             ? () => {
@@ -202,8 +209,8 @@ const App = () => {
           }
         />
       </Routes>
-    </>
-  );
+    </> */}
+  // );
 };
 
 export default App;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../styles/Navigation.scss';
+import '../../styles/demo-styles/Navigation.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaSearch } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';

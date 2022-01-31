@@ -1,7 +1,7 @@
-import '../styles/SubMenuData.scss';
+import '../../styles/demo-styles/SubMenuData.scss';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Item } from '../../interfaces';
+import { Item } from '../../../interfaces';
 
 const SubMenu = ({
   item,
