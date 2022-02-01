@@ -46,6 +46,11 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
               <strong>Out of stock</strong>
             )}
             <p>{product.description}</p>
+            <button onClick={() => {
+              /* Add to cart button: when clicked, sends product.id to cart
+              which should add that product to the cart for checkout */
+
+            }}>Add to cart</button>
           </div>
         </div>
       ))}

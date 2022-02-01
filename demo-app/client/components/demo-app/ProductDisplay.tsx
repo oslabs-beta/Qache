@@ -64,7 +64,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
           setProductData(data.data.filterProductsBy);
         console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
-  }, [category, refresh]);
+    }, [category, refresh]);
 
   useEffect(() => {
     if (speed.length) {
