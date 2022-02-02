@@ -1,0 +1,79 @@
+@import '../variables.scss';
+
+.navbar-container {
+  display: flex;
+  position: sticky;
+  padding-right: 1%;
+  padding-left: 1%;
+  top: 0;
+  z-index: 1;
+  background-color: $black;
+
+  .left-nav,
+  .right-nav {
+    display: flex;
+    width: 50%;
+    max-width: 50%;
+
+    .image-container {
+      display: flex;
+      width: 25%;
+      img {
+        height: 100%;
+        object-fit: contain;
+        position: absolute;
+        box-sizing: border-box;
+        vertical-align: middle;
+      }
+    }    
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .nav-link {
+        text-decoration: none;
+        font-size: large;
+        font-weight: 550;
+        color: $white;
+        display: block;
+        position: relative;
+        padding: 0.5rem 0;
+        margin-left: 2rem;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 0.1rem;
+          background-color: $cyan;
+          transition: opacity $quick, transform $quick;
+          opacity: 1;
+          transform: scale(0);
+          transform-origin: center;
+        }
+        
+        &:hover, &:hover::after, &:focus::after {
+          color: $cyan;
+          transform: scale(1);
+        }
+      }
+    }
+
+    .nav-list:nth-child(1) {
+      justify-content: flex-end;
+
+      .nav-icons {
+        margin-right: 1rem;
+
+        path:hover, svg:hover {
+          fill: $cyan;
+          transition: fill $quick ease-in;
+        }
+      }
+    }
+  }
+}
