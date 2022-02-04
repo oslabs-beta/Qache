@@ -7,7 +7,7 @@ const cache = new Qache();
 module.exports = {
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
-    const { name, description, imageUrl, quantity, price, onSale, category } =
+    const { name, description, imageUrl, quantity, price, onSale, category, inCart } =
       args.product;
 
     // creates new product in DB
@@ -19,6 +19,7 @@ module.exports = {
       price,
       onSale,
       category,
+      inCart
     });
 
     newProduct.category.forEach(async (id) => {
@@ -122,15 +123,26 @@ module.exports = {
     return updatedCategory;
   },
 
-  // filters existing Products based on onSale field
+  // filters existing Products based on onSale/inCart field
   filterProductsBy: async (args, parent, info) => {
-    const { onSale } = args.filter;
-    const cacheRes = cache.listRange('onSale');
-    if (cacheRes) {
-      return cacheRes;
+    const { onSale, inCart } = args.filter;
+    let cacheRes;
+    // if (onSale) {
+    //   cacheRes = cache.listRange('onSale');
+    // } else if (inCart) {
+    //   cacheRes = cache.listRange('inCart');
+    // }
+    // if (cacheRes) {
+    //   return cacheRes;
+    // }
+    let filteredProducts;
+    if (onSale) {
+      filteredProducts = await Product.find({ onSale });
+      // cache.listCreate('onSale', ...filteredProducts);
+    } else if (inCart) {
+      filteredProducts = await Product.find({inCart});
+      // cache.listCreate('inCart', ...filteredProducts);
     }
-    const filteredProducts = await Product.find({ onSale });
-    cache.listCreate('onSale', ...filteredProducts);
     return filteredProducts;
   },
 };

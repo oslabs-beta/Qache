@@ -54,6 +54,10 @@ const App = () => {
       labels: [],
       data: [],
     },
+    Cart: {
+      labels: [],
+      data: []
+    }
   });
 
   return (
@@ -209,7 +213,10 @@ const App = () => {
             />
           }
         />
-        <Route path='/cart' element={<Cart props={{}}/>}/>
+        <Route path='/cart' element={<Cart props={{category: 'Cart',
+                setMetrics,
+                metrics,
+                refresh,}}/>}/>
       </Routes>
     </>
   );

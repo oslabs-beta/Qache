@@ -18,6 +18,7 @@ module.exports = buildSchema(`
     price: Float!
     onSale: Boolean!
     category: [String!]!
+    inCart: Boolean
   }
 
   type PopulatedProducts {
@@ -29,6 +30,7 @@ module.exports = buildSchema(`
     price: Float!
     onSale: Boolean!
     category: [Category]!
+    inCart: Boolean
   }
 
   type Category {
@@ -46,6 +48,7 @@ module.exports = buildSchema(`
     price: Float!
     onSale: Boolean!
     products: [Product]!
+    inCart: Boolean
   }
 
   type Mutation {
@@ -65,6 +68,7 @@ module.exports = buildSchema(`
     price: Float!
     onSale: Boolean!
     category: [String!]!
+    inCart: Boolean
   }
 
   input AddCategoryInput {
@@ -81,6 +85,7 @@ module.exports = buildSchema(`
     price: Float
     onSale: Boolean
     category: [String!]
+    inCart: Boolean
   }
 
   input UpdateCategoryInput {
@@ -91,5 +96,6 @@ module.exports = buildSchema(`
 
   input FilterProductsInput {
     onSale: Boolean
+    inCart: Boolean
   }
 `);

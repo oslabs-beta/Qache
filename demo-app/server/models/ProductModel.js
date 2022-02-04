@@ -8,6 +8,7 @@ const productSchema = new Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   onSale: { type: Boolean, required: true },
+  inCart: {type: Boolean, required: true},
   category: [{ type: Schema.Types.ObjectId, ref: 'category', required: true }],
 });
 
