@@ -53,6 +53,10 @@ const App = () => {
       labels: [],
       data: [],
     },
+    Cart: {
+      labels: [],
+      data: []
+    }
   });
 
   return (
@@ -208,6 +212,15 @@ const App = () => {
             />
           }
         />
+<<<<<<< Updated upstream
+=======
+        <Route path='/cart' element={<Cart props={{
+          category: 'Cart',
+          setMetrics,
+          metrics,
+          refresh
+        }}/>}/>
+>>>>>>> Stashed changes
       </Routes>
     </> */}
   // );
