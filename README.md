@@ -1,3 +1,5 @@
+<p align="center" style="width: 1000px; height: 600px;"><img src="./demo-app/client/images/transparentBG.png" width='1000' style="margin-top: 10px;"></p>
+
 # Qache
 
 ## What is Qache?
