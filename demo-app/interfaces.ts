@@ -14,11 +14,11 @@ export interface Product {
 }
 
 export interface AddButton {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: React.MouseEventHandler;
 }
 
 export interface RemoveButton {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: React.MouseEventHandler;
 }
 
 export interface Metric {

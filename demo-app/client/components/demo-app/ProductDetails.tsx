@@ -32,8 +32,9 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
   const firstUpdate = useRef(true);
   const [clickedButton, setClickedButton] = useState<string>();
   const [addOrRemove, setAddOrRemove] = useState<boolean>();
-  const addItem = (e: React.MouseEvent<HTMLButtonElement>, product: Product) => {
+  const addItem = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
+    console.log("is this working")
     setClickedButton(product.id);
   }
   /* Add to or remove from cart hook: when clicked, sends product.id to cart
@@ -44,8 +45,8 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
       return;
     }
     const body = {
-      query: `{
-        mutation {
+      query: 
+        `mutation {
           updateProduct (product: {
             id: "${clickedButton}"
             inCart: ${addOrRemove}
@@ -58,12 +59,12 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
             onSale
             id
           }
-        }
-      }`
+        }`
     }
     axios
-      .post('http://localhost:3000/graphql', body)
+      .post<Product[]>('http://localhost:3000/graphql', body)
       .then(res => console.log('this is res', res))
+      .catch((err) => {throw {error: err}})
   }, [clickedButton])
   // /* Remove from cart button: when clicked, sends product.id to cart
   // which should remove that product from the cart */
@@ -123,6 +124,7 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
               setAddOrRemove(false)
               addItem(e, product)
               }}></RemoveFromCart>
+              <button onClick={() => console.log("test button")}>Test Button</button>
           </div>
         </div>
       ))}
