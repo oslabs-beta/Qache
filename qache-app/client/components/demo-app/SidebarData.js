@@ -23,27 +23,27 @@ export const SidebarData = [
     subNav: [
       {
         title: 'Appliances',
-        path: '/products/appliances',
+        path: '*/products/appliances',
         icon: <GiKnifeFork />,
       },
       {
         title: 'Couches',
-        path: '/products/couches',
+        path: '*/products/couches',
         icon: <GiSofa />,
       },
       {
         title: 'Furniture',
-        path: '/products/furnitures',
+        path: '*/products/furnitures',
         icon: <FaCouch />,
       },
       {
         title: 'Mattresses',
-        path: '/products/mattresses',
+        path: '*/products/mattresses',
         icon: <FaBed />,
       },
       {
         title: 'Storage',
-        path: '/products/storage',
+        path: '*/products/storage',
         icon: <BiCabinet />,
       },
     ],
@@ -58,22 +58,22 @@ export const SidebarData = [
     subNav: [
       {
         title: 'Bathroom',
-        path: '/rooms/bathroom',
+        path: '*/rooms/bathroom',
         icon: <FaToilet />,
       },
       {
         title: 'Bedroom',
-        path: '/rooms/bedroom',
+        path: '*/rooms/bedroom',
         icon: <FaBed />,
       },
       {
         title: 'Kitchen',
-        path: '/rooms/kitchen',
+        path: '*/rooms/kitchen',
         icon: <MdKitchen />,
       },
       {
         title: 'Living Room',
-        path: '/rooms/living-room',
+        path: '*/rooms/living-room',
         icon: <FiMonitor />,
       },
     ],
@@ -81,7 +81,7 @@ export const SidebarData = [
   },
   {
     title: 'Deals',
-    path: '/deals',
+    path: '*/deals',
     icon: <IoMdFlash />,
     cName: 'nav-text',
   },

@@ -13,22 +13,27 @@
     align-items: center;
     color: $white;
 
+    h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      margin-bottom: 2%;
+    }
+
+    p {
+      font-weight: 200;
+      font-size: 1.5rem;
+      letter-spacing: 0.05rem;
+    }
+
     h1,
-    h2,
     p {
       margin: 0;
     }
 
-    h2,
     p,
     .buttons-container {
-      padding-top: 2%;
-    }
-
-    p {
-      font-size: x-large;
-      text-align: center;
-      width: 50%;
+      padding-top: 5%;
+      padding-bottom: 5%;
     }
 
     strong {
@@ -109,7 +114,8 @@
     }
   }
 
-  .blue-button, a {
+  .blue-button,
+  a {
     display: inline-block;
     color: $cyan;
     text-decoration: none;
@@ -139,5 +145,16 @@
     &:hover {
       color: $white;
     }
+  }
+}
+
+.overview-container,
+.overview-texts,
+.overview-graph {
+  display: flex;
+
+  .overview-texts {
+    flex-direction: column;
+    width: 50%;
   }
 }
