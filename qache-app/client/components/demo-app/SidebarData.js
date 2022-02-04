@@ -10,7 +10,7 @@ import { FiMonitor } from 'react-icons/fi';
 export const SidebarData = [
   {
     title: 'Home',
-    path: '/',
+    path: '/demo-app',
     icon: <AiFillHome />,
     cName: 'nav-text',
   },
