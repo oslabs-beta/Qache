@@ -2,6 +2,8 @@
 
 # Qache
 
+Accelerated by [OS Labs](https://github.com/open-source-labs) and developed by [Nader Almogazy](https://github.com/nader12334), [Steven Du](https://github.com/stebed), [Leo Crossman](https://github.com/leocrossman), and [Evan Preedy](https://github.com/ep1815), 
+
 ## What is Qache?
 Qache is a modular utility class for handling server side caching of Data.
 
