@@ -7,6 +7,7 @@ import ProductDisplay from './components/demo-app/ProductDisplay';
 import '../client/styles/demo-styles/Navigation.scss';
 import Navbar from './components/home/Navbar';
 import Introduction from './components/home/Introduction';
+import Cart from './components/demo-app/Cart'
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -61,12 +62,12 @@ const App = () => {
 
   return (
     <>
-    <Navbar />
+    {/* <Navbar />
     <Routes>
       <Route path='/' element={<Introduction />} />
     </Routes>
-    </>)
-      {/* <div
+    </>) */}
+       <div
         onClick={
           sidebar
             ? () => {
@@ -212,18 +213,15 @@ const App = () => {
             />
           }
         />
-<<<<<<< Updated upstream
-=======
         <Route path='/cart' element={<Cart props={{
           category: 'Cart',
           setMetrics,
           metrics,
           refresh
         }}/>}/>
->>>>>>> Stashed changes
       </Routes>
-    </> */}
-  // );
+    </> 
+  );
 };
 
 export default App;

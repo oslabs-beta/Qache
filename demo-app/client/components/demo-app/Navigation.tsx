@@ -61,6 +61,7 @@ const Navigation = ({ props }: { props: any }) => {
               Rooms
             </a>
             <Link to='/deals'>Deals</Link>
+            <Link to='/cart'>Cart</Link>
             <div className='search'>
               <input
                 id='search'

@@ -126,21 +126,21 @@ module.exports = {
   filterProductsBy: async (args, parent, info) => {
     const { onSale, inCart } = args.filter;
     let cacheRes;
-    if (onSale) {
-      cacheRes = cache.listRange('onSale');
-    } else if (inCart) {
-      cacheRes = cache.listRange('inCart');
-    }
-    if (cacheRes) {
-      return cacheRes;
-    }
+    // if (onSale) {
+    //   cacheRes = cache.listRange('onSale');
+    // } else if (inCart) {
+    //   cacheRes = cache.listRange('inCart');
+    // }
+    // if (cacheRes) {
+    //   return cacheRes;
+    // }
     let filteredProducts;
     if (onSale) {
       filteredProducts = await Product.find({ onSale });
-      cache.listCreate('onSale', ...filteredProducts);
+      // cache.listCreate('onSale', ...filteredProducts);
     } else if (inCart) {
       filteredProducts = await Product.find({inCart});
-      cache.listCreate('inCart', ...filteredProducts);
+      // cache.listCreate('inCart', ...filteredProducts);
     }
     return filteredProducts;
   },
