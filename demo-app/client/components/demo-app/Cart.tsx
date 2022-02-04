@@ -8,6 +8,7 @@ import LineGraph from './LineGraph';
 const Cart = ({props}: {props: any}) => {
     const [cartStorage, setCartStorage] = useState<Product[]>([]);
     const [speed, setSpeed] = useState<number[]>([]);
+    const [cartCost, setCartCost] = useState<number>(0);
     const {
         category,
         setMetrics,
@@ -48,7 +49,7 @@ const Cart = ({props}: {props: any}) => {
             setCartStorage(data.data.filterProductsBy)
           })
           .catch((err) => {throw {error: err}})
-    }, [id, refresh]);
+    }, [id, category, refresh]);
 
     useEffect(() => {
         if (speed.length) {
@@ -61,6 +62,16 @@ const Cart = ({props}: {props: any}) => {
           setMetrics(newMetrics);
         }
       }, [speed]);
+
+    useEffect(() => {
+      if (cartStorage.length) {
+        let newCost = 0;
+        cartStorage.forEach((product) => {
+          newCost = newCost + product.price;
+        })
+        setCartCost(newCost);
+      }
+    }, [cartCost, cartStorage])
 
     return (
         <>
@@ -94,9 +105,9 @@ const Cart = ({props}: {props: any}) => {
           relevant data in the cache is updated, <em>immediately!</em>
         </div>
       </div>
-        <p>Current items in your cart</p>
+        <p>Total cost of your cart:  <strong>$ {cartCost}</strong></p>
+        <p>Current items in your cart:</p>
         <ProductDetails productData={cartStorage}/>
-        <p>Current total cost of your cart:</p>
       </div>
     </>
     )

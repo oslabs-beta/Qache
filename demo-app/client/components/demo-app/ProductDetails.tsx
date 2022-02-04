@@ -1,20 +1,73 @@
-import { Product } from '../../../interfaces';
+import { Product, AddButton, RemoveButton } from '../../../interfaces';
 import '../../styles/demo-styles/ProductDetails.scss';
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios';
+import {useState, useEffect, useRef, useLayoutEffect} from 'react';
+// import AddToCart from './Buttons';
+// import RemoveFromCart from './Buttons';
+import * as React from 'react';
+
+
+// const AddToCart = ({props} : {props: AddButton}) => {
+class AddToCart extends React.Component <AddButton> {
+  render() {
+  return (
+      <button onClick={this.props.onClick}>
+          Add item to cart
+      </button>
+  )
+  }
+}
+
+class RemoveFromCart extends React.Component <RemoveButton> {
+  render() {
+  return (
+      <button onClick={this.props.onClick}>
+          Remove item from cart
+      </button>
+  )
+  }
+}
 
 const ProductDetails = ({ productData }: { productData: Product[] }) => {
-
-  /* Add to cart button: when clicked, sends product.id to cart
-  which should add that product to the cart for checkout */
-  // const addToCart = (product: { inCart: boolean; }) => {
-  //   product.inCart = true;
-  // }
-
+  const firstUpdate = useRef(true);
+  const [clickedButton, setClickedButton] = useState<string>();
+  const [addOrRemove, setAddOrRemove] = useState<boolean>();
+  const addItem = (e: React.MouseEvent<HTMLButtonElement>, product: Product) => {
+    e.preventDefault();
+    setClickedButton(product.id);
+  }
+  /* Add to or remove from cart hook: when clicked, sends product.id to cart
+  which should add/remove that product to the cart for checkout */
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    const body = {
+      query: `{
+        mutation {
+          updateProduct (product: {
+            id: "${clickedButton}"
+            inCart: ${addOrRemove}
+          }) {
+            name
+            description
+            imageUrl
+            quantity
+            price
+            onSale
+            id
+          }
+        }
+      }`
+    }
+    axios
+      .post('http://localhost:3000/graphql', body)
+      .then(res => console.log('this is res', res))
+  }, [clickedButton])
   // /* Remove from cart button: when clicked, sends product.id to cart
   // which should remove that product from the cart */
-  // const removeFromCart = (product: { inCart: boolean; }) => {
-  //   product.inCart = false;
-  // }
+  
   return (
     <div className='products-wrap'>
       {productData.map((product, key) => (
@@ -59,19 +112,17 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
               <strong>Out of stock</strong>
             )}
             <p>{product.description}</p>
-            <button onClick={() => {
-              let body = {
-                query: `mutation {
-                  updateProduct (id: ${product.id}, inCart: true) 
-                }`
-              }
-              axios
-                .post<Product[]>('http://localhost:3000/graphql', body)
-                .then(({data}: AxiosResponse<any>) => {
-                  console.log(data)
-                })
-            }}>Add to cart</button>
-            <button onClick={() => {product.inCart = false}}>Remove from cart</button>
+            {/* <button onClick={(e) => {
+              addItem(e, product);
+              }}>Add to cart</button> */}
+            <AddToCart onClick={(e) => {
+              setAddOrRemove(true)
+              addItem(e, product)
+              }}></AddToCart>
+            <RemoveFromCart onClick={(e) => {
+              setAddOrRemove(false)
+              addItem(e, product)
+              }}></RemoveFromCart>
           </div>
         </div>
       ))}

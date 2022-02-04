@@ -10,6 +10,15 @@ export interface Product {
   onSale: boolean;
   category: string;
   inCart: boolean;
+  // onClick?: (event: React.MouseEventHandler<HTMLButtonElement>) => void;
+}
+
+export interface AddButton {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+export interface RemoveButton {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export interface Metric {
