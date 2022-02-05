@@ -43,7 +43,7 @@ const Navigation = ({ props }: { props: any }) => {
             <Link to='#' className='menu-bars'>
               <FaBars onClick={showSidebar} />
             </Link>
-            <Link to='/'>Demo App</Link>
+            <Link to='/'>Homepage</Link>
             <a
               onClick={() => {
                 showSidebar();
@@ -60,7 +60,7 @@ const Navigation = ({ props }: { props: any }) => {
             >
               Rooms
             </a>
-            <Link to='/deals'>Deals</Link>
+            <Link to='/demo-app/*/deals'>Deals</Link>
             <div className='search'>
               <input
                 id='search'
