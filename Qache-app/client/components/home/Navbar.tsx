@@ -2,7 +2,7 @@ import '../../styles/home-styles/Navbar.scss';
 import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
-import qachelogo from '../../images/qachelogo.png';
+import qache from '../../images/qache.png';
 
 const Navbar = () => {
   return (
@@ -12,7 +12,7 @@ const Navbar = () => {
           <div className='left-nav'>
             <div className='image-container'>
               <Link to='/'>
-                <img src={qachelogo} alt='Qache Logo' />
+                <img src={qache} alt='Qache Logo' />
               </Link>
             </div>
             <ul className='nav-list'>

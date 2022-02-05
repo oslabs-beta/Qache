@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Metric } from '../interfaces';
-import Navigation from './components/demo-app/Navigation';
-import LandingPage from './components/demo-app/LandingPage';
-import ProductDisplay from './components/demo-app/ProductDisplay';
-import '../client/styles/demo-styles/Navigation.scss';
-import Navbar from './components/home/Navbar';
-import Introduction from './components/home/Introduction';
-import Cart from './components/demo-app/Cart'
+import { Metric } from '../../../interfaces';
+import Navigation from './Navigation';
+import LandingPage from './LandingPage';
+import ProductDisplay from './ProductDisplay';
+import '../../styles/demo-styles/Navigation.scss';
 
-const App = () => {
+const DemoApp = () => {
   const [sidebar, setSidebar] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const hideSidebar = () => setSidebar(false);
@@ -54,19 +51,10 @@ const App = () => {
       labels: [],
       data: [],
     },
-    Cart: {
-      labels: [],
-      data: []
-    }
   });
 
   return (
     <>
-    {/* <Navbar />
-    <Routes>
-      <Route path='/' element={<Introduction />} />
-    </Routes>
-    </>) */}
       <div
         onClick={
           sidebar
@@ -84,7 +72,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route
-          path='/products/couches'
+          path='/*/products/couches'
           element={
             <ProductDisplay
               props={{
@@ -97,7 +85,7 @@ const App = () => {
           }
         />
         <Route
-          path='/products/mattresses'
+          path='/*/products/mattresses'
           element={
             <ProductDisplay
               props={{
@@ -110,7 +98,7 @@ const App = () => {
           }
         />
         <Route
-          path='/rooms/bedroom'
+          path='/*/rooms/bedroom'
           element={
             <ProductDisplay
               props={{
@@ -123,7 +111,7 @@ const App = () => {
           }
         />
         <Route
-          path='/products/furnitures'
+          path='/*/products/furnitures'
           element={
             <ProductDisplay
               props={{
@@ -136,7 +124,7 @@ const App = () => {
           }
         />
         <Route
-          path='/products/storage'
+          path='/*/products/storage'
           element={
             <ProductDisplay
               props={{
@@ -149,7 +137,7 @@ const App = () => {
           }
         />
         <Route
-          path='/products/appliances'
+          path='/*/products/appliances'
           element={
             <ProductDisplay
               props={{
@@ -162,7 +150,7 @@ const App = () => {
           }
         />
         <Route
-          path='/rooms/bathroom'
+          path='/*/rooms/bathroom'
           element={
             <ProductDisplay
               props={{
@@ -175,7 +163,7 @@ const App = () => {
           }
         />
         <Route
-          path='/rooms/living-room'
+          path='/*/rooms/living-room'
           element={
             <ProductDisplay
               props={{
@@ -188,7 +176,7 @@ const App = () => {
           }
         />
         <Route
-          path='/rooms/kitchen'
+          path='/*/rooms/kitchen'
           element={
             <ProductDisplay
               props={{
@@ -201,7 +189,7 @@ const App = () => {
           }
         />
         <Route
-          path='/deals'
+          path='/*/deals'
           element={
             <ProductDisplay
               props={{
@@ -213,13 +201,9 @@ const App = () => {
             />
           }
         />
-        <Route path='/cart' element={<Cart props={{category: 'Cart',
-                setMetrics,
-                metrics,
-                refresh,}}/>}/>
       </Routes>
     </>
   );
 };
 
-export default App;
+export default DemoApp;
