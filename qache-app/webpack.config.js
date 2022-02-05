@@ -42,12 +42,12 @@ const config = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.png$/,
+        test: /\.(png|svg|jpg|gif)$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: 'file-loader',
             options: {
-              mimetype: 'image/png',
+              name: 'images/[name].[ext]',
             },
           },
         ],
