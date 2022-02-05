@@ -20,7 +20,12 @@ const testUsers = [
     lastName: 'preedy',
     age: 23,
   },
-  { username: 'stebed', firstName: 'steven', lastName: 'du', age: 26 },
+  {
+    username: 'stebed',
+    firstName: 'steven',
+    lastName: 'du',
+    age: Number.MAX_VALUE,
+  },
 ];
 
 describe('Qache Tests', () => {
@@ -45,25 +50,27 @@ describe('Qache Tests', () => {
       let userNode = new Node('users', users);
     });
 
-    it('should have properties: TTL, maxSize, content, size, head, tail', () => {
+    it('should have properties: TTL, maxSize, content, size, policyType, head, tail', () => {
       let cache = new Cache();
       expect(cache.TTL).toBeDefined();
       expect(cache.maxSize).toBeDefined();
       expect(cache.content).toBeDefined();
       expect(cache.size).toBeDefined();
+      expect(cache.policyType).toBeDefined();
       expect(cache.head).toBeDefined();
       expect(cache.tail).toBeDefined();
     });
 
-    it('should have initial property values: head = tail = null, size = 0, content = {}, maxSize = options.maxSize', () => {
+    it('should have initial property values: head = tail = null, size = 0, content = {}, maxSize = options.maxSize, policyType = options.evictionPolicy', () => {
       let cache = new Cache();
       expect(cache.head).toBe(null);
       expect(cache.tail).toBe(null);
       expect(cache.size).toBe(0);
       expect(cache.content).toEqual({});
+      expect(cache.policyType).toEqual('LRU');
     });
 
-    describe(`Get Data`, () => {
+    describe('LRU', () => {
       let cache;
       beforeEach(() => {
         cache = new Cache();
