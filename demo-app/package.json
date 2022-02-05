@@ -37,7 +37,11 @@
     "webpack": "^5.66.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.3"
+    "webpack-dev-server": "^4.7.3",
+    "nodemon": "^2.0.15",
+    "postcss-loader": "^6.2.1",
+    "mini-css-extract-plugin": "^2.5.3",
+    "autoprefixer": "^10.4.2"
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.7",
@@ -51,12 +55,12 @@
     "dotenv": "^14.2.0",
     "express-graphql": "^0.12.0",
     "mongoose": "^6.1.7",
-    "nodemon": "^2.0.15",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.6",
-    "react-router-dom": "^6.2.1"
+    "react-router-dom": "^6.2.1",
+    "tailwindcss": "^3.0.18"
   }
 }
