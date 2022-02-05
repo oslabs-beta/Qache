@@ -1,5 +1,4 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import naderUrl from '../../images/nader.jpg';
 
 const shuffleArray = (array: any) => {
   const outputArray = [];
@@ -18,7 +17,8 @@ const unshuffledPeople = [
   {
     name: 'Nader Almogazy',
     role: 'Full-Stack Engineer',
-    imageUrl: naderUrl,
+    imageUrl:
+      'https://media-exp1.licdn.com/dms/image/C4E03AQF8fJfVlCNFPg/profile-displayphoto-shrink_800_800/0/1639494320094?e=1649289600&v=beta&t=9tnZvGoJuLvmwoWfCPmmJCTGHCiP6wy06sbLKskn4k8',
     githubUrl: 'https://github.com/nader12334',
     linkedinUrl: 'https://www.linkedin.com/in/naderalmogazy/',
   },
