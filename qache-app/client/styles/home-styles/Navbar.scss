@@ -3,34 +3,39 @@
 .navbar-container {
   display: flex;
   position: sticky;
+  justify-content: space-between;
+  height: 10%;
   padding-right: 1%;
   padding-left: 1%;
   top: 0;
   z-index: 1;
   background-color: $black;
 
+  .image-container {
+    display: flex;
+    min-width: 200px;
+    margin-right: 10;
+    img {
+      height: 100%;
+      object-fit: contain;
+      box-sizing: border-box;
+      vertical-align: middle;
+    }
+  }    
+
   .left-nav,
   .right-nav {
     display: flex;
-    width: 50%;
-    max-width: 50%;
 
-    .image-container {
-      display: flex;
-      width: 25%;
-      img {
-        height: 100%;
-        object-fit: contain;
-        position: absolute;
-        box-sizing: border-box;
-        vertical-align: middle;
-      }
-    }    
 
     .nav-list {
       display: flex;
       align-items: center;
-      width: 100%;
+      margin-left: auto;
+
+      li{
+        margin: 0 10px;
+      }
 
       .nav-link {
         text-decoration: none;
@@ -67,12 +72,28 @@
       justify-content: flex-end;
 
       .nav-icons {
-        margin-right: 1rem;
+        height: 100%;
 
         path:hover, svg:hover {
           fill: $cyan;
           transition: fill $quick ease-in;
         }
+      }
+    }
+  }
+  .left-nav{
+    margin-right: auto;
+  }
+  .right-nav{
+    margin-right: auto;
+    margin-right: 3%;
+    .nav-list {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+
+      svg{
+        height: 100%;
       }
     }
   }

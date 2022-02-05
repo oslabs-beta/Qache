@@ -4,7 +4,7 @@ $offwhite: #fafafa;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 5%;
+  height: 10%;
   background-color: white;
 
   .navbar {
@@ -74,7 +74,7 @@ $offwhite: #fafafa;
         background: none;
         background-color: transparent;
       }
-      
+
       &:active .tooltip {
         box-shadow: none;
       }
@@ -134,7 +134,7 @@ $offwhite: #fafafa;
     display: flex;
     justify-content: center;
     position: fixed;
-    width: 15%;
+    width: 250px;
     height: 300vh;
     top: 0;
     left: -100%;
@@ -164,7 +164,7 @@ $offwhite: #fafafa;
       align-items: center;
       height: 5rem;
       margin-left: 1rem;
-      font-size: 2rem;
+      font-size: large;
       background-color: $offwhite;
       cursor: pointer;
     }

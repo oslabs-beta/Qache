@@ -19,10 +19,10 @@
 
     .sale {
       background: transparent;
-      width: 80px;
-      height: 80px;
+      height: 3rem;
+      width: 3rem;
       position: relative;
-      left: 100px;
+      left: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -37,8 +37,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 80px;
-      width: 80px;
+      height: 3rem;
+      width: 3rem;
       background: green;
       color: white;
       transform: rotate(135deg);
@@ -46,10 +46,10 @@
     }
     @keyframes beat {
       from {
-        transform: rotate(-20deg) scale(1);
+        transform: rotate(20deg) scale(1);
       }
       to {
-        transform: rotate(-20deg) scale(1.1);
+        transform: rotate(20deg) scale(1.1);
       }
     }
 

@@ -3,6 +3,7 @@ import '../../styles/home-styles/Introduction.scss';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import LineGraph from '../demo-app/LineGraph';
+import Team from './Team';
 
 const Introduction = () => {
   const copyToClipboard = () => {
@@ -28,11 +29,11 @@ const Introduction = () => {
               className='copy-button hvr-curl-top-right'
               onClick={copyToClipboard}
             >
-              <MdOutlineArrowForwardIos
+              
+              <code><MdOutlineArrowForwardIos
                 className='forward-arrow'
                 color='black'
-              />
-              <code>npm i qache</code>
+              />npm i qache</code>
             </div>
             <div className='blue-button'>
               <Link to='/docs'>Get Started</Link>
@@ -109,9 +110,9 @@ const Introduction = () => {
             Qache is a utility class for handling server-side caching of SQL and
             noSQL databases to reduce the latency of your queries.
           </p>
-          
-          <p>178ms  13ms</p>
-          {<AiOutlineArrowRight/>}
+
+          <p>178ms 13ms</p>
+          {<AiOutlineArrowRight />}
         </div>
         <div className='overview-graph'>
           <LineGraph
@@ -124,6 +125,7 @@ const Introduction = () => {
           />
         </div>
       </div>
+      <Team/>
     </>
   );
 };

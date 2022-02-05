@@ -6,7 +6,6 @@ const LandingPage = () => {
   return (
     <>
       <div className='landingPage-container'>
-        <h1>Welcome to our Demo App!</h1>
         <div className='section-container'>
           <div className='imageContainer'>
             <img src={storage} alt='Storage picture' />

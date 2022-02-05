@@ -6,16 +6,19 @@
   padding: 0.5rem 0 0.5rem 1rem;
   text-decoration: none;
   border-radius: 0.25rem;
-  font-size: xx-large;
+  font-size: x-large;
   color: black;
   &:hover {
     text-decoration: underline;
   }
   svg {
+    display: inline-block;
     position: relative;
+    vertical-align: baseline;
     top: 0.25rem;
   }
   span {
+    display: inline-block;
     margin-left: 1rem;
   }
 }
@@ -27,7 +30,7 @@
   align-items: center;
   text-decoration: none;
   border-radius: 0.25rem;
-  font-size: 1.5rem;
+  font-size: large;
   color: black;
 
   &:hover {
