@@ -1,10 +1,23 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import naderUrl from '../../images/nader.jpg'
 
-const people = [
+const shuffleArray = (array:any) => {
+  const outputArray = []
+  const used = new Set()
+  while(outputArray.length !== array.length){
+    const rand = Math.floor(Math.random()*array.length)
+    if(!used.has(array[rand])){
+      outputArray.push(array[rand])
+      used.add(array[rand])
+    } else continue
+  }
+  return outputArray
+}
+
+const unshuffledPeople = [
   {
     name: 'Nader Almogazy',
-    role: 'Software Engineer',
+    role: 'Full-Stack Engineer',
     imageUrl: naderUrl,
     githubUrl: 'https://github.com/nader12334',
     linkedinUrl: 'https://www.linkedin.com/in/naderalmogazy/',
@@ -32,6 +45,8 @@ const people = [
   },
 ]
 
+const people:any = shuffleArray(unshuffledPeople)
+
 export default function Team() {
   return (
     <div className="bg-gray-900">
@@ -44,8 +59,8 @@ export default function Team() {
               neque.
             </p>
           </div>
-          <ul role="list" className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:grid-cols-3 lg:gap-8">
-            {people.map((person) => (
+          <ul role="list" className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:grid-cols-2 lg:gap-8">
+            {people.map((person:any) => (
               <li key={person.name} className="py-10 px-6 bg-gray-800 text-center rounded-lg xl:px-10 xl:text-left">
                 <div className="space-y-6 xl:space-y-10">
                   <img className="mx-auto h-40 w-40 rounded-full xl:w-56 xl:h-56" src={person.imageUrl} alt="" />
@@ -59,7 +74,7 @@ export default function Team() {
                       <li>
                         <a href={person.githubUrl} target='_blank' rel='noreferrer noopener' className="text-gray-400 hover:text-gray-300">
                           <span className="sr-only">Github</span>
-                          <svg className="w-10 h-10" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="hover:scale-110 w-10 h-10" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                             <FaGithub/>
                           </svg>
                         </a>
@@ -67,7 +82,7 @@ export default function Team() {
                       <li>
                         <a href={person.linkedinUrl} target='_blank' rel='noreferrer noopener' className="text-gray-400 hover:text-gray-300">
                           <span className="sr-only">LinkedIn</span>
-                          <svg className="w-11 h-11" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="hover:scale-110 w-11 h-11" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                             <FaLinkedin/>
                           </svg>
                         </a>

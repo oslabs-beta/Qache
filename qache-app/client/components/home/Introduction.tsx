@@ -29,11 +29,11 @@ const Introduction = () => {
               className='copy-button hvr-curl-top-right'
               onClick={copyToClipboard}
             >
-              <MdOutlineArrowForwardIos
+              
+              <code><MdOutlineArrowForwardIos
                 className='forward-arrow'
                 color='black'
-              />
-              <code>npm i qache</code>
+              />npm i qache</code>
             </div>
             <div className='blue-button'>
               <Link to='/docs'>Get Started</Link>
