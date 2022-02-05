@@ -17,7 +17,7 @@ const config = {
       {
         test: /\.(js|jsx)$/,
         use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -26,24 +26,20 @@ const config = {
           {
             loader: 'css-loader',
             options: {
-              importLoaders: 1
-            }
+              importLoaders: 1,
+            },
           },
-          'postcss-loader'
-        ]
+          'postcss-loader',
+        ],
       },
       {
         test: /\.ts(x)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.png$/,
@@ -51,16 +47,16 @@ const config = {
           {
             loader: 'url-loader',
             options: {
-              mimetype: 'image/png'
-            }
-          }
-        ]
+              mimetype: 'image/png',
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,
-        use: 'file-loader'
-      }
-    ]
+        use: 'file-loader',
+      },
+    ],
   },
   devServer: {
     historyApiFallback: true,
@@ -69,7 +65,7 @@ const config = {
     new HtmlWebpackPlugin({
       templateContent: ({ htmlWebpackPlugin }) =>
         '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' +
-        'Qache' +
+        htmlWebpackPlugin.options.title +
         '</title></head><body><div id="app"></div></body></html>',
       filename: 'index.html',
     }),
