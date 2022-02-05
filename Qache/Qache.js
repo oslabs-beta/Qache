@@ -1,11 +1,15 @@
 const Node = require('./Node');
 
 class Qache {
-  constructor({ timeToLive = Infinity, maxSize = 5, evictionPolicy = "LRU" } = {}) {
+  constructor({
+    timeToLive = Infinity,
+    maxSize = 5,
+    evictionPolicy = 'LRU',
+  } = {}) {
     //set timeToLive in options or default to 10min
     this.TTL = timeToLive; //10 minute default timeToLive
     this.maxSize = maxSize; // 5 node default maximum size
-    this.policyType = evictionPolicy
+    this.policyType = evictionPolicy;
 
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
@@ -44,9 +48,9 @@ class Qache {
     if (this.content[listKey] === undefined) return null;
 
     const { value } = this.content[listKey];
-    this._refresh(listKey)
+    this._refresh(listKey);
 
-    return value.slice(start, end)
+    return value.slice(start, end);
   }
 
   //**Update an item if found, push item if not found.**
@@ -90,8 +94,8 @@ class Qache {
         //We push that item into cache, THEN refresh expiration.
         this.content[listKey].value.push(item);
         this.content[listKey].expires = Date.now() + this.TTL;
-        
-        this._refresh(listKey)
+
+        this._refresh(listKey);
       }
     }
   }
@@ -146,7 +150,7 @@ class Qache {
           if (unique) break;
         }
       }
-      this._refresh(key)
+      this._refresh(key);
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
@@ -196,7 +200,7 @@ class Qache {
           if (unique) break;
         }
       }
-      this._refresh(key)
+      this._refresh(key);
     }
   }
 
@@ -207,7 +211,7 @@ class Qache {
     // Check if list exists, if not return null.
     if (this.content[listKey] === undefined) return null;
 
-    this._refresh(listKey)
+    this._refresh(listKey);
 
     const returnList = [];
     // Option to specify if each list only contains the item once.
@@ -315,7 +319,7 @@ class Qache {
   _addToQueueAndCache(key, value) {
     let nodeInCache = this.content[key];
 
-    if (this.policyType ===  "LRU"){
+    if (this.policyType === 'LRU') {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
@@ -336,32 +340,31 @@ class Qache {
         // assign key to new node
         this.content[key] = this.tail;
       }
-    } else if (this.policyType === "LFU"){
+    } else if (this.policyType === 'LFU') {
       // key exists in cache
       if (nodeInCache) {
-        nodeInCache.accessCount++
-        this._refresh(key)
+        nodeInCache.accessCount++;
+        this._refresh(key);
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
         this._removeFromQueueAndCache(this.head);
-        this.size--
-      } 
+        this.size--;
+      }
       // key doesn't exist
       if (!nodeInCache) {
         //create new node
         nodeInCache = new Node(key, value);
-        nodeInCache.expires = Date.now() + this.TTL
-        this.size++
-        
+        nodeInCache.expires = Date.now() + this.TTL;
+        this.size++;
+
         //Place node at head/cold side of queue
-        this._enqueue(nodeInCache)
-        
+        this._enqueue(nodeInCache);
+
         // assign key to new node
-        this.content[key] = this.head
+        this.content[key] = this.head;
       }
     }
   }
-
 
   /**
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
@@ -373,76 +376,74 @@ class Qache {
   }
 
   _refreshFrequent(existingNode) {
-    this._bubbleSort(existingNode)
+    this._bubbleSort(existingNode);
   }
 
-  _refresh(key){
+  _refresh(key) {
     const existingNode = this.content[key];
 
-    if(existingNode){
+    if (existingNode) {
+      existingNode.accessCount++;
 
-      existingNode.accessCount++
-
-      if(this.policyType === "LRU"){
+      if (this.policyType === 'LRU') {
         this._refreshRecent(existingNode);
-      } else if (this.policyType === "LFU"){
+      } else if (this.policyType === 'LFU') {
         this._refreshFrequent(existingNode);
       } else {
-        throw new Error("Policy type does not exist")
+        throw new Error('Policy type does not exist');
       }
     }
   }
 
   _bubbleSort(node) {
-    console.log(this)
+    console.log(this);
     // 0 node list
-    if(!node) return;
+    if (!node) return;
     // 1 node list OR 2+ node list where node is tail
-    if(node === this.tail) return;
-    
+    if (node === this.tail) return;
+
     // 2+ node list
-    while (node.next && node.next.accessCount < node.accessCount){
-      console.log("~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~")
-      if(node === this.head) {
-        this.head = node.next
+    while (node.next && node.next.accessCount < node.accessCount) {
+      console.log('~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~');
+      if (node === this.head) {
+        this.head = node.next;
 
         //2 node list where node is head
-        if(!node.next.next){
-          this.tail = node
+        if (!node.next.next) {
+          this.tail = node;
 
-          node.next.prev = null
-          node.next.next = node
-          
-          node.next = null
-          node.prev = this.head
+          node.next.prev = null;
+          node.next.next = node;
+
+          node.next = null;
+          node.prev = this.head;
           break;
         }
 
         //3+ node list where node is head
-        const temp = node.next.next
-        temp.prev = node
+        const temp = node.next.next;
+        temp.prev = node;
 
-        node.next.prev = null
-        node.next.next = node
+        node.next.prev = null;
+        node.next.next = node;
 
-        node.next = temp
-        node.prev = this.head
-
+        node.next = temp;
+        node.prev = this.head;
       } else {
         //3 node list where node is not head
         // A > B > C  swap B with C
-        if(!node.next.next){
-          this.tail = node
+        if (!node.next.next) {
+          this.tail = node;
 
-          const temp = node.next
+          const temp = node.next;
 
-          node.prev.next = temp
+          node.prev.next = temp;
 
-          temp.prev = node.prev
-          temp.next = node
+          temp.prev = node.prev;
+          temp.next = node;
 
-          node.prev = temp
-          node.next = null
+          node.prev = temp;
+          node.next = null;
 
           break;
         }
@@ -450,20 +451,20 @@ class Qache {
         //   node
         // A > B > C > D
         //Point A's 'next' to C
-        node.prev.next = node.next
+        node.prev.next = node.next;
         //Point D's 'prev' to B
-        node.next.next.prev = node
-  
+        node.next.next.prev = node;
+
         //Swap C's prev and next pointers
-        const temp = node.next.next
-        node.next.prev = node.prev
-        node.next.next = node
-  
+        const temp = node.next.next;
+        node.next.prev = node.prev;
+        node.next.next = node;
+
         //Swap B's prev and next pointers
-        node.prev = node.next
-        node.next = temp
+        node.prev = node.next;
+        node.next = temp;
       }
-      node = node.next
+      node = node.next;
     }
   }
 
@@ -474,14 +475,14 @@ class Qache {
    */
   _enqueue(node) {
     // insert new node at tail of the linked list (queue)
-    if(this.policyType === "LRU") {
+    if (this.policyType === 'LRU') {
       if (this.tail) {
         node.prev = this.tail;
         this.tail.next = node;
         this.tail = node;
       } else this.tail = this.head = node;
       // queue is empty. point head & tail ➡ new Node
-    } else if (this.policyType === "LFU") {
+    } else if (this.policyType === 'LFU') {
       if (this.head) {
         node.next = this.head;
         this.head.prev = node;
@@ -523,7 +524,7 @@ class Qache {
       return null;
     }
 
-    this._refresh(key)
+    this._refresh(key);
 
     return nodeInCache.value;
   }
