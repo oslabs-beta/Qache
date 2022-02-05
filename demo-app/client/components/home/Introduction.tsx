@@ -1,7 +1,10 @@
+import Team from "./Team"
+
 const Introduction = () => {
   return (
     <>
       <header className='introduction-container'>
+        <Team/>
         <div className='left-stack'>
           <div>
             <h1>A server side caching libary for your database</h1>
