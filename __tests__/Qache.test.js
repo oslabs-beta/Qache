@@ -44,14 +44,20 @@ describe('Qache Tests', () => {
   });
 
   describe('Cache', () => {
+    let cache, users, userNode;
     // this beforeEach will change soonish... will be replaced with whatever's relevant or just removed.
     beforeEach(() => {
-      const users = [...testUsers];
-      let userNode = new Node('users', users);
+      users = [...testUsers];
+      userNode = new Node('users', users);
+      cache = new Cache();
+    });
+
+    afterEach(() => {
+      users = [...testUsers];
+      cache = new Cache();
     });
 
     it('should have properties: TTL, maxSize, content, size, policyType, head, tail', () => {
-      let cache = new Cache();
       expect(cache.TTL).toBeDefined();
       expect(cache.maxSize).toBeDefined();
       expect(cache.content).toBeDefined();
@@ -62,7 +68,6 @@ describe('Qache Tests', () => {
     });
 
     it('should have initial property values: head = tail = null, size = 0, content = {}, maxSize = options.maxSize, policyType = options.evictionPolicy', () => {
-      let cache = new Cache();
       expect(cache.head).toBe(null);
       expect(cache.tail).toBe(null);
       expect(cache.size).toBe(0);
@@ -70,46 +75,59 @@ describe('Qache Tests', () => {
       expect(cache.policyType).toEqual('LRU');
     });
 
+    describe('get()', () => {
+      it(`should be a method on the 'Cache' class`, () => {
+        expect(cache.get).toBeDefined();
+        expect(typeof cache.get).toBe('function');
+      });
+
+      it(`should take in a cache key and return the data found inside that key's/Node's value property`, () => {
+        // need to test for `set` logic before this...
+        // console.log(cache.get('users'));
+        //expect(cache.get('users')).toEqual
+      });
+    });
+
+    describe('set()', () => {
+      it(`should be a method on the 'Cache' class`, () => {
+        expect(cache.set).toBeDefined();
+        expect(typeof cache.set).toBe('function');
+      });
+      it('should take in a cache key/value, add the node to the queue, and add the node to the cache at the key when cache is empty', () => {
+        expect(cache.head).toBe(null);
+        expect(cache.tail).toBe(null);
+        const key = 'users';
+        cache.set(key, users);
+        let node = cache.content[key];
+        expect(node).toBeInstanceOf(Node);
+        expect(node).toEqual(userNode);
+        expect(node.keyRef).toBe('users');
+        expect(node.value).toBe(users);
+        expect(node.prev).toBe(null);
+        expect(node.next).toBe(null);
+        expect(node.accessCount).toBe(1);
+        expect(cache.head).toBe(node);
+        expect(cache.tail).toBe(node);
+      });
+    });
+
     describe('LRU', () => {
-      let cache;
-      beforeEach(() => {
-        cache = new Cache();
-        users = [...testUsers];
-        userNode = new Node('users', users);
+      xdescribe('get() (LRU specific)', () => {
+        xit('should add a node to the queue and cache when there is one element in the cache', () => {});
+        xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
+        xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
       });
-
-      describe('set()', () => {
-        it(`should be a method on the 'Cache' class`, () => {
-          expect(cache.set).toBeDefined();
-          expect(typeof cache.set).toBe('function');
+      describe('set() (LRU specific)', () => {
+        it('should add a node to the queue and cache when there is one element in the cache', () => {
+          cache.set('users', users);
+          expect(cache.head).toEqual(userNode);
         });
-        it('should take in a cache key/value, add the node to the queue, and add the node to the cache at the key when cache is empty', () => {
-          expect(cache.head).toBe(null);
-          expect(cache.tail).toBe(null);
-          const key = 'users';
-          cache.set(key, users);
-          let node = cache.content[key];
-          expect(node).toBeInstanceOf(Node);
-          expect(node.keyRef).toBe('users');
-          expect(node.value).toBe(users);
-          expect(node.prev).toBe(null);
-          expect(node.next).toBe(null);
-          expect(cache.head).toBe(node);
-          expect(cache.tail).toBe(node);
-        });
+        xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
+        xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
       });
-
-      describe('get()', () => {
-        it(`should be a method on the 'Cache' class`, () => {
-          expect(cache.get).toBeDefined();
-          expect(typeof cache.get).toBe('function');
-        });
-
-        xit(`take in a cache key and return the data found inside that key's/Node's value property`, () => {
-          // need to test for `set` logic before this...
-          // expect();
-        });
-      });
+    });
+    describe('LFU', () => {
+      it('should', () => {});
     });
   });
 });
