@@ -14,7 +14,6 @@ class Qache {
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
-    console.log('Qache Cache Starting Up');
   }
 
   get(key) {
@@ -370,13 +369,13 @@ class Qache {
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
    * @param {object} key
    */
-  _refreshRecent(existingNode) {
-    this._removeFromQueue(existingNode);
-    this._enqueue(existingNode);
+  _refreshRecent(node) {
+    this._removeFromQueue(node);
+    this._enqueue(node);
   }
 
-  _refreshFrequent(existingNode) {
-    this._bubbleSort(existingNode);
+  _refreshFrequent(node) {
+    this._bubbleSort(node);
   }
 
   _refresh(key) {
