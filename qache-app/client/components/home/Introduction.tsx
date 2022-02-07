@@ -29,11 +29,13 @@ const Introduction = () => {
               className='copy-button hvr-curl-top-right'
               onClick={copyToClipboard}
             >
-              
-              <code><MdOutlineArrowForwardIos
-                className='forward-arrow'
-                color='black'
-              />npm i qache</code>
+              <code>
+                <MdOutlineArrowForwardIos
+                  className='forward-arrow'
+                  color='black'
+                />
+                npm i qache
+              </code>
             </div>
             <div className='blue-button'>
               <Link to='/docs'>Get Started</Link>
@@ -63,6 +65,7 @@ const Introduction = () => {
           height='475'
           preserveAspectRatio='none'
           viewBox='0 0 1440 560'
+          className='bg'
         >
           <g mask='url("#SvgjsMask1017")' fill='none'>
             <path
@@ -110,9 +113,9 @@ const Introduction = () => {
             Qache is a utility class for handling server-side caching of SQL and
             noSQL databases to reduce the latency of your queries.
           </p>
-
-          <p>178ms 13ms</p>
-          {<AiOutlineArrowRight />}
+          <p>
+            178ms <AiOutlineArrowRight /> 13ms
+          </p>
         </div>
         <div className='overview-graph'>
           <LineGraph
@@ -125,7 +128,49 @@ const Introduction = () => {
           />
         </div>
       </div>
-      <Team/>
+
+      <section className='features-container'>
+        <div className='demo-feature-container'>
+          <h1>Demo our Qache Tool</h1>
+
+          {/* navigate to demo-app gif */}
+          <div className='demo-container'>
+            gif
+            <div className='text'>
+              <h3>Demo App Preview</h3>
+              <p>test</p>
+            </div>
+          </div>
+            <br/><br/>
+          {/* experience our caching tool when browsing through products, rooms, and deals */}
+          <div className='demo-container'>
+            gif
+            <div className='text'>
+              <h3>Browse through our Demo App</h3>
+              <p>test</p>
+            </div>
+          </div>
+          <br/><br/>
+          {/* describe what one of the page shows, scroll down to look at the products, and say that the first point of the graph represents the latency of fetching those product data */}
+          <div className='demo-container'>
+            gif
+            <div className='text'>
+              <h3>Latency Graph</h3>
+              <p>test</p>
+            </div>
+          </div>
+          <br/><br/>
+          {/* click on the refresh button to show the line graph changes and describe what it means */}
+          <div className='demo-container'>
+            gif
+            <div className='text'>
+              <h3>Qache Tool</h3>
+              <p>test</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <Team id='team' />
     </>
   );
 };
