@@ -322,7 +322,7 @@ class Qache {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
-        this._refreshRecent(key);
+        this._refresh(key);
       }
       // when the cache is full, we dequeue the head from the cache/queue
       else if (this.size === this.maxSize) {
@@ -343,7 +343,11 @@ class Qache {
       // key exists in cache
       if (nodeInCache) {
         nodeInCache.accessCount++;
+<<<<<<< HEAD
         this._refreshFrequent(key);
+=======
+        this._refresh(key);
+>>>>>>> dev
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
         this._removeFromQueueAndCache(this.head);
@@ -395,13 +399,15 @@ class Qache {
   }
 
   _bubbleSort(node) {
+    console.log(this);
     // 0 node list
     if (!node) return;
     // 1 node list OR 2+ node list where node is tail
     if (node === this.tail) return;
 
     // 2+ node list
-    while (node.next && node.next.accessCount > node.accessCount) {
+    while (node.next && node.next.accessCount < node.accessCount) {
+      console.log('~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~');
       if (node === this.head) {
         this.head = node.next;
 
@@ -410,6 +416,7 @@ class Qache {
           this.tail = node;
 
           node.next.prev = null;
+          node.next.next = node;
 
           node.next = null;
           node.prev = this.head;

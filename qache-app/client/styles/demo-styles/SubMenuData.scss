@@ -1,0 +1,45 @@
+.sidebarLink {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 5rem;
+  padding: 0.5rem 0 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  font-size: x-large;
+  color: black;
+  &:hover {
+    text-decoration: underline;
+  }
+  svg {
+    display: inline-block;
+    position: relative;
+    vertical-align: baseline;
+    top: 0.25rem;
+  }
+  span {
+    display: inline-block;
+    margin-left: 1rem;
+  }
+}
+
+.dropdownLink {
+  height: 60px;
+  padding-left: 3rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  font-size: large;
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  .subIcon {
+    display: flex;
+    align-items: center;
+    padding-right: 1rem;
+  }
+}
