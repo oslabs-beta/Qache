@@ -104,6 +104,38 @@ describe('Qache Tests', () => {
         expect(cache.set).toBeDefined();
         expect(typeof cache.set).toBe('function');
       });
+
+      it('should take in any data type and store it in the cache as a node with the value of what was passed into set', () => {
+        const testKeys = [
+          'string',
+          'number',
+          'boolean',
+          'array',
+          'object',
+          'undefined',
+          'null',
+          'NaN',
+        ].map((type) => type + 'Key');
+        const testTypes = [
+          'testString',
+          7,
+          true,
+          [1, 2, 3],
+          { a: 'asdf' },
+          undefined,
+          null,
+          NaN,
+        ];
+        for (let i = 0; i < testTypes.length; i++) {
+          const key = testKeys[i];
+          const typeVal = testTypes[i];
+          cache.set(key, typeVal);
+          expect(cache.content[key]).toBeInstanceOf(Node);
+          expect(cache.content[key].value).toBe(typeVal);
+          cache = new Cache();
+        }
+      });
+
       it('should take in a cache key/value, add the node to the queue, and add the node to the cache at the key when cache is empty', () => {
         expect(cache.head).toBe(null);
         expect(cache.tail).toBe(null);
