@@ -343,11 +343,7 @@ class Qache {
       // key exists in cache
       if (nodeInCache) {
         nodeInCache.accessCount++;
-<<<<<<< HEAD
-        this._refreshFrequent(key);
-=======
         this._refresh(key);
->>>>>>> dev
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
         this._removeFromQueueAndCache(this.head);
