@@ -322,12 +322,13 @@ class Qache {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
+        nodeInCache.accessCount++;
         this._refresh(key);
       }
       // when the cache is full, we dequeue the head from the cache/queue
       else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
         this._removeFromQueueAndCache(this.head);
-        this.size--;
       }
       //key doesn't exist
       if (!nodeInCache) {
@@ -346,8 +347,8 @@ class Qache {
         this._refresh(key);
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
         this._removeFromQueueAndCache(this.head);
-        this.size--;
       }
       // key doesn't exist
       if (!nodeInCache) {
