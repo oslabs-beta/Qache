@@ -8,9 +8,7 @@
   border-radius: 0.25rem;
   font-size: x-large;
   color: black;
-  &:hover {
-    text-decoration: underline;
-  }
+  
   svg {
     display: inline-block;
     position: relative;
@@ -20,6 +18,9 @@
   span {
     display: inline-block;
     margin-left: 1rem;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
