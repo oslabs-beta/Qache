@@ -49,14 +49,13 @@ describe('Qache Tests', () => {
     // this beforeEach will change soonish... will be replaced with whatever's relevant or just removed.
     beforeEach(() => {
       users = [...testUsers];
-      users2 = [...testUsers].map((user, idx) => user.username + idx);
+      users2 = [...testUsers].map((user) => user.username + 2);
+      users3 = [...testUsers].map((user) => user.username + 3);
+      users4 = [...testUsers].map((user) => user.username + 4);
       userNode = new Node('users', users);
       userNode2 = new Node('users2', users2);
-      cache = new Cache();
-    });
-
-    afterEach(() => {
-      users = [...testUsers];
+      userNode3 = new Node('users3', users3);
+      userNode4 = new Node('users4', users4);
       cache = new Cache();
     });
 
@@ -76,27 +75,6 @@ describe('Qache Tests', () => {
       expect(cache.size).toBe(0);
       expect(cache.content).toEqual({});
       expect(cache.policyType).toEqual('LRU');
-    });
-
-    describe('get()', () => {
-      it(`should be a method on the 'Cache' class`, () => {
-        expect(cache.get).toBeDefined();
-        expect(typeof cache.get).toBe('function');
-      });
-
-      it(`should take in a cache key and return the data found inside that key's/Node's 'value' property`, () => {
-        cache.content['users'] = userNode;
-        expect(cache.get('users')).toBe(users);
-      });
-
-      it('should increment accessCount', () => {
-        userNode.accessCount = 0;
-        cache.content['users'] = userNode;
-        expect(cache.get('users')).toBe(users);
-        expect(userNode.accessCount).toBe(1);
-        expect(cache.get('users')).toBe(users);
-        expect(userNode.accessCount).toBe(2);
-      });
     });
 
     describe('set()', () => {
@@ -152,14 +130,59 @@ describe('Qache Tests', () => {
         expect(cache.head).toBe(node);
         expect(cache.tail).toBe(node);
       });
+
+      it('should increment cache size when size < maxSize', () => {
+        expect(cache.size).toBe(0);
+        cache.set('users', users);
+        expect(cache.size).toBe(1);
+        cache.set('users2', users2);
+        expect(cache.size).toBe(2);
+      });
+
+      it('should not alter cache size when size equals maxSize', () => {
+        cache.maxSize = 0;
+        cache.set('users', users);
+        expect(cache.size).toBe(0);
+        cache = new Cache();
+        cache.maxSize = 3;
+        cache.set('users', users);
+        expect(cache.size).toBe(1);
+        cache.set('users2', users2);
+        expect(cache.size).toBe(2);
+        cache.set('users3', users3);
+        expect(cache.size).toBe(3);
+        cache.set('users4', users4);
+        expect(cache.size).toBe(3);
+        userNode2.prev = null;
+        userNode2.next = userNode3;
+        userNode3.prev = userNode2;
+        userNode3.next = userNode4;
+        userNode4.prev = userNode3;
+      });
+    });
+
+    describe('get()', () => {
+      it(`should be a method on the 'Cache' class`, () => {
+        expect(cache.get).toBeDefined();
+        expect(typeof cache.get).toBe('function');
+      });
+
+      it(`should take in a cache key and return the data found inside that key's/Node's 'value' property`, () => {
+        cache.content['users'] = userNode;
+        expect(cache.get('users')).toBe(users);
+      });
+
+      it('should increment accessCount', () => {
+        userNode.accessCount = 0;
+        cache.content['users'] = userNode;
+        expect(cache.get('users')).toBe(users);
+        expect(userNode.accessCount).toBe(1);
+        expect(cache.get('users')).toBe(users);
+        expect(userNode.accessCount).toBe(2);
+      });
     });
 
     describe('LRU Eviction Policy Tests:', () => {
-      xdescribe('get()', () => {
-        xit('should add a node to the queue and cache when there is one element in the cache', () => {});
-        xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
-        xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
-      });
       describe('set()', () => {
         it('should add a node to the queue and cache when there is one element in the cache and update the cache tail to point to the added node', () => {
           cache.set('users', users);
@@ -170,6 +193,68 @@ describe('Qache Tests', () => {
           expect(cache.tail).toEqual(userNode2);
           expect(cache.tail).toBeInstanceOf(Node);
         });
+        it('should add a node to the queue and cache when there are two elements in the cache', () => {
+          cache.set('users', users);
+          cache.set('users2', users2);
+          cache.set('users3', users3);
+          userNode.next = userNode2;
+          userNode2.prev = userNode;
+          userNode2.next = userNode3;
+          userNode3.prev = userNode2;
+          expect(cache.head).toEqual(userNode);
+          expect(cache.tail).toEqual(userNode3);
+          expect(cache.head.next).toEqual(userNode2);
+          expect(cache.tail.prev).toEqual(userNode2);
+          expect(cache.head.next.next).toBe(cache.tail);
+          expect(cache.tail.prev.prev).toBe(cache.head);
+          expect(cache.content['users2']).toEqual(userNode2);
+        });
+        it('should add a node to the queue and cache when there are 3+ elements in the cache', () => {
+          cache.set('users', users);
+          cache.set('users2', users2);
+          cache.set('users3', users3);
+          cache.set('users4', users4);
+          userNode.next = userNode2;
+          userNode2.prev = userNode;
+          userNode2.next = userNode3;
+          userNode3.prev = userNode2;
+          userNode3.next = userNode4;
+          userNode4.prev = userNode3;
+          expect(cache.head).toEqual(userNode);
+          expect(cache.head.next).toEqual(userNode2);
+          expect(cache.head.next.next).toEqual(userNode3);
+          expect(cache.head.next.next.next).toEqual(cache.tail);
+          expect(cache.tail).toEqual(userNode4);
+          expect(cache.tail.prev).toEqual(userNode3);
+          expect(cache.tail.prev.prev).toEqual(userNode2);
+          expect(cache.tail.prev.prev.prev).toEqual(userNode);
+          expect(cache.content['users']).toEqual(userNode);
+          expect(cache.content['users2']).toEqual(userNode2);
+          expect(cache.content['users3']).toEqual(userNode3);
+          expect(cache.content['users4']).toEqual(userNode4);
+        });
+
+        it('should add a node to the tail and remove + reassign the head when cache size equals maxSize', () => {
+          cache.maxSize = 3;
+          cache.set('users', users);
+          cache.set('users2', users2);
+          cache.set('users3', users3);
+          cache.set('users4', users4);
+          userNode2.prev = null;
+          userNode2.next = userNode3;
+          userNode3.prev = userNode2;
+          userNode3.next = userNode4;
+          userNode4.prev = userNode3;
+          expect(cache.head).toEqual(userNode2);
+          expect(cache.head.next).toEqual(userNode3);
+          expect(cache.head.next.next).toBe(cache.tail);
+          expect(cache.tail).toEqual(userNode4);
+          expect(cache.tail.prev).toEqual(userNode3);
+          expect(cache.tail.prev.prev).toBe(cache.head);
+        });
+      });
+      xdescribe('get()', () => {
+        xit('should add a node to the queue and cache when there is one element in the cache', () => {});
         xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
         xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
       });
