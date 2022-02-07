@@ -7,7 +7,7 @@ const cache = new Qache({evictionPolicy: "LFU"});
 module.exports = {
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
-    const { name, description, imageUrl, quantity, price, onSale, category } =
+    const { name, description, imageUrl, quantity, price, onSale, category, inCart } =
       args.product;
 
     // creates new product in DB
@@ -19,6 +19,7 @@ module.exports = {
       price,
       onSale,
       category,
+      inCart
     });
 
     newProduct.category.forEach(async (id) => {
@@ -119,7 +120,7 @@ module.exports = {
     return updatedCategory;
   },
 
-  // filters existing Products based on onSale field
+  // filters existing Products based on onSale/inCart field
   filterProductsBy: async (args, parent, info) => {
     const { onSale } = args.filter;
     const cacheRes = cache.listRange('onSale');

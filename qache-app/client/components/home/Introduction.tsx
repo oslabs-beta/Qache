@@ -125,7 +125,9 @@ const Introduction = () => {
           />
         </div>
       </div>
-      <Team/>
+      <div id='team'>
+        <Team/>
+      </div>
     </>
   );
 };
