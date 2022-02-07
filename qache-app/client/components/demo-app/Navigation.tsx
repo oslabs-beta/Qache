@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../../styles/demo-styles/Navigation.scss';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 import { FaBars, FaSearch } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoMdRefresh } from 'react-icons/io';
@@ -61,6 +62,7 @@ const Navigation = ({ props }: { props: any }) => {
               Rooms
             </a>
             <Link to='/demo-app/*/deals'>Deals</Link>
+            <Link to='/#team'>Meet The Team</Link>
             <div className='search'>
               <input
                 id='search'

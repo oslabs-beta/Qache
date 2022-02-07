@@ -1,5 +1,5 @@
 import '../../styles/home-styles/Navbar.scss';
-import { Link } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import qache from '../../images/qache.png';
@@ -27,9 +27,9 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <a href='#team' className='nav-link'>
-                  Meet the Team
-                </a>
+                <Link to='/#team' className='nav-link'>
+                  Meet The Team
+                </Link>
               </li>
             </ul>
           </div>
