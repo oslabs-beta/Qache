@@ -181,17 +181,16 @@
     align-items: flex-start;
 
     h3 {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 300;
       margin-bottom: 2%;
     }
 
     p {
+      font-size: 1.25rem;
       width: 75%;
-    }
-
-    svg {
-      display: inline-block;
+      margin-top: 1%;
+      margin-bottom: 1%;
     }
   }
 
@@ -228,7 +227,7 @@
       font-size: 2.5rem;
       font-weight: 600;
       margin-top: 0;
-      margin-bottom: 10%;
+      margin-bottom: 5%;
       text-align: center;
     }
 

@@ -110,11 +110,9 @@ const Introduction = () => {
         <div className='overview-texts'>
           <h3>Qache Your Data</h3>
           <p>
-            Qache is a utility class for handling server-side caching of SQL and
-            noSQL databases to reduce the latency of your queries.
-          </p>
-          <p>
-            178ms <AiOutlineArrowRight /> 13ms
+            Qache is a modular utility class for handling server side caching of
+            Data. Optimize your data fetching performance with our caching
+            solution!
           </p>
         </div>
         <div className='overview-graph'>
@@ -141,7 +139,8 @@ const Introduction = () => {
               <p>test</p>
             </div>
           </div>
-            <br/><br/>
+          <br />
+          <br />
           {/* experience our caching tool when browsing through products, rooms, and deals */}
           <div className='demo-container'>
             gif
@@ -150,7 +149,8 @@ const Introduction = () => {
               <p>test</p>
             </div>
           </div>
-          <br/><br/>
+          <br />
+          <br />
           {/* describe what one of the page shows, scroll down to look at the products, and say that the first point of the graph represents the latency of fetching those product data */}
           <div className='demo-container'>
             gif
@@ -159,7 +159,8 @@ const Introduction = () => {
               <p>test</p>
             </div>
           </div>
-          <br/><br/>
+          <br />
+          <br />
           {/* click on the refresh button to show the line graph changes and describe what it means */}
           <div className='demo-container'>
             gif
