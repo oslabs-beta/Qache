@@ -1,4 +1,4 @@
-<p align="center" style="width: 1000px; height: 600px;"><img src="./demo-app/client/images/transparentlogowithslogan.png" width='1000' style="margin-top: 10px;"></p>
+<p align="center" style="width: 1000px; height: 600px;"><img src="./qache-app/client/components/demo-app/images/transparentlogowithslogan.png" width='1000' style="margin-top: 10px;"></p>
 
 # Qache
 

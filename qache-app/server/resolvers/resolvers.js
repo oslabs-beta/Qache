@@ -2,7 +2,7 @@ const Qache = require('../../../Qache/Qache');
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 
-const cache = new Qache({evictionPolicy: "LFU", timeToLive: 1000 * 60});
+const cache = new Qache({evictionPolicy: "LFU"});
 
 module.exports = {
   // creates new product and adds it to DB
@@ -26,7 +26,7 @@ module.exports = {
       const path = await Category.findById(id);
       cache.listPush(newProduct, category.name);
       path.products.push(newProduct._id);
-      await path.save();
+      await path.save()
     });
     return newProduct;
   },
@@ -35,7 +35,7 @@ module.exports = {
   addCategory: async (args, parent, info) => {
     const { name, products } = args.category;
     const newCategory = await Category.create({ name, products });
-    return newCategory;
+    return newCategory
   },
 
   // returns all existing products in DB
@@ -46,12 +46,10 @@ module.exports = {
 
   // returns all existing products in DB that are in given category
   getProductsBy: async (args, parent, info) => {
-    console.log(cache)
     const t1 = Date.now();
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
     if (cacheRes) {
-      console.log(cacheRes);
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
       return cacheRes;
@@ -124,23 +122,10 @@ module.exports = {
 
   // filters existing Products based on onSale/inCart field
   filterProductsBy: async (args, parent, info) => {
-    const { onSale, inCart } = args.filter;
-    let cacheRes;
-    // if (onSale) {
-    //   cacheRes = cache.listRange('onSale');
-    // } else if (inCart) {
-    //   cacheRes = cache.listRange('inCart');
-    // }
-    // if (cacheRes) {
-    //   return cacheRes;
-    // }
-    let filteredProducts;
-    if (onSale) {
-      filteredProducts = await Product.find({ onSale });
-      // cache.listCreate('onSale', ...filteredProducts);
-    } else if (inCart) {
-      filteredProducts = await Product.find({inCart});
-      // cache.listCreate('inCart', ...filteredProducts);
+    const { onSale } = args.filter;
+    const cacheRes = cache.listRange('onSale');
+    if (cacheRes) {
+      return cacheRes
     }
     const filteredProducts = await Product.find({ onSale });
     cache.listCreate('onSale', filteredProducts);
