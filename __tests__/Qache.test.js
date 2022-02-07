@@ -81,10 +81,18 @@ describe('Qache Tests', () => {
         expect(typeof cache.get).toBe('function');
       });
 
-      it(`should take in a cache key and return the data found inside that key's/Node's value property`, () => {
-        // need to test for `set` logic before this...
-        // console.log(cache.get('users'));
-        //expect(cache.get('users')).toEqual
+      it(`should take in a cache key and return the data found inside that key's/Node's 'value' property`, () => {
+        cache.content['users'] = userNode;
+        expect(cache.get('users')).toBe(users);
+      });
+
+      it('should increment accessCount', () => {
+        userNode.accessCount = 0;
+        cache.content['users'] = userNode;
+        expect(cache.get('users')).toBe(users);
+        expect(userNode.accessCount).toBe(1);
+        expect(cache.get('users')).toBe(users);
+        expect(userNode.accessCount).toBe(2);
       });
     });
 
@@ -123,9 +131,6 @@ describe('Qache Tests', () => {
           expect(cache.head).toEqual(userNode);
           expect(cache.tail).toEqual(userNode);
           expect(cache.content['users']).toEqual(userNode);
-          // userNode.accessCount++;
-          console.log(cache.get('users'));
-          // expect(cache.get('users')).toEqual(userNode);
         });
         xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
         xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
