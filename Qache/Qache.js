@@ -369,13 +369,13 @@ class Qache {
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
    * @param {object} key
    */
-  _refreshRecent(key) {
-    this._removeFromQueue(existingNode);
-    this._enqueue(existingNode);
+  _refreshRecent(node) {
+    this._removeFromQueue(node);
+    this._enqueue(node);
   }
 
-  _refreshFrequent(key) {
-    this._bubbleSort(existingNode);
+  _refreshFrequent(node) {
+    this._bubbleSort(node);
   }
 
   _refresh(key) {
@@ -385,9 +385,9 @@ class Qache {
       existingNode.accessCount++;
 
       if (this.policyType === 'LRU') {
-        this._refreshRecent(key);
+        this._refreshRecent(existingNode);
       } else if (this.policyType === 'LFU') {
-        this._refreshFrequent(key);
+        this._refreshFrequent(existingNode);
       } else {
         throw new Error('Policy type does not exist');
       }

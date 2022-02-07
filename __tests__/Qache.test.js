@@ -121,6 +121,11 @@ describe('Qache Tests', () => {
         it('should add a node to the queue and cache when there is one element in the cache', () => {
           cache.set('users', users);
           expect(cache.head).toEqual(userNode);
+          expect(cache.tail).toEqual(userNode);
+          expect(cache.content['users']).toEqual(userNode);
+          // userNode.accessCount++;
+          console.log(cache.get('users'));
+          // expect(cache.get('users')).toEqual(userNode);
         });
         xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
         xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
