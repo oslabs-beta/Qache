@@ -1,6 +1,14 @@
 @import '../variables.scss';
 
 body {
+  .code-block{
+    margin: 20px 30px;
+    padding: 10px;
+    display: inline-block;
+    background-color: lightgray;
+    border-radius: 5px;
+    border: 1px solid gray
+  }
   #docs {
     display: flex;
     width: 100%;
@@ -14,9 +22,10 @@ body {
 
     .title {
       font-size: x-large;
-      color: $offWhite;
+      color: $offerWhite;
       font-weight: 600;
       margin-left: 20px;
+      padding-bottom: 5px;
       border-bottom: 1px solid gray;
     }
     .time {
@@ -26,11 +35,11 @@ body {
     }
     .body {
       font-size: large;
-      color: $bluegreen;
       margin-left: 20px;
     }
 
     #docs-nav {
+      padding: 10px;
       font-size: larger;
       position: fixed;
       top: 130px;
@@ -39,6 +48,7 @@ body {
       border-right: 1px solid gray;
       li {
         margin-left: 30px;
+        color: $offerWhite;
       }
     }
 
@@ -49,29 +59,21 @@ body {
       margin-left: 230px;
       flex-direction: column;
       font-size: x-large;
+      strong{
+        font-size: xx-large;
+        margin-left: -10px;
+      }
       .section {
         background-color: $offBlack;
         margin: 0px 5px 10px 5px;
         width: 90%;
         border-radius: 10px;
         padding: 10px 0px 20px 0px;
-        strong{
-          margin-top: -130px;
-          padding-top: 130px;
-        }
+
         .title {
           margin: 0;
           padding-left: 20px;
           color: $offWhite;
-        }
-
-
-        .title:before { 
-          display: block; 
-          content: " "; 
-          margin-top: -130px; 
-          height: 130px; 
-          visibility: hidden; 
         }
 
         .time {
@@ -79,7 +81,7 @@ body {
         }
         .body {
           margin-top: 10px;
-          color: $offWhite;
+          color: $offerWhite;
         }
       }
     }

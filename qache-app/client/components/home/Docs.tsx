@@ -2,6 +2,12 @@ import { HashLink as Link } from 'react-router-hash-link';
 import Navbar from './Navbar';
 import '../../styles/home-styles/Docs.scss'
 
+const scrollWithOffset = (el:any) => {
+  const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+  const yOffset = -120; 
+  window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
+}
+
 
 const Docs = () => {
   return (
@@ -12,27 +18,27 @@ const Docs = () => {
         <div id="docs-nav">
           <Link to={'/docs/#quick-start'}><strong>Quick Start</strong></Link>
           <ul>
-            <li><Link to={'/docs/#install'}>Install</Link></li>
-            <li><Link to={'/docs/#instantiate'}>Instantiate</Link></li>
-            <li><Link to={'/docs/#set'}>Set</Link></li>
-            <li><Link to={'/docs/#get'}>Get</Link></li>
+            <li><Link to={'/docs/#install'} scroll={el => scrollWithOffset(el)}>Install</Link></li>
+            <li><Link to={'/docs/#instantiate'} scroll={el => scrollWithOffset(el)}>Instantiate</Link></li>
+            <li><Link to={'/docs/#set'} scroll={el => scrollWithOffset(el)}>Set Your First Key</Link></li>
+            <li><Link to={'/docs/#get'} scroll={el => scrollWithOffset(el)}>Get Your Data</Link></li>
           </ul>
           <Link to={'/docs/#commands'}><strong>Commands</strong></Link>
           <ul>
-            <li><Link to={'/docs/#getcommand'}>get</Link></li>
-            <li><Link to={'/docs/#setcommand'}>set</Link></li>
-            <li><Link to={'/docs/#update'}>update</Link></li>
-            <li><Link to={'/docs/#delete'}>delete</Link></li>
-            <li><Link to={'/docs/#listCreate'}>listCreate</Link></li>
-            <li><Link to={'/docs/#listRange'}>listRange</Link></li>
-            <li><Link to={'/docs/#invalidate'}>invalidate</Link></li>
-            <li><Link to={'/docs/#listPush'}>listPush</Link></li>
-            <li><Link to={'/docs/#listFetch'}>listFetch</Link></li>
-            <li><Link to={'/docs/#listUpdate'}>listUpdate</Link></li>
-            <li><Link to={'/docs/#listUpsert'}>listUpsert</Link></li>
-            <li><Link to={'/docs/#listRemoveItem'}>listRemoveItem</Link></li>
+            <li><Link to={'/docs/#getcommand'} scroll={el => scrollWithOffset(el)}>get</Link></li>
+            <li><Link to={'/docs/#setcommand'} scroll={el => scrollWithOffset(el)}>set</Link></li>
+            <li><Link to={'/docs/#update'} scroll={el => scrollWithOffset(el)}>update</Link></li>
+            <li><Link to={'/docs/#delete'} scroll={el => scrollWithOffset(el)}>delete</Link></li>
+            <li><Link to={'/docs/#listCreate'} scroll={el => scrollWithOffset(el)}>listCreate</Link></li>
+            <li><Link to={'/docs/#listRange'} scroll={el => scrollWithOffset(el)}>listRange</Link></li>
+            <li><Link to={'/docs/#invalidate'} scroll={el => scrollWithOffset(el)}>invalidate</Link></li>
+            <li><Link to={'/docs/#listPush'} scroll={el => scrollWithOffset(el)}>listPush</Link></li>
+            <li><Link to={'/docs/#listFetch'} scroll={el => scrollWithOffset(el)}>listFetch</Link></li>
+            <li><Link to={'/docs/#listUpdate'} scroll={el => scrollWithOffset(el)}>listUpdate</Link></li>
+            <li><Link to={'/docs/#listUpsert'} scroll={el => scrollWithOffset(el)}>listUpsert</Link></li>
+            <li><Link to={'/docs/#listRemoveItem'} scroll={el => scrollWithOffset(el)}>listRemoveItem</Link></li>
           </ul>
-          <Link to={'/docs/#faq'}><strong>FAQ</strong></Link>
+          <Link to={'/docs/#faq'} scroll={el => scrollWithOffset(el)}><strong>FAQ</strong></Link>
           <ul>
             <li>One</li>
             <li>Two</li>
@@ -43,11 +49,16 @@ const Docs = () => {
         <div id="docs-content">
           <div id="quick-start">
             <strong>Quick Start</strong>
-            <div id="install" className='section'>
-              <p className='title'>Installation</p>
-              <p className='body'>Installation is a very simple process. Start with a quick npm install qache</p>
-              <p className='body'>This will add qache to your servers dependencies.</p>
-            </div>
+            <a id="install" className='anchor'>
+              <div className='section'>
+                <p className='title'>Installation</p>
+                <p className='body'>Installation is a very simple process. Start with a quick npm install qache</p>
+                <div className='code-block'>
+                  <code>npm install qache</code>
+                </div>
+                <p className='body'>This will add qache to your servers dependencies.</p>
+              </div>
+            </a>
             <div id="instantiate" className='section'>
               <p className='title'>Instantiate</p>
               <p className='body'>This is how you Instantiate it</p>
