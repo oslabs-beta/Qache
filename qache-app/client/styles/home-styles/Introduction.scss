@@ -214,8 +214,7 @@
   padding: 1%;
   background-color: $offWhite;
 
-  .demo-feature-container
-  {
+  .demo-feature-container {
     display: flex;
     flex-direction: column;
     color: $black;
@@ -231,14 +230,27 @@
       text-align: center;
     }
 
+    hr {
+      border: 1px solid $zinc;
+    }
+
     .demo-container {
       display: flex;
-      padding: 10%;
-      border: 1px solid black;
+      padding: 1%;
+
+      img {
+        max-width: 50%;
+        margin-right: 2.5%;
+      }
+
+      .text {
+        width: 100%;
+      }
 
       h3 {
         font-size: 1.75rem;
         font-weight: 400;
+        margin-bottom: 1%;
       }
     }
   }
