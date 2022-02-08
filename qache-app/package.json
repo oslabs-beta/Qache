@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.7",
+    "@heroicons/react": "^1.0.5",
     "@observablehq/plot": "^0.4.0",
     "@reduxjs/toolkit": "^1.7.1",
     "add": "^2.0.6",

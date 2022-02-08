@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/oslabs-beta/Qache/issues"
   },
-  "homepage": "https://github.com/oslabs-beta/Qache#readme"
+  "homepage": "https://github.com/oslabs-beta/Qache#readme",
+  "dependencies": {
+    "@headlessui/react": "^1.4.3",
+    "@headlessui/vue": "^1.4.3",
+    "@heroicons/vue": "^1.0.5"
+  }
 }

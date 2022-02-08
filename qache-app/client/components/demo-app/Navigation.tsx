@@ -61,7 +61,7 @@ const Navigation = ({ props }: { props: any }) => {
             >
               Rooms
             </a>
-            <Link to='/demo-app/*/deals'>Deals</Link>
+            <Link to='/demo-app/deals'>Deals</Link>
             <Link to='/#team'>Meet The Team</Link>
             <div className='search'>
               <input
