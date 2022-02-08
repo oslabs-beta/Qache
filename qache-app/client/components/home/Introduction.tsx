@@ -4,8 +4,27 @@ import { MdOutlineArrowForwardIos } from 'react-icons/md';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import LineGraph from '../demo-app/LineGraph';
 import Team from './Team';
+import preview from '../../images/preview.gif';
+import demo from '../../images/demo.gif';
+import navigate from '../../images/navigate.gif';
+import qache from '../../images/qache.gif';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const Introduction = () => {
+  const [ref1, inView1] = useInView({
+    triggerOnce: true,
+  });
+  const [ref2, inView2] = useInView({
+    triggerOnce: true,
+  });
+  const [ref3, inView3] = useInView({
+    triggerOnce: true,
+  });
+  const [ref4, inView4] = useInView({
+    triggerOnce: true,
+  });
+
   const copyToClipboard = () => {
     const range = document.createRange();
     range.selectNode(document.getElementsByClassName('copy-button')[0]);
@@ -29,11 +48,13 @@ const Introduction = () => {
               className='copy-button hvr-curl-top-right'
               onClick={copyToClipboard}
             >
-              
-              <code><MdOutlineArrowForwardIos
-                className='forward-arrow'
-                color='black'
-              />npm i qache</code>
+              <code>
+                <MdOutlineArrowForwardIos
+                  className='forward-arrow'
+                  color='black'
+                />
+                npm i qache
+              </code>
             </div>
             <div className='blue-button'>
               <Link to='/docs'>Get Started</Link>
@@ -63,6 +84,7 @@ const Introduction = () => {
           height='475'
           preserveAspectRatio='none'
           viewBox='0 0 1440 560'
+          className='bg'
         >
           <g mask='url("#SvgjsMask1017")' fill='none'>
             <path
@@ -107,12 +129,10 @@ const Introduction = () => {
         <div className='overview-texts'>
           <h3>Qache Your Data</h3>
           <p>
-            Qache is a utility class for handling server-side caching of SQL and
-            noSQL databases to reduce the latency of your queries.
+            Qache is a modular utility class for handling server side caching of
+            data. It works with any database and API architecture including
+            GraphQL and RESTful APIs.
           </p>
-
-          <p>178ms 13ms</p>
-          {<AiOutlineArrowRight />}
         </div>
         <div className='overview-graph'>
           <LineGraph
@@ -125,9 +145,121 @@ const Introduction = () => {
           />
         </div>
       </div>
-      <div id='team'>
-        <Team/>
-      </div>
+
+      <section className='features-container'>
+        <div className='demo-feature-container'>
+          <h1>Demo our Qache Tool</h1>
+          <div className='demo-container' ref={ref1}>
+            <motion.img
+              src={preview}
+              alt='Preview gif'
+              initial={{ x: '-100vw' }}
+              animate={inView1 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            />
+            <motion.div
+              className='text'
+              initial={{ x: '100vw' }}
+              animate={inView1 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            >
+              <h3>Preview</h3>
+              <p>
+                We built a Demo application to see in real time how our caching
+                solution would work on a mock database we created with MongoDB
+                and GraphQL. Behind the scenes, we've implemented our Qache
+                methods to handle query performance, optimizing it with server
+                side caching.
+              </p>
+            </motion.div>
+          </div>
+          <br />
+          <hr />
+          <br />
+          <div className='demo-container' ref={ref2}>
+            <motion.img
+              src={demo}
+              alt='Demo gif'
+              initial={{ x: '-100vw' }}
+              animate={inView2 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            />
+            <motion.div
+              className='text'
+              initial={{ x: '100vw' }}
+              animate={inView2 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            >
+              <h3>Browsing Through</h3>
+              <p>
+                In our Demo application, you can browse through the navigation
+                bar and sidebar, allowing you to go through our products, rooms,
+                and deals.
+              </p>
+            </motion.div>
+          </div>
+          <br />
+          <hr />
+          <br />
+          <div className='demo-container' ref={ref3}>
+            <motion.img
+              src={navigate}
+              alt='Navigate gif'
+              initial={{ x: '-100vw' }}
+              animate={inView3 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            />
+            <motion.div
+              className='text'
+              initial={{ x: '100vw' }}
+              animate={inView3 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            >
+              <h3>Latency Graph</h3>
+              <p>
+                Our Demo application shows a line graph for each of the pages.
+                The landing page has an example line graph of what will be shown
+                when you visit any of the pages. The line graph shows the speed
+                in miliseconds on the y-axis and the number of fetches/queries
+                to the database and our server side cache on the x-axis.
+              </p>
+            </motion.div>
+          </div>
+          <br />
+          <hr />
+          <br />
+          <div className='demo-container' ref={ref4}>
+            <motion.img
+              src={qache}
+              alt='Qache gif'
+              initial={{ x: '-100vw' }}
+              animate={inView4 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            />
+            <motion.div
+              className='text'
+              initial={{ x: '100vw' }}
+              animate={inView4 ? { x: 0 } : 'hidden'}
+              transition={{ duration: 1.5 }}
+            >
+              <h3>Qache Tool</h3>
+              <p>
+                The first point on the line graph describes how fast our query
+                takes to fetch the data from the database and returning it back
+                to the client which displays all the products on the page.
+                Behind the scenes, our qache tool stashes that response data
+                into the cache. Above the graph is a refresh button that allows
+                you to refetch the data. It creates a new data point in the line
+                graph every time you click on it, but instead of fetching the
+                data from the database again, it checks if the data lies in the
+                server side cache first, and if it is, it will return the data
+                from the cache, cutting the time needed to go to the database.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      <Team id='team' />
     </>
   );
 };

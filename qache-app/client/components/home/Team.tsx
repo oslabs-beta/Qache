@@ -1,10 +1,10 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
-const shuffleArray = (array: any) => {
-  const outputArray = [];
-  const used = new Set();
+const shuffleArray = (array: {}[]) => {
+  const outputArray: {}[] = [];
+  const used: any = new Set();
   while (outputArray.length !== array.length) {
-    const rand = Math.floor(Math.random() * array.length);
+    const rand: number = Math.floor(Math.random() * array.length);
     if (!used.has(array[rand])) {
       outputArray.push(array[rand]);
       used.add(array[rand]);
@@ -48,20 +48,19 @@ const unshuffledPeople = [
   },
 ];
 
-const people: any = shuffleArray(unshuffledPeople);
+const people: {}[] = shuffleArray(unshuffledPeople);
 
-export default function Team() {
+const Team = ({ id }: { id: string }) => {
   return (
-    <div className='bg-gray-900'>
-      <div className='mx-auto py-12 px-4 max-w-7xl sm:px-6 lg:px-8 lg:py-24'>
+    <div id={id} className='bg-zinc-900'>
+      <div className='mx-auto px-4 max-w-7xl sm:px-6 lg:px-8 lg:py-4'>
         <div className='space-y-12'>
           <div className='space-y-5 sm:space-y-4 md:max-w-xl lg:max-w-3xl xl:max-w-none'>
-            <h2 className='text-3xl font-extrabold text-white tracking-tight sm:text-4xl'>
+            <h2 className='text-3xl text-center font-extrabold text-white tracking-tight sm:text-4xl'>
               Meet our team
             </h2>
-            <p className='text-xl text-gray-300'>
-              Ornare sagittis, suspendisse in hendrerit quis. Sed dui aliquet
-              lectus sit pretium egestas vel mattis neque.
+            <p className='text-center text-xl text-gray-300'>
+              Connect and follow our engineers!
             </p>
           </div>
           <ul
@@ -71,7 +70,7 @@ export default function Team() {
             {people.map((person: any) => (
               <li
                 key={person.name}
-                className='py-10 px-6 bg-gray-800 text-center rounded-lg xl:px-10 xl:text-left'
+                className='py-10 px-6 bg-zinc-800 text-center rounded-lg xl:px-10 xl:text-left'
               >
                 <div className='space-y-6 xl:space-y-10'>
                   <img
@@ -82,7 +81,7 @@ export default function Team() {
                   <div className='space-y-2 xl:flex xl:items-center xl:justify-between'>
                     <div className='font-medium text-lg leading-6 space-y-1'>
                       <h3 className='text-white'>{person.name}</h3>
-                      <p className='text-indigo-400'>{person.role}</p>
+                      <p className='text-cyan-500'>{person.role}</p>
                     </div>
 
                     <ul role='list' className='flex justify-center space-x-5'>
@@ -132,4 +131,6 @@ export default function Team() {
       </div>
     </div>
   );
-}
+};
+
+export default Team;
