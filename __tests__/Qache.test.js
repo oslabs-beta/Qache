@@ -184,73 +184,117 @@ describe('Qache Tests', () => {
 
     describe('LRU Eviction Policy Tests:', () => {
       describe('set()', () => {
-        it('should add a node to the queue and cache when there is one element in the cache and update the cache tail to point to the added node', () => {
-          cache.set('users', users);
-          cache.set('users2', users2);
-          userNode.next = userNode2;
-          userNode2.prev = userNode;
-          expect(cache.head).toEqual(userNode);
-          expect(cache.tail).toEqual(userNode2);
-          expect(cache.tail).toBeInstanceOf(Node);
-        });
-        it('should add a node to the queue and cache when there are two elements in the cache', () => {
-          cache.set('users', users);
-          cache.set('users2', users2);
-          cache.set('users3', users3);
-          userNode.next = userNode2;
-          userNode2.prev = userNode;
-          userNode2.next = userNode3;
-          userNode3.prev = userNode2;
-          expect(cache.head).toEqual(userNode);
-          expect(cache.tail).toEqual(userNode3);
-          expect(cache.head.next).toEqual(userNode2);
-          expect(cache.tail.prev).toEqual(userNode2);
-          expect(cache.head.next.next).toBe(cache.tail);
-          expect(cache.tail.prev.prev).toBe(cache.head);
-          expect(cache.content['users2']).toEqual(userNode2);
-        });
-        it('should add a node to the queue and cache when there are 3+ elements in the cache', () => {
-          cache.set('users', users);
-          cache.set('users2', users2);
-          cache.set('users3', users3);
-          cache.set('users4', users4);
-          userNode.next = userNode2;
-          userNode2.prev = userNode;
-          userNode2.next = userNode3;
-          userNode3.prev = userNode2;
-          userNode3.next = userNode4;
-          userNode4.prev = userNode3;
-          expect(cache.head).toEqual(userNode);
-          expect(cache.head.next).toEqual(userNode2);
-          expect(cache.head.next.next).toEqual(userNode3);
-          expect(cache.head.next.next.next).toEqual(cache.tail);
-          expect(cache.tail).toEqual(userNode4);
-          expect(cache.tail.prev).toEqual(userNode3);
-          expect(cache.tail.prev.prev).toEqual(userNode2);
-          expect(cache.tail.prev.prev.prev).toEqual(userNode);
-          expect(cache.content['users']).toEqual(userNode);
-          expect(cache.content['users2']).toEqual(userNode2);
-          expect(cache.content['users3']).toEqual(userNode3);
-          expect(cache.content['users4']).toEqual(userNode4);
+        beforeEach(() => {
+          users = [...testUsers];
+          users2 = [...testUsers].map((user) => user.username + 2);
+          users3 = [...testUsers].map((user) => user.username + 3);
+          users4 = [...testUsers].map((user) => user.username + 4);
+          userNode = new Node('users', users);
+          userNode2 = new Node('users2', users2);
+          userNode3 = new Node('users3', users3);
+          userNode4 = new Node('users4', users4);
+          cache = new Cache();
         });
 
-        it('should add a node to the tail and remove + reassign the head when cache size equals maxSize', () => {
-          cache.maxSize = 3;
-          cache.set('users', users);
-          cache.set('users2', users2);
-          cache.set('users3', users3);
-          cache.set('users4', users4);
-          userNode2.prev = null;
-          userNode2.next = userNode3;
-          userNode3.prev = userNode2;
-          userNode3.next = userNode4;
-          userNode4.prev = userNode3;
-          expect(cache.head).toEqual(userNode2);
-          expect(cache.head.next).toEqual(userNode3);
-          expect(cache.head.next.next).toBe(cache.tail);
-          expect(cache.tail).toEqual(userNode4);
-          expect(cache.tail.prev).toEqual(userNode3);
-          expect(cache.tail.prev.prev).toBe(cache.head);
+        describe('Adding a unique key to the cache:', () => {
+          it('should add a node to the queue and cache when there is one element in the cache and update the cache tail to point to the added node', () => {
+            cache.set('users', users);
+            cache.set('users2', users2);
+            userNode.next = userNode2;
+            userNode2.prev = userNode;
+            expect(cache.head).toEqual(userNode);
+            expect(cache.tail).toEqual(userNode2);
+            expect(cache.tail).toBeInstanceOf(Node);
+          });
+          it('should add a node to the queue and cache when there are two elements in the cache', () => {
+            cache.set('users', users);
+            cache.set('users2', users2);
+            cache.set('users3', users3);
+            userNode.next = userNode2;
+            userNode2.prev = userNode;
+            userNode2.next = userNode3;
+            userNode3.prev = userNode2;
+            expect(cache.head).toEqual(userNode);
+            expect(cache.tail).toEqual(userNode3);
+            expect(cache.head.next).toEqual(userNode2);
+            expect(cache.tail.prev).toEqual(userNode2);
+            expect(cache.head.next.next).toBe(cache.tail);
+            expect(cache.tail.prev.prev).toBe(cache.head);
+            expect(cache.content['users2']).toEqual(userNode2);
+          });
+          it('should add a node to the queue and cache when there are 3+ elements in the cache', () => {
+            cache.set('users', users);
+            cache.set('users2', users2);
+            cache.set('users3', users3);
+            cache.set('users4', users4);
+            userNode.next = userNode2;
+            userNode2.prev = userNode;
+            userNode2.next = userNode3;
+            userNode3.prev = userNode2;
+            userNode3.next = userNode4;
+            userNode4.prev = userNode3;
+            expect(cache.head).toEqual(userNode);
+            expect(cache.head.next).toEqual(userNode2);
+            expect(cache.head.next.next).toEqual(userNode3);
+            expect(cache.head.next.next.next).toEqual(cache.tail);
+            expect(cache.tail).toEqual(userNode4);
+            expect(cache.tail.prev).toEqual(userNode3);
+            expect(cache.tail.prev.prev).toEqual(userNode2);
+            expect(cache.tail.prev.prev.prev).toEqual(userNode);
+            expect(cache.content['users']).toEqual(userNode);
+            expect(cache.content['users2']).toEqual(userNode2);
+            expect(cache.content['users3']).toEqual(userNode3);
+            expect(cache.content['users4']).toEqual(userNode4);
+          });
+
+          it('should add a node to the tail and remove + reassign the head when cache size equals maxSize', () => {
+            cache.maxSize = 3;
+            cache.set('users', users);
+            cache.set('users2', users2);
+            cache.set('users3', users3);
+            cache.set('users4', users4);
+            userNode2.prev = null;
+            userNode2.next = userNode3;
+            userNode3.prev = userNode2;
+            userNode3.next = userNode4;
+            userNode4.prev = userNode3;
+            expect(cache.head).toEqual(userNode2);
+            expect(cache.head.next).toEqual(userNode3);
+            expect(cache.head.next.next).toBe(cache.tail);
+            expect(cache.tail).toEqual(userNode4);
+            expect(cache.tail.prev).toEqual(userNode3);
+            expect(cache.tail.prev.prev).toBe(cache.head);
+          });
+        });
+        describe('Adding a duplicate key to the cache:', () => {
+          beforeEach(() => {
+            users = [...testUsers];
+            users2 = [...testUsers].map((user) => user.username + 2);
+            users3 = [...testUsers].map((user) => user.username + 3);
+            users4 = [...testUsers].map((user) => user.username + 4);
+            userNode = new Node('users', users);
+            userNode2 = new Node('users2', users2);
+            userNode3 = new Node('users3', users3);
+            userNode4 = new Node('users4', users4);
+            cache = new Cache();
+          });
+
+          xit('should move an existing node to the tail of the cache when a new node is added to a cache with one node and the given key already exists in the cache', () => {
+            cache.set('users', users);
+            cache.set('users2', users2);
+            cache.set('users', users3);
+            userNode2.prev = null;
+            userNode2.next = userNode3;
+            userNode3.prev = userNode2;
+            userNode3.next = null;
+            expect(cache.size).toBe(2);
+            // TODO: add in cases for checking that the node has been changed and not reset.
+            console.log(cache.head.next.next);
+            expect(cache.head).toEqual(userNode2);
+            // expect(cache.tail).toBe(cache.head.next);
+          });
+
+          it('should increment', () => {});
         });
       });
       xdescribe('get()', () => {

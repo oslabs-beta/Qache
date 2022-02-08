@@ -322,8 +322,7 @@ class Qache {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
-        nodeInCache.accessCount++;
-        this._refresh(key);
+        this._refresh(key, value);
       }
       // when the cache is full, we dequeue the head from the cache/queue
       else if (this.size === this.maxSize) {
@@ -343,8 +342,7 @@ class Qache {
     } else if (this.policyType === 'LFU') {
       // key exists in cache
       if (nodeInCache) {
-        nodeInCache.accessCount++;
-        this._refresh(key);
+        this._refresh(key, value);
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
         if (this.maxSize === 0) return;
@@ -379,11 +377,12 @@ class Qache {
     this._bubbleSort(node);
   }
 
-  _refresh(key) {
+  _refresh(key, value = undefined) {
     const existingNode = this.content[key];
 
     if (existingNode) {
       existingNode.accessCount++;
+      if (value !== undefined) existingNode.value = value;
 
       if (this.policyType === 'LRU') {
         this._refreshRecent(existingNode);
