@@ -14,7 +14,6 @@ class Qache {
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
-    console.log('Qache Cache Starting Up');
   }
 
   get(key) {
@@ -24,6 +23,19 @@ class Qache {
 
   set(key, value) {
     this._addToQueueAndCache(key, value);
+  }
+
+  update(key, newValue) {
+    if(this.content[key]){
+      this._refresh(key)
+      this.content[key].value = newValue
+    } else {
+      this._addToQueueAndCache(key, newValue);
+    }
+  }
+
+  delete(key) {
+    if(this.content[key]) this._removeFromQueueAndCache(this.content[key])
   }
 
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
@@ -50,7 +62,7 @@ class Qache {
     const { value } = this.content[listKey];
     this._refresh(listKey);
 
-    return value.slice(start, end);
+    return start === 0 && end >= value.length ? value : value.slice(start, end);
   }
 
   //**Update an item if found, push item if not found.**
@@ -154,7 +166,7 @@ class Qache {
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
-  listUpdate(filterObject, newItem, ...listKey) {
+  listUpdate(newItem, filterObject, ...listKey) {
     // Option to specify if each list only contains the item once.
     let unique = false;
 
@@ -265,8 +277,7 @@ class Qache {
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
       if (this.content[key] !== undefined) {
-        delete this.content[key];
-        this.size--;
+        this._removeFromQueueAndCache(this.content[key])
       }
     }
   }
@@ -323,12 +334,13 @@ class Qache {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
+        nodeInCache.accessCount++;
         this._refresh(key);
       }
       // when the cache is full, we dequeue the head from the cache/queue
       else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
         this._removeFromQueueAndCache(this.head);
-        this.size--;
       }
       //key doesn't exist
       if (!nodeInCache) {
@@ -347,8 +359,8 @@ class Qache {
         this._refresh(key);
         //key doesn't exist, and cache at max size
       } else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
         this._removeFromQueueAndCache(this.head);
-        this.size--;
       }
       // key doesn't exist
       if (!nodeInCache) {
@@ -370,13 +382,13 @@ class Qache {
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
    * @param {object} key
    */
-  _refreshRecent(existingNode) {
-    this._removeFromQueue(existingNode);
-    this._enqueue(existingNode);
+  _refreshRecent(node) {
+    this._removeFromQueue(node);
+    this._enqueue(node);
   }
 
-  _refreshFrequent(existingNode) {
-    this._bubbleSort(existingNode);
+  _refreshFrequent(node) {
+    this._bubbleSort(node);
   }
 
   _refresh(key) {

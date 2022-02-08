@@ -21,6 +21,7 @@
     "@babel/preset-react": "^7.16.7",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
+    "@types/react-router-hash-link": "^2.4.5",
     "autoprefixer": "^10.4.2",
     "babel-jest": "^27.4.6",
     "babel-loader": "^8.2.3",
@@ -46,6 +47,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.7",
+    "@heroicons/react": "^1.0.5",
     "@observablehq/plot": "^0.4.0",
     "@reduxjs/toolkit": "^1.7.1",
     "add": "^2.0.6",
@@ -64,6 +66,7 @@
     "react-intersection-observer": "^8.33.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
+    "react-router-hash-link": "^2.4.3",
     "tailwindcss": "^3.0.18"
   }
 }

@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   onSale: boolean;
   category: string;
+  inCart: boolean;
 }
 
 export interface Metric {
@@ -55,6 +56,10 @@ export interface Metric {
     labels: string[];
     data: number[];
   };
+  Cart?: {
+    labels: string[];
+    data: number[];
+  }
 }
 
 export interface Item {

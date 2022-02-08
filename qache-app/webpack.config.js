@@ -64,9 +64,7 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: ({ htmlWebpackPlugin }) =>
-        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' +
-        'Qache' +
-        '</title></head><body><div id="app"></div></body></html>',
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Qache</title></head><body><div id="app"></div></body></html>',
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin(),

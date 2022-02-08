@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
-    "jest": "^27.4.7",
-    "nodemon": "^2.0.15"
+    "jest": "^27.4.7"
   },
   "scripts": {
-    "start": "nodemon server",
     "test": "jest --watchAll"
   },
   "repository": {
@@ -22,8 +20,8 @@
   },
   "homepage": "https://github.com/oslabs-beta/Qache#readme",
   "dependencies": {
-    "express": "^4.17.2",
-    "express-graphql": "^0.12.0",
-    "graphql": "^16.2.0"
+    "@headlessui/react": "^1.4.3",
+    "@headlessui/vue": "^1.4.3",
+    "@heroicons/vue": "^1.0.5"
   }
 }
