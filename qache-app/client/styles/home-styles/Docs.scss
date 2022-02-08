@@ -1,61 +1,54 @@
 @import '../variables.scss';
 
-$cyan: #21f5ee;
-$black: #111111;
-$lightSoftBlack: rgb(31, 41, 55);
-$softBlack: rgb(17, 24, 39);
-$offBlack: #161616;
-$white: #ffffff;
-$quick: 300ms;
-
-body{
-
-  #docs{
+body {
+  #docs {
     display: flex;
     width: 100%;
     background-color: $softBlack;
     color: $white;
-  
-    strong{
+
+    strong {
       color: $cyan;
       margin: 10px 0px;
     }
 
-    .title{
+    .title {
       font-size: x-large;
       font-weight: 600;
       margin-left: 20px;
       border-bottom: 1px solid gray;
     }
-    .time{
+    .time {
       color: $cyan;
       font-size: large;
       margin: 5px 20px;
     }
-    .body{
+    .body {
       font-size: large;
       margin-left: 20px;
     }
-    
-    #docs-nav{
+
+    #docs-nav {
       font-size: larger;
+      position: sticky;
+      top: 100px;
       margin-left: 20px;
       width: 200px;
       height: 100vh;
       border-right: 1px solid gray;
       padding-left: 10px;
-      li{
+      li {
         margin-left: 20px;
       }
     }
-  
-    #docs-content{
+
+    #docs-content {
       display: flex;
       width: 80%;
       flex-direction: column;
       font-size: x-large;
       .section {
-        background-color: $lightSoftBlack;
+        background-color: $offBlack;
         margin: 10px 5px;
         width: 100%;
         border-radius: 10px;
