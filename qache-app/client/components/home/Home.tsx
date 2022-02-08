@@ -7,7 +7,7 @@ const Home = () => {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Introduction />} />
+        <Route path="/*" element={<Introduction />} />
       </Routes>
     </>
   )

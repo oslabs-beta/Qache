@@ -70,9 +70,9 @@ const DemoApp = () => {
         props={{ refresh, setRefresh, sidebar, setSidebar, hideSidebar }}
       />
       <Routes>
-        <Route path='/' element={<LandingPage />} />
+        <Route path='/*' element={<LandingPage />} />
         <Route
-          path='/*/products/couches'
+          path='/products/couches'
           element={
             <ProductDisplay
               props={{
@@ -85,7 +85,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/products/mattresses'
+          path='/products/mattresses'
           element={
             <ProductDisplay
               props={{
@@ -98,7 +98,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/rooms/bedroom'
+          path='/rooms/bedroom'
           element={
             <ProductDisplay
               props={{
@@ -111,7 +111,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/products/furnitures'
+          path='/products/furnitures'
           element={
             <ProductDisplay
               props={{
@@ -124,7 +124,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/products/storage'
+          path='/products/storage'
           element={
             <ProductDisplay
               props={{
@@ -137,7 +137,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/products/appliances'
+          path='/products/appliances'
           element={
             <ProductDisplay
               props={{
@@ -150,7 +150,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/rooms/bathroom'
+          path='/rooms/bathroom'
           element={
             <ProductDisplay
               props={{
@@ -163,7 +163,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/rooms/living-room'
+          path='/rooms/living-room'
           element={
             <ProductDisplay
               props={{
@@ -176,7 +176,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/rooms/kitchen'
+          path='/rooms/kitchen'
           element={
             <ProductDisplay
               props={{
@@ -189,7 +189,7 @@ const DemoApp = () => {
           }
         />
         <Route
-          path='/*/deals'
+          path='deals'
           element={
             <ProductDisplay
               props={{
