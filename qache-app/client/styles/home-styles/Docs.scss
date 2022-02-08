@@ -44,7 +44,7 @@ body {
 
     #docs-content {
       display: flex;
-      width: 80%;
+      width: auto;
       padding-top: 130px;
       margin-left: 230px;
       flex-direction: column;
@@ -55,12 +55,25 @@ body {
         width: 90%;
         border-radius: 10px;
         padding: 10px 0px 20px 0px;
-
+        strong{
+          margin-top: -130px;
+          padding-top: 130px;
+        }
         .title {
           margin: 0;
           padding-left: 20px;
           color: $offWhite;
         }
+
+
+        .title:before { 
+          display: block; 
+          content: " "; 
+          margin-top: -130px; 
+          height: 130px; 
+          visibility: hidden; 
+        }
+
         .time {
           margin-bottom: 10px;
         }

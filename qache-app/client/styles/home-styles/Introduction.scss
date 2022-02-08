@@ -3,11 +3,12 @@
 .introduction-container {
   display: flex;
   height: 40%;
-  margin-top: 120px;
   justify-content: space-around;
   align-items: center;
   background-color: $softBlack;
   padding: 2%;
+  margin-top: -120px;
+  padding-top: 240px;
 
   .header-texts {
     display: flex;
@@ -255,4 +256,8 @@
       }
     }
   }
+}
+#team{
+  height: 150px;
+  background-color: $softBlack;
 }

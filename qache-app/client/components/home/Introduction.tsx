@@ -259,7 +259,8 @@ const Introduction = () => {
           </div>
         </div>
       </section>
-      <Team id='team' />
+      <Team />
+      <div id='team'></div>
     </>
   );
 };

@@ -2,6 +2,7 @@ import { HashLink as Link } from 'react-router-hash-link';
 import Navbar from './Navbar';
 import '../../styles/home-styles/Docs.scss'
 
+
 const Docs = () => {
   return (
   <>
@@ -18,8 +19,8 @@ const Docs = () => {
           </ul>
           <Link to={'/docs/#commands'}><strong>Commands</strong></Link>
           <ul>
-            <li><Link to={'/docs/#get'}>get</Link></li>
-            <li><Link to={'/docs/#set'}>set</Link></li>
+            <li><Link to={'/docs/#getcommand'}>get</Link></li>
+            <li><Link to={'/docs/#setcommand'}>set</Link></li>
             <li><Link to={'/docs/#update'}>update</Link></li>
             <li><Link to={'/docs/#delete'}>delete</Link></li>
             <li><Link to={'/docs/#listCreate'}>listCreate</Link></li>
@@ -63,12 +64,12 @@ const Docs = () => {
 
           <div id="commands">
             <strong>Commands</strong>
-              <div id="get" className='section'>
+              <div id="getcommand" className='section'>
                 <p className='title'>get(key)</p>
                 <p className='time'>Time Complexity: O(1)</p>
                 <p className='body'>Used to retrieve data stored under a predetermined key. See "Set" below</p>
               </div>
-              <div id="set" className='section'>
+              <div id="setcommand" className='section'>
                 <p className='title'>set(key, value)</p>
                 <p className='time'>Time Complexity: O(1)</p>
                 <p className='body'>Intended for storing singleton data, i.e. data with a unique identifier. This function has many uses, such as storing data by id, or by a username, so it can easily save you many trips to a database to retrieve those pieces of data.</p>

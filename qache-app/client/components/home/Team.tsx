@@ -50,9 +50,9 @@ const unshuffledPeople = [
 
 const people: {}[] = shuffleArray(unshuffledPeople);
 
-const Team = ({ id }: { id: string }) => {
+const Team = () => {
   return (
-    <div id={id} className='bg-zinc-900'>
+    <div className='bg-zinc-900'>
       <div className='mx-auto px-4 max-w-7xl sm:px-6 lg:px-8 lg:py-4'>
         <div className='space-y-12'>
           <div className='space-y-5 sm:space-y-4 md:max-w-xl lg:max-w-3xl xl:max-w-none'>
