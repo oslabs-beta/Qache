@@ -9,7 +9,7 @@ body {
 
     strong {
       color: $cyan;
-      margin: 10px 0px;
+      margin: 10px 10px;
     }
 
     .title {
@@ -31,14 +31,12 @@ body {
     #docs-nav {
       font-size: larger;
       position: sticky;
-      top: 100px;
-      margin-left: 20px;
+      top: 130px;
       width: 200px;
       height: 100vh;
       border-right: 1px solid gray;
-      padding-left: 10px;
       li {
-        margin-left: 20px;
+        margin-left: 30px;
       }
     }
 
