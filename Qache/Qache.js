@@ -25,6 +25,19 @@ class Qache {
     this._addToQueueAndCache(key, value);
   }
 
+  update(key, newValue) {
+    if(this.content[key]){
+      this._refresh(key)
+      this.content[key].value = newValue
+    } else {
+      this._addToQueueAndCache(key, newValue);
+    }
+  }
+
+  delete(key) {
+    if(this.content[key]) this._removeFromQueueAndCache(this.content[key])
+  }
+
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
   // It will be strongly advised to only create a list once it's full and complete content is available for storage.
   listCreate(listKey, items) {
@@ -49,7 +62,7 @@ class Qache {
     const { value } = this.content[listKey];
     this._refresh(listKey);
 
-    return value.slice(start, end);
+    return start === 0 && end >= value.length ? value : value.slice(start, end);
   }
 
   //**Update an item if found, push item if not found.**
@@ -153,7 +166,7 @@ class Qache {
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
-  listUpdate(filterObject, newItem, ...listKey) {
+  listUpdate(newItem, filterObject, ...listKey) {
     // Option to specify if each list only contains the item once.
     let unique = false;
 
@@ -264,8 +277,7 @@ class Qache {
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
       if (this.content[key] !== undefined) {
-        delete this.content[key];
-        this.size--;
+        this._removeFromQueueAndCache(this.content[key])
       }
     }
   }

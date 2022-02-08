@@ -1,0 +1,59 @@
+@import '../variables.scss';
+
+body {
+  #docs {
+    display: flex;
+    width: 100%;
+    background-color: $softBlack;
+    color: $white;
+
+    strong {
+      color: $cyan;
+      margin: 10px 0px;
+    }
+
+    .title {
+      font-size: x-large;
+      font-weight: 600;
+      margin-left: 20px;
+      border-bottom: 1px solid gray;
+    }
+    .time {
+      color: $cyan;
+      font-size: large;
+      margin: 5px 20px;
+    }
+    .body {
+      font-size: large;
+      margin-left: 20px;
+    }
+
+    #docs-nav {
+      font-size: larger;
+      position: sticky;
+      top: 100px;
+      margin-left: 20px;
+      width: 200px;
+      height: 100vh;
+      border-right: 1px solid gray;
+      padding-left: 10px;
+      li {
+        margin-left: 20px;
+      }
+    }
+
+    #docs-content {
+      display: flex;
+      width: 80%;
+      flex-direction: column;
+      font-size: x-large;
+      .section {
+        background-color: $offBlack;
+        margin: 10px 5px;
+        width: 100%;
+        border-radius: 10px;
+        padding: 10px 20px 10px 10px;
+      }
+    }
+  }
+}

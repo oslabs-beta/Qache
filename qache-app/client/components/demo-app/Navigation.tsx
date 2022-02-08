@@ -61,7 +61,7 @@ const Navigation = ({ props }: { props: any }) => {
             >
               Rooms
             </a>
-            <Link to='/demo-app/*/deals'>Deals</Link>
+            <Link to='/demo-app/deals'>Deals</Link>
             <Link to='/#team'>Meet The Team</Link>
             <div className='search'>
               <input
@@ -73,7 +73,7 @@ const Navigation = ({ props }: { props: any }) => {
               <FaSearch className='icon' />
             </div>
             <button
-              className={location.pathname !== '/' ? 'active' : 'not-active'}
+              className={location.pathname !== '/demo-app' ? 'active' : 'not-active'}
               onClick={() => setRefresh(!refresh)}
             >
               <IoMdRefresh className='spinner' />

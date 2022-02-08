@@ -1,11 +1,11 @@
-$offwhite: #fafafa;
+@import '../variables.scss';
 
 #nav-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 10%;
-  background-color: white;
+  background-color: $white;
 
   .navbar {
     display: flex;
@@ -17,7 +17,7 @@ $offwhite: #fafafa;
     padding-top: 1%;
     padding-left: 5%;
     padding-right: 5%;
-    background-color: $offwhite;
+    background-color: $offWhite;
     border-bottom: solid 1px #dfdfdf;
 
     .menu-bars {
@@ -50,6 +50,7 @@ $offwhite: #fafafa;
         padding: 10px;
         padding-left: 1.75rem;
         font-size: large;
+        background-color: $offWhite;
       }
       .icon {
         position: absolute;
@@ -88,8 +89,8 @@ $offwhite: #fafafa;
         box-shadow: 1px 1px 20px #aaa;
         border-radius: 5px;
         background-color: #fff;
-        top: 100px;
-        left: 90.5%;
+        top: 85px;
+        left: 90.75%;
         transform: translate(-50%);
         transform-style: preserve-3d;
         z-index: 200;
@@ -139,12 +140,12 @@ $offwhite: #fafafa;
     top: 0;
     left: -100%;
     transition: 750ms;
-    background-color: $offwhite;
+    background-color: $offWhite;
     overflow-y: scroll !important;
   }
 
   .nav-menu.active {
-    padding-top: 1.5%;
+    padding-left: 1.5%;
     left: 0;
     z-index: 10;
     transition: 250ms;
@@ -165,7 +166,7 @@ $offwhite: #fafafa;
       height: 5rem;
       margin-left: 1rem;
       font-size: large;
-      background-color: $offwhite;
+      background-color: $offWhite;
       cursor: pointer;
     }
   }
