@@ -14,6 +14,7 @@ body {
 
     .title {
       font-size: x-large;
+      color: $offWhite;
       font-weight: 600;
       margin-left: 20px;
       border-bottom: 1px solid gray;
@@ -25,12 +26,13 @@ body {
     }
     .body {
       font-size: large;
+      color: $bluegreen;
       margin-left: 20px;
     }
 
     #docs-nav {
       font-size: larger;
-      position: sticky;
+      position: fixed;
       top: 130px;
       width: 200px;
       height: 100vh;
@@ -43,6 +45,8 @@ body {
     #docs-content {
       display: flex;
       width: 80%;
+      padding-top: 130px;
+      margin-left: 210px;
       flex-direction: column;
       font-size: x-large;
       .section {
@@ -50,7 +54,19 @@ body {
         margin: 10px 5px;
         width: 100%;
         border-radius: 10px;
-        padding: 10px 20px 10px 10px;
+        padding: 20px 25px 20px 10px;
+
+        .title {
+          margin-bottom: 10px;
+          color: $offWhite;
+        }
+        .time {
+          margin-bottom: 10px;
+        }
+        .body {
+          margin-top: 10px;
+          color: $offWhite;
+        }
       }
     }
   }

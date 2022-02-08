@@ -44,7 +44,8 @@ const Docs = () => {
             <strong>Quick Start</strong>
             <div id="install" className='section'>
               <p className='title'>Installation</p>
-              <p className='body'>This is how you install it</p>
+              <p className='body'>Installation is a very simple process. Start with a quick npm install qache</p>
+              <p className='body'>This will add qache to your servers dependencies.</p>
             </div>
             <div id="instantiate" className='section'>
               <p className='title'>Instantiate</p>

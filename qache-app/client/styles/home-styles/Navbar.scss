@@ -2,13 +2,14 @@
 
 .navbar-container {
   display: flex;
-  position: sticky;
+  position: fixed;
   justify-content: space-between;
+  width: 100%;
   height: 120px;
   padding-right: 1%;
   padding-left: 1%;
-  top: 0;
   z-index: 1;
+  top: 0;
   background-color: $black;
 
   .image-container {
