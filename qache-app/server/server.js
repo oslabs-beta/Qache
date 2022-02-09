@@ -32,6 +32,7 @@ app.use(
     graphiql: process.env.NODE_ENV === 'development',
   })
 );
+
 if (process.env.NODE_ENV === 'development') {
   app.get('/', (req, res) => {
     res.status(200).send('Welcome to Demo App dev server!');

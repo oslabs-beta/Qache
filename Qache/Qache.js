@@ -270,8 +270,9 @@ class Qache {
   }
   // Option to invalidate certain lists, or items and remove them from cache, for certain mutations.
   invalidate(...keys) {
+    console.log(keys);
     //Clears cache if no keys are specified
-    if (keys === undefined) {
+    if (keys.length === 0) {
       this.clear();
     }
     //Clears specific keys and adjusts size property if key exists.
@@ -407,7 +408,6 @@ class Qache {
   }
 
   _bubbleSort(node) {
-    console.log(this);
     // 0 node list
     if (!node) return;
     // 1 node list OR 2+ node list where node is tail
@@ -415,7 +415,6 @@ class Qache {
 
     // 2+ node list
     while (node.next && node.next.accessCount < node.accessCount) {
-      console.log('~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~');
       if (node === this.head) {
         this.head = node.next;
 

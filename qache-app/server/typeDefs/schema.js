@@ -2,6 +2,7 @@ const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
   type Query {
+		invalidate: Boolean
     getAllProducts: [PopulatedProducts]
     getProductsBy(category: String!): [Product]
     filterProductsBy(filter: FilterProductsInput): [Product]

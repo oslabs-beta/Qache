@@ -10,6 +10,18 @@ const Category = require('../models/CategoryModel');
 const cache = new Qache({ evictionPolicy: 'LFU' });
 
 module.exports = {
+  // clear cache
+  invalidate: () => {
+    try {
+      cache.invalidate();
+      console.log('Cache invalidated!');
+      console.log(cache);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  },
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
     const {
