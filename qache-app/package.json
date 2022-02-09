@@ -14,7 +14,6 @@
     "build:dev": "NODE_ENV=development webpack --mode development",
     "build:prod": "NODE_ENV=production webpack --mode production",
     "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch",
-		"deploy": "git subtree push --prefix qache-app heroku deployment:main"
   },
 	"engines": {
 		"node": ">=16.0.0"
