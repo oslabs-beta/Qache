@@ -69,7 +69,7 @@ const config = {
     }),
     new MiniCssExtractPlugin(),
     new webpack.EnvironmentPlugin({
-      PORT: 3000,
+      NODE_ENV: 'development',
     }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
