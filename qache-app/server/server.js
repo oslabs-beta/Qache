@@ -36,8 +36,8 @@ if (process.env.NODE_ENV === 'development') {
     res.status(200).send('Welcome to Demo App dev server!');
   });
 } else if (process.env.NODE_ENV === 'production') {
-  // app.use('/dist', express.static(path.join(__dirname, '../dist')));
-  app.use(express.static(path.join(__dirname, '../dist')));
+  app.use('/dist', express.static(path.join(__dirname, '../dist')));
+  // app.use(express.static(path.join(__dirname, '../dist')));
   app.get('/', (req, res) => {
     return res.status(200).sendFile(path.join(__dirname, '../index.html'));
   });
