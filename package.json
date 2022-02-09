@@ -7,7 +7,7 @@
     "jest": "^27.4.7"
   },
   "scripts": {
-		"deploy": "git push heroku `git subtree split --prefix qache-app deployment`:main",
+		"deploy": "git push heroku `git subtree split --prefix qache-app deployment`:main --force",
     "test": "jest --watchAll"
   },
   "repository": {
