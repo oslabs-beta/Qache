@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "server": "nodemon server/server.js",
+    "start:dev": "concurrently --kill-others-on-fail \"npm run server:dev\" \"npm run client\"",
+    "server": "node server/server.js",
+    "server:dev": "nodemon server/server.js",
     "client": "webpack serve --mode development",
     "build-dev": "webpack --mode development",
     "build-prod": "webpack --mode production",
