@@ -20,9 +20,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-
-  },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.16.7",
     "@heroicons/react": "^1.0.5",
