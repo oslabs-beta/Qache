@@ -30,10 +30,17 @@ app.use(
     graphiql: true,
   })
 );
-
-app.get('/', (req, res) => {
-  res.status(200).send('Welcome to Demo App server!');
-});
+if (process.env.NODE_ENV === 'development') {
+  app.get('/', (req, res) => {
+    res.status(200).send('Welcome to Demo App dev server!');
+  });
+} else if (process.env.NODE_ENV === 'production') {
+  // app.use('/dist', express.static(path.join(__dirname, '../dist')));
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('/', (req, res) => {
+    return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+  });
+}
 
 app.use('*', (req, res) => {
   res.status(404).send('Page not found!');
@@ -47,6 +54,7 @@ app.use((err, req, res, next) => {
   };
 
   const errorObj = Object.assign(defaultError, error);
+
   res.status(errorObj.status).send(errorObj.message);
 });
 

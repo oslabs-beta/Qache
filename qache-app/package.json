@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "\"npm run build-prod\" && \"npm run server\"",
     "start:dev": "concurrently --kill-others-on-fail \"npm run server:dev\" \"npm run client\"",
-    "server": "node server/server.js",
+    "server": "NODE_ENV=production node server/server.js",
     "server:dev": "nodemon server/server.js",
-    "client": "webpack serve --mode development",
-    "build-dev": "webpack --mode development",
-    "build-prod": "webpack --mode production",
+    "client": "NODE_ENV=development webpack serve --mode development",
+    "build-dev": "NODE_ENV=development webpack --mode development",
+    "build-prod": "NODE_ENV=production webpack --mode production",
     "build-css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch"
   },
   "keywords": [],
