@@ -1,7 +1,7 @@
 {
   "name": "qache",
-  "version": "1.0.2",
-  "description": "Qache is a utility class for handling server side caching of MongoDB queries made with GraphQL.",
+  "version": "1.0.3",
+  "description": "Qache is a utility class for handling server side caching of API queries made with any database.",
   "main": "Qache.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
