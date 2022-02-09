@@ -3,7 +3,7 @@ const Node = require('./Node');
 class Qache {
   constructor({
     timeToLive = Infinity,
-    maxSize = 5,
+    maxSize = Infinity,
     evictionPolicy = 'LRU',
   } = {}) {
     //set timeToLive in options or default to 10min

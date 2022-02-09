@@ -2,12 +2,34 @@
 
 body {
   .code-block{
-    margin: 20px 30px;
+    margin: 10px 30px;
     padding: 10px;
+    width: 80%;
+    min-height: 100px;
+    color: rgb(223, 223, 223);
     display: inline-block;
-    background-color: lightgray;
+    font-size: small;
+    background-color: rgb(19, 19, 19);
     border-radius: 5px;
     border: 1px solid gray
+  }
+  .gr{
+    color: gray
+  }
+  .g{
+    color: rgb(34, 209, 34)
+  }
+  .r{
+    color: red
+  }
+  .b{
+    color: rgb(63, 182, 230)
+  }
+  .y{
+    color: rgb(248, 245, 58)
+  }
+  .p{
+    color: rgb(142, 18, 173);
   }
   #docs {
     display: flex;

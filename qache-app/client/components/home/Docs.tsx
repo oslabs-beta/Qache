@@ -39,11 +39,6 @@ const Docs = () => {
             <li><Link to={'/docs/#listRemoveItem'} scroll={el => scrollWithOffset(el)}>listRemoveItem</Link></li>
           </ul>
           <Link to={'/docs/#faq'} scroll={el => scrollWithOffset(el)}><strong>FAQ</strong></Link>
-          <ul>
-            <li>One</li>
-            <li>Two</li>
-            <li>Three</li>
-          </ul>
         {/* CONTENT SECTION */}
         </div>
         <div id="docs-content">
@@ -56,21 +51,72 @@ const Docs = () => {
                 <div className='code-block'>
                   <code>npm install qache</code>
                 </div>
-                <p className='body'>This will add qache to your servers dependencies.</p>
+                <p className='body'>This will add qache to your servers dependencies. Then, choose a home for your cache, somewhere where you can easily reference it, it is reccomended to be in the same file that you make your database calls.</p>
               </div>
             </a>
             <div id="instantiate" className='section'>
               <p className='title'>Instantiate</p>
-              <p className='body'>This is how you Instantiate it</p>
+              <p className='body'>Once you have picked a file to set up your cache, the process is simple.</p>
+              <div className='code-block'>
+                <code><code className='b'>const</code> Qache = <code className='b'>require</code>(<code className='y'>'qache'</code>) <code className='gr'>//require in qache</code></code><br/>
+                <code><code className='b'>const</code> cache = <code className='r'>new</code> <code className='g'>Qache</code>(policies <code className='r'>||</code> {'{}'}) <code className='gr'>//This line will create an instance of our Qache</code></code>
+              </div>
+              <p className='body'>
+                Awesome, with those two lines, every time you run your server, you have access to powerful caching capabilities!<br/>
+                Now you have some decisions to make, in particular, some settings to choose.
+              </p>
+              <div className='code-block'>
+                <code>
+                <code className='b'>const</code> policies = {'{'} <br/>
+                &nbsp;&nbsp;timeToLive: <code className='p'>1000</code>*<code className='p'>60</code>*<code className='p'>10</code><code className='gr'> //time is expected in ms, this line represents 10min</code><br/>
+                &nbsp;&nbsp;maxSize: <code className='p'>100</code><br/>
+                &nbsp;&nbsp;evictionPolicy: <code className='y'>"LFU"</code><br/>
+                {'}'}<br/>
+                </code>
+              </div>
+              <p className='body'>
+                All of these fields are optional, but something to think about.<br/>
+                The built-in defaults are LRU(Least Recently Used) optionally pick LFU(Least Frequently Used), no max size, and infinite time to live.
+                If you do have a ton of data in your database and cant cache everything, it's reccomended to put some limitations on either maxSize or timeToLive
+              </p>
             </div>
             <div id="set" className='section'>
-              <p className='title'>Set</p>
-              <p className='body'>This is how you Set it</p>
+              <p className='title'>Set Your First Key</p>
+              <p className='body'>
+                To start caching data all we have to do is set our first key!<br/>
+                Keep in mind, we need to catch the data after the database response but before the return.
+              </p>
+              <div className='code-block'>
+                <code>
+                  <code className='g'>getProductById</code>: <code className='r'>async</code> <code className='b'>function</code>(args){'{'}<br/>
+                  &nbsp;&nbsp;<code className='b'>const</code> data <code className='r'>=</code> <code className='r'>await</code> Product.<code className='g'>findOne</code>(args.id);<code className='gr'> //Your standard DB query</code><br/>
+                  &nbsp;&nbsp;cache.<code className='g'>set</code>(args.id, data);<code className='gr'> //add this new data to cache</code><br/>
+                  &nbsp;&nbsp;<code className='r'>return</code> data;<br/>
+                  {'}'}
+                </code>
+              </div>
+                <p className='body'>Congrats! You just added your first piece of data to cache... but something is missing.</p>
             </div>
             <div id="get" className='section'>
-              <p className='title'>Get</p>
-              <p className='body'>This is how you Get it</p>
-            </div>
+              <p className='title'>Get Your Data</p>
+              <p className='body'>What would be the point of adding data to cache, without using it.</p>
+              <div className='code-block'>
+                <code>
+                  <code className='g'>getProductById</code>: <code className='r'>async</code> <code className='b'>function</code>(args){'{'}<br/>
+                  &nbsp;&nbsp;<code className='b'>const</code> cacheResponse <code className='r'>=</code> cache.<code className='g'>get</code>(args.id); <code className='gr'> //Check the cache under the unique key id</code><br/>
+                  &nbsp;&nbsp;<code className='r'>if</code>(cacheResponse) <code className='r'>return</code> cacheResponse;<code className='gr'> // If the cache has what we're looking for, we return it.</code><br/><br/>
+                  &nbsp;&nbsp;<code className='b'>const</code> data <code className='r'>=</code> <code className='r'>await</code> Product.<code className='g'>findOne</code>(args.id);<code className='gr'> //Your standard DB query</code><br/>
+                  &nbsp;&nbsp;cache.<code className='g'>set</code>(args.id, data);<code className='gr'> //add this new data to cache</code><br/>
+                  &nbsp;&nbsp;<code className='r'>return</code> data;<br/>
+                  {'}'}
+                </code>
+              </div>
+              <p className='body'>
+                Now that's what we're talking about! In 5 lines, we check our cache, and set the data to cache if it wasn't found the first time.<br/>
+                Below find a complete list of the commands, and be sure to keep in mind maintaining the validity of your data.<br/> 
+                There are commands for every mutation!
+              </p>
+              </div>
           </div>
 
           <div id="commands">
@@ -138,7 +184,45 @@ const Docs = () => {
           </div>
 
           <div id="faq">
-
+            <strong>FAQ</strong>
+            <div className='section'>
+              <p className='title'>How is Qache different from other key-value stores?</p>
+              <p className='body'>
+                Qache's main draw is ease of use, and it's gentle learning curve. But behind that, lies a powerful and modular suite of methods to handle complex situations.<br/>
+                Everything is handled in the same server being serviced by the cache. This means several things.<br/>
+                <li>Qache horizontally scales in tandem with servers. Each server AUTOMATICALLY has it's own instance of qache! Keep in mind however that you will need to adopt an aproach such as employing a service worker process to handle cache updates.</li>
+                <li>Qache requires very little upkeep after it's initial set up.</li>
+                <li>In most cases Qache fits perfectly into an ACID compliant system, and can be integrated into existing systems with ease.</li>
+              </p>
+            </div>
+            <div className='section'>
+              <p className='title'>Will a Qache ever be a bottleneck for my server?</p>
+              <p className='body'>
+                It is nearly impossible for Qache to be the bottleneck of your server. We set out to break apart the bottlenecks that come with high traffic sites, or large amounts of database queries, even more specifically GraphQL queries, which are known to sometimes make multiple DB queries in a single request.<br/>
+                We accomplished that task, and surpassed our expectations.<br/>
+                To be more specific, every Qache read operation can be constant time, or if neccesary, for say filtered results, linear. This means Qache can get through millions of requests without ever getting bogged down.
+              </p>
+            </div>
+            <div className='section'>
+              <p className='title'>Is there a way to control how much memory is used?</p>
+              <p className='body'>
+                We have set up a few powerful settings that allow for you to use up as much or as little memory as you want. set a max key limit or set short expiration dates.<br/>
+                If those settings don't suffice, you can take further steps to store your data in stringified form, and parse it, when you receive it back. 
+              </p>
+            </div>
+            <div className='section'>
+              <p className='title'>What's a good strategy for keeping data in cache accurate?</p>
+              <p className='body'>
+                It varies from case to case. But the greatest rule of thumb is this. If a request is making an update, you should also update the cache. And the same goes for deleting and creating. Whatever database action is happening, mirror it with a cache action.<br/>
+                If the idea of an inaccurate cache scares you, cache.invalidate() after every mutation will ease your worries!
+              </p>
+            </div>
+            <div className='section'>
+              <p className='title'>How is Qache pronounced?</p>
+              <p className='body'>
+                kwaash :{')'}
+              </p>
+            </div>
           </div>
 
         </div>
