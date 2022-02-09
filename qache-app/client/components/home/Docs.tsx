@@ -59,7 +59,7 @@ const Docs = () => {
               <p className='body'>Once you have picked a file to set up your cache, the process is simple.</p>
               <div className='code-block'>
                 <code><code className='b'>const</code> Qache = <code className='b'>require</code>(<code className='y'>'qache'</code>) <code className='gr'>//require in qache</code></code><br/>
-                <code><code className='b'>const</code> cache = <code className='r'>new</code> <code className='g'>Qache</code>(policies <code className='r'>||</code> {'{}'}) <code className='gr'>//This line will create an instance of our Qache</code></code>
+                <code><code className='b'>const</code> cache = <code className='r'>new</code> <code className='g'>Qache</code>() <code className='gr'>//This line will create a default instance of our Qache</code></code>
               </div>
               <p className='body'>
                 Awesome, with those two lines, every time you run your server, you have access to powerful caching capabilities!<br/>
@@ -68,10 +68,11 @@ const Docs = () => {
               <div className='code-block'>
                 <code>
                 <code className='b'>const</code> policies = {'{'} <br/>
-                &nbsp;&nbsp;timeToLive: <code className='p'>1000</code>*<code className='p'>60</code>*<code className='p'>10</code><code className='gr'> //time is expected in ms, this line represents 10min</code><br/>
+                &nbsp;&nbsp;timeToLive: <code className='p'>1000</code><code className='r'>*</code><code className='p'>60</code><code className='r'>*</code><code className='p'>10</code><code className='gr'> //time is expected in ms, this line represents 10min</code><br/>
                 &nbsp;&nbsp;maxSize: <code className='p'>100</code><br/>
                 &nbsp;&nbsp;evictionPolicy: <code className='y'>"LFU"</code><br/>
                 {'}'}<br/>
+                <code className='b'>const</code> cache = <code className='r'>new</code> <code className='g'>Qache</code>(policies)<code className='gr'>// Pass your policies into the constructor like so</code>
                 </code>
               </div>
               <p className='body'>
