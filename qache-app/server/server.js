@@ -1,8 +1,6 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
-require('dotenv').config();
 
 const schema = require('./typeDefs/schema');
 const resolvers = require('./resolvers/resolvers');
@@ -12,7 +10,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
 mongoose.connect(
   `mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
@@ -31,6 +28,9 @@ app.use(
   })
 );
 if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config();
+  const cors = require('cors');
+  app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
   app.get('/', (req, res) => {
     res.status(200).send('Welcome to Demo App dev server!');
   });
