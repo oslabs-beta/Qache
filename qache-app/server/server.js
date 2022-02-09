@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -8,6 +9,9 @@ const resolvers = require('./resolvers/resolvers');
 
 const port = 3000;
 const app = express();
+
+const cors = require('cors');
+app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,9 +33,6 @@ app.use(
   })
 );
 if (process.env.NODE_ENV === 'development') {
-  require('dotenv').config();
-  const cors = require('cors');
-  app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
   app.get('/', (req, res) => {
     res.status(200).send('Welcome to Demo App dev server!');
   });
