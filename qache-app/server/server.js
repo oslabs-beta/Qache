@@ -50,6 +50,6 @@ app.use((err, req, res, next) => {
   res.status(errorObj.status).send(errorObj.message);
 });
 
-app.listen(port, (req, res) =>
-  console.log(`Server is listening on port ${port}!`)
+app.listen(process.env.PORT || port, (req, res) =>
+  console.log(`Server is listening on port ${process.env.PORT || port}!`)
 );
