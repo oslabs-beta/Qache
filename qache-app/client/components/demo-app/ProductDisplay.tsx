@@ -55,7 +55,7 @@ const ProductDisplay = ({ props }: { props: any }) => {
     }
     const t1 = Date.now(); // time before axios post starts
     axios
-      .post<Product[]>('http://localhost:3000/graphql', body)
+      .post<Product[]>(`http://localhost:${process.env.PORT || 3000}/graphql`, body)
       .then(({ data }: AxiosResponse<any>) => {
         const t2 = Date.now();
         setSpeed([...speed, t2 - t1]);
