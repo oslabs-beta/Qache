@@ -54,7 +54,7 @@
     "nodemon": "^2.0.15",
     "postcss-loader": "^6.2.1",
     "prettier": "^2.5.1",
-    "qache": "^1.0.2",
+    "qache": "^1.0.3",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",

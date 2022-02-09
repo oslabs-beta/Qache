@@ -26,16 +26,16 @@ class Qache {
   }
 
   update(key, newValue) {
-    if(this.content[key]){
-      this._refresh(key)
-      this.content[key].value = newValue
+    if (this.content[key]) {
+      this._refresh(key);
+      this.content[key].value = newValue;
     } else {
       this._addToQueueAndCache(key, newValue);
     }
   }
 
   delete(key) {
-    if(this.content[key]) this._removeFromQueueAndCache(this.content[key])
+    if (this.content[key]) this._removeFromQueueAndCache(this.content[key]);
   }
 
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
@@ -277,7 +277,7 @@ class Qache {
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
       if (this.content[key] !== undefined) {
-        this._removeFromQueueAndCache(this.content[key])
+        this._removeFromQueueAndCache(this.content[key]);
       }
     }
   }
