@@ -7,7 +7,8 @@
     "jest": "^27.4.7"
   },
   "scripts": {
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+		"deploy": "git push heroku main"
   },
   "repository": {
     "type": "git",
