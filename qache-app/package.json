@@ -15,7 +15,7 @@
     "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch"
   },
 	"engines": {
-		"node": "16.13.0"
+		"node": ">=16.0.0"
 	},
   "keywords": [],
   "author": "",
