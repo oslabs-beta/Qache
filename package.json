@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
-    "jest": "^27.4.7",
-    "nodemon": "^2.0.15"
+    "jest": "^27.4.7"
   },
   "scripts": {
-    "start": "nodemon server",
     "test": "jest --watchAll"
   },
   "repository": {
@@ -20,11 +18,5 @@
   "bugs": {
     "url": "https://github.com/oslabs-beta/Qache/issues"
   },
-  "homepage": "https://github.com/oslabs-beta/Qache#readme",
-  "dependencies": {
-    "express": "^4.17.2",
-    "express-graphql": "^0.12.0",
-    "graphql": "^16.2.0",
-    "graphql-tag": "^2.12.6"
-  }
+  "homepage": "https://github.com/oslabs-beta/Qache#readme"
 }

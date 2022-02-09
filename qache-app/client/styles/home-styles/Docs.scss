@@ -1,0 +1,111 @@
+@import '../variables.scss';
+
+body {
+  .code-block{
+    margin: 10px 30px;
+    padding: 10px;
+    width: 80%;
+    min-height: 100px;
+    color: rgb(223, 223, 223);
+    display: inline-block;
+    font-size: small;
+    background-color: rgb(19, 19, 19);
+    border-radius: 5px;
+    border: 1px solid gray
+  }
+  .gr{
+    color: rgba(138, 138, 138, 0.616)
+  }
+  .g{
+    color: rgb(101, 223, 101)
+  }
+  .r{
+    color: rgb(241, 54, 54)
+  }
+  .b{
+    color: rgb(91, 189, 228)
+  }
+  .y{
+    color: rgb(230, 228, 119)
+  }
+  .p{
+    color: rgb(176, 111, 236);
+  }
+  #docs {
+    display: flex;
+    width: 100%;
+    background-color: $softBlack;
+    color: $white;
+
+    strong {
+      color: $cyan;
+      margin: 10px 10px;
+    }
+
+    .title {
+      font-size: x-large;
+      color: $offerWhite;
+      font-weight: 600;
+      margin-left: 20px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid gray;
+    }
+    .time {
+      color: $cyan;
+      font-size: large;
+      margin: 5px 20px;
+    }
+    .body {
+      font-size: large;
+      margin-left: 20px;
+    }
+
+    #docs-nav {
+      padding: 10px;
+      font-size: larger;
+      position: fixed;
+      top: 130px;
+      width: 200px;
+      height: 100vh;
+      border-right: 1px solid gray;
+      li {
+        margin-left: 30px;
+        color: $offerWhite;
+      }
+    }
+
+    #docs-content {
+      display: flex;
+      width: auto;
+      padding-top: 130px;
+      margin-left: 230px;
+      flex-direction: column;
+      font-size: x-large;
+      strong{
+        font-size: xx-large;
+        margin-left: -10px;
+      }
+      .section {
+        background-color: $offBlack;
+        margin: 0px 5px 10px 5px;
+        width: 90%;
+        border-radius: 10px;
+        padding: 10px 0px 20px 0px;
+
+        .title {
+          margin: 0;
+          padding-left: 20px;
+          color: $offWhite;
+        }
+
+        .time {
+          margin-bottom: 10px;
+        }
+        .body {
+          margin-top: 10px;
+          color: $offerWhite;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+  font-family: 'Noto Sans Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+canvas {
+  background-color: #fafafa;
+  z-index: 1;
+}
+
+#app {
+  height: 100%;
+}

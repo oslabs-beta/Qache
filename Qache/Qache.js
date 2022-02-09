@@ -1,18 +1,23 @@
 const Node = require('./Node');
 
 class Qache {
-  constructor(options = { timeToLive: 1000 * 60 * 10, maxSize: 5 }) {
+  constructor({
+    timeToLive = Infinity,
+    maxSize = Infinity,
+    evictionPolicy = 'LRU',
+  } = {}) {
     //set timeToLive in options or default to 10min
-    this.TTL = options.timeToLive; //10 minute default timeToLive
-    this.maxSize = options.maxSize; // 5 node default maximum size
+    this.TTL = timeToLive; //10 minute default timeToLive
+    this.maxSize = maxSize; // 5 node default maximum size
+    this.policyType = evictionPolicy;
 
     this.content = {}; // STORE OF NODES
     this.size = 0; // current size of cache
     this.tail = this.head = null; // pointers to head(dequeue)/tail(enqueue) of queue
-    console.log('Qache Cache Starting Up');
   }
 
   get(key) {
+    this.cleanUp(key);
     return this._getDataFromQueue(key);
   }
 
@@ -20,9 +25,22 @@ class Qache {
     this._addToQueueAndCache(key, value);
   }
 
+  update(key, newValue) {
+    if(this.content[key]){
+      this._refresh(key)
+      this.content[key].value = newValue
+    } else {
+      this._addToQueueAndCache(key, newValue);
+    }
+  }
+
+  delete(key) {
+    if(this.content[key]) this._removeFromQueueAndCache(this.content[key])
+  }
+
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
   // It will be strongly advised to only create a list once it's full and complete content is available for storage.
-  listCreate(listKey, ...item) {
+  listCreate(listKey, items) {
     if (listKey === undefined) {
       console.log('Error, listCreate requires a unique cache key');
     } else {
@@ -32,20 +50,24 @@ class Qache {
         this._addToQueueAndCache(listKey, []);
       }
       // for each item given, we push that item into cache, THEN refresh expiration.
-      item.forEach((n) => this.content[listKey].value.push(n));
+      items.forEach((item) => this.content[listKey].value.push(item));
     }
   }
   //Check if list exists, if exists, assumed fresh and complete, returns by range or if no range specified, returns all.
   listRange(listKey, start = 0, end = Infinity) {
     this.cleanUp(listKey);
+
     if (this.content[listKey] === undefined) return null;
+
     const { value } = this.content[listKey];
-    return end ? value.slice(start, end) : value.slice(start);
+    this._refresh(listKey);
+
+    return start === 0 && end >= value.length ? value : value.slice(start, end);
   }
 
   //**Update an item if found, push item if not found.**
 
-  listUpsert(item, filterObj, ...listKeys){
+  listUpsert(item, filterObj, ...listKeys) {
     //Remind user that a key is required for this method
     if (listKeys === undefined) {
       console.log('Error, listPush requires atleast one unique cache key');
@@ -56,16 +78,16 @@ class Qache {
           continue;
         }
         //We push that item into cache, THEN refresh expiration.
-        let found = false
-        for(const oldItem of this.content[listKey].value){
-          for (const key in filterObj){
-            if (oldItem[key] === filterObj[key]){
+        let found = false;
+        for (const oldItem of this.content[listKey].value) {
+          for (const key in filterObj) {
+            if (oldItem[key] === filterObj[key]) {
               found = true;
               Object.assign(oldItem, item);
             }
           }
         }
-        if(!found) this.content[listKey].value.push(item)
+        if (!found) this.content[listKey].value.push(item);
         this.content[listKey].expires = Date.now() + this.TTL;
       }
     }
@@ -84,6 +106,8 @@ class Qache {
         //We push that item into cache, THEN refresh expiration.
         this.content[listKey].value.push(item);
         this.content[listKey].expires = Date.now() + this.TTL;
+
+        this._refresh(listKey);
       }
     }
   }
@@ -134,7 +158,7 @@ class Qache {
         //if flag was never set off, remove item from list
         if (!missing) {
           const index = currentList.indexOf(item);
-          array.splice(index, 1);
+          currentList.splice(index, 1);
           if (unique) break;
         }
       }
@@ -142,7 +166,7 @@ class Qache {
     }
   }
   //Very similar to listRemoveItem but updates the item instead of deleting it from list
-  listUpdate(filterObject, newItem, ...listKey) {
+  listUpdate(newItem, filterObject, ...listKey) {
     // Option to specify if each list only contains the item once.
     let unique = false;
 
@@ -185,10 +209,10 @@ class Qache {
         //if flag was never set off, update item in list
         if (!missing) {
           Object.assign(item, newItem);
-          console.log(item);
           if (unique) break;
         }
       }
+      this._refresh(key);
     }
   }
 
@@ -198,6 +222,8 @@ class Qache {
     this.cleanUp(listKey);
     // Check if list exists, if not return null.
     if (this.content[listKey] === undefined) return null;
+
+    this._refresh(listKey);
 
     const returnList = [];
     // Option to specify if each list only contains the item once.
@@ -251,8 +277,7 @@ class Qache {
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
       if (this.content[key] !== undefined) {
-        delete this.content[key];
-        this.size--;
+        this._removeFromQueueAndCache(this.content[key])
       }
     }
   }
@@ -301,39 +326,156 @@ class Qache {
    * @param {string} key
    * @param {object} value
    */
+
   _addToQueueAndCache(key, value) {
-    let nodeInCache;
-    nodeInCache = this.content[key];
-    // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
-    if (nodeInCache) {
-      // we only remove from queue and NOT cache since we are just enqueueing this node
-      this._removeFromQueue(nodeInCache);
-      this.size--;
+    let nodeInCache = this.content[key];
+
+    if (this.policyType === 'LRU') {
+      // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
+      if (nodeInCache) {
+        // we only remove from queue and NOT cache since we are just enqueueing this node
+        this._refresh(key, value);
+      }
+      // when the cache is full, we dequeue the head from the cache/queue
+      else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
+        this._removeFromQueueAndCache(this.head);
+      }
+      //key doesn't exist
+      if (!nodeInCache) {
+        nodeInCache = new Node(key, value);
+        nodeInCache.expires = Date.now() + this.TTL;
+        this.size++;
+        // enqueue node if it exists, otherwise enqueue new node with value
+        this._enqueue(nodeInCache);
+        // assign key to new node
+        this.content[key] = this.tail;
+      }
+    } else if (this.policyType === 'LFU') {
+      // key exists in cache
+      if (nodeInCache) {
+        this._refresh(key, value);
+        //key doesn't exist, and cache at max size
+      } else if (this.size === this.maxSize) {
+        if (this.maxSize === 0) return;
+        this._removeFromQueueAndCache(this.head);
+      }
+      // key doesn't exist
+      if (!nodeInCache) {
+        //create new node
+        nodeInCache = new Node(key, value);
+        nodeInCache.expires = Date.now() + this.TTL;
+        this.size++;
+
+        //Place node at head/cold side of queue
+        this._enqueue(nodeInCache);
+
+        // assign key to new node
+        this.content[key] = this.head;
+      }
     }
-    // when the cache is full, we dequeue the head from the cache/queue
-    else if (this.size === this.maxSize) {
-      this._removeFromQueueAndCache(this.head);
-    }
-    if (nodeInCache === undefined) {
-      nodeInCache = new Node(key, value);
-      nodeInCache.expires = Date.now() + this.TTL;
-    }
-    // enqueue node if it exists, otherwise enqueue new node with value
-    this._enqueue(nodeInCache);
-    // add node to cache (enqueue)
-    this.content[key] = this.tail;
-    this.size++;
   }
 
   /**
    * Move accessed node in cache to the tail of the queue (remove it from queue and then enqueue it)
    * @param {object} key
    */
-  _refresh(key) {
+  _refreshRecent(node) {
+    this._removeFromQueue(node);
+    this._enqueue(node);
+  }
+
+  _refreshFrequent(node) {
+    this._bubbleSort(node);
+  }
+
+  _refresh(key, value = undefined) {
     const existingNode = this.content[key];
+
     if (existingNode) {
-      this._removeFromQueue(existingNode);
-      this._enqueue(existingNode);
+      existingNode.accessCount++;
+      if (value !== undefined) existingNode.value = value;
+
+      if (this.policyType === 'LRU') {
+        this._refreshRecent(existingNode);
+      } else if (this.policyType === 'LFU') {
+        this._refreshFrequent(existingNode);
+      } else {
+        throw new Error('Policy type does not exist');
+      }
+    }
+  }
+
+  _bubbleSort(node) {
+    console.log(this);
+    // 0 node list
+    if (!node) return;
+    // 1 node list OR 2+ node list where node is tail
+    if (node === this.tail) return;
+
+    // 2+ node list
+    while (node.next && node.next.accessCount < node.accessCount) {
+      console.log('~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~');
+      if (node === this.head) {
+        this.head = node.next;
+
+        //2 node list where node is head
+        if (!node.next.next) {
+          this.tail = node;
+
+          node.next.prev = null;
+          node.next.next = node;
+
+          node.next = null;
+          node.prev = this.head;
+          break;
+        }
+
+        //3+ node list where node is head
+        const temp = node.next.next;
+        temp.prev = node;
+
+        node.next.prev = null;
+        node.next.next = node;
+
+        node.next = temp;
+        node.prev = this.head;
+      } else {
+        //3 node list where node is not head
+        // A > B > C  swap B with C
+        if (!node.next.next) {
+          this.tail = node;
+
+          const temp = node.next;
+
+          node.prev.next = temp;
+
+          temp.prev = node.prev;
+          temp.next = node;
+
+          node.prev = temp;
+          node.next = null;
+
+          break;
+        }
+        //swap with next
+        //   node
+        // A > B > C > D
+        //Point A's 'next' to C
+        node.prev.next = node.next;
+        //Point D's 'prev' to B
+        node.next.next.prev = node;
+
+        //Swap C's prev and next pointers
+        const temp = node.next.next;
+        node.next.prev = node.prev;
+        node.next.next = node;
+
+        //Swap B's prev and next pointers
+        node.prev = node.next;
+        node.next = temp;
+      }
+      node = node.next;
     }
   }
 
@@ -344,23 +486,32 @@ class Qache {
    */
   _enqueue(node) {
     // insert new node at tail of the linked list (queue)
-    if (this.tail) {
-      node.prev = this.tail;
-      this.tail.next = node;
-      this.tail = node;
+    if (this.policyType === 'LRU') {
+      if (this.tail) {
+        node.prev = this.tail;
+        this.tail.next = node;
+        this.tail = node;
+      } else this.tail = this.head = node;
+      // queue is empty. point head & tail ➡ new Node
+    } else if (this.policyType === 'LFU') {
+      if (this.head) {
+        node.next = this.head;
+        this.head.prev = node;
+        this.head = node;
+      } else this.tail = this.head = node;
     }
-    // queue is empty. point head & tail ➡ new Node
-    else this.tail = this.head = node;
   }
   /**
    * Removes a node from the queue and deletes the corresponding data from the cache
    * @param {object} key
    */
+
   _removeFromQueueAndCache(node) {
     delete this.content[node.keyRef];
     this._removeFromQueue(node);
     this.size--;
   }
+
   _removeFromQueue(node) {
     if (!node.next && !node.prev) {
       this.head = this.tail = null;
@@ -383,8 +534,9 @@ class Qache {
       console.log(`There is no key: ${key} in the cache.`);
       return null;
     }
-    // put newly accessed node at the tail of the list
+
     this._refresh(key);
+
     return nodeInCache.value;
   }
 
