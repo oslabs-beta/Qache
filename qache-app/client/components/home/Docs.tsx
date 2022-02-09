@@ -51,7 +51,7 @@ const Docs = () => {
                 <div className='code-block'>
                   <code>npm install qache</code>
                 </div>
-                <p className='body'>This will add qache to your servers dependencies. Then, choose a home for your cache, somewhere where you can easily reference it, it is reccomended to be in the same file that you make your database calls.</p>
+                <p className='body'>This will add qache to your servers dependencies. Then, choose a home for your cache, somewhere where it can be easily referenced. It is recommended you keep it in the same file that you make your database calls.</p>
               </div>
             </a>
             <div id="instantiate" className='section'>
@@ -62,8 +62,8 @@ const Docs = () => {
                 <code><code className='b'>const</code> cache = <code className='r'>new</code> <code className='g'>Qache</code>() <code className='gr'>//This line will create a default instance of our Qache</code></code>
               </div>
               <p className='body'>
-                Awesome, with those two lines, every time you run your server, you have access to powerful caching capabilities!<br/>
-                Now you have some decisions to make, in particular, some settings to choose.
+                Awesome! With just those two lines, every time you run your server, you have access to powerful caching capabilities.<br/>
+                Now you have some decisions to make: in particular, some settings to apply to your cache.
               </p>
               <div className='code-block'>
                 <code>
@@ -76,16 +76,16 @@ const Docs = () => {
                 </code>
               </div>
               <p className='body'>
-                All of these fields are optional, but something to think about.<br/>
-                The built-in defaults are LRU(Least Recently Used) optionally pick LFU(Least Frequently Used), no max size, and infinite time to live.
-                If you do have a ton of data in your database and cant cache everything, it's reccomended to put some limitations on either maxSize or timeToLive
+                All of these fields are optional, but important to consider.<br/>
+                The eviction policy options are LRU (Least Recently Used - this is selected by default) and LFU (Least Frequently Used). <br/>
+                maxSize and timeToLive are infinte by default. If you have a large amount of data in your database and can't cache everything, it is recommended that you put some limitations on either maxSize or timeToLive.
               </p>
             </div>
             <div id="set" className='section'>
               <p className='title'>Set Your First Key</p>
               <p className='body'>
                 To start caching data all we have to do is set our first key!<br/>
-                Keep in mind, we need to catch the data after the database response but before the return.
+                Keep in mind, we need to catch the data after the database response, but before the return.
               </p>
               <div className='code-block'>
                 <code>
@@ -114,7 +114,7 @@ const Docs = () => {
               </div>
               <p className='body'>
                 Now that's what we're talking about! In 5 lines, we check our cache, and set the data to cache if it wasn't found the first time.<br/>
-                Below find a complete list of the commands, and be sure to keep in mind maintaining the validity of your data.<br/> 
+                Below you can find a complete list of the commands, and be sure to consider maintaining the validity of your data.<br/> 
                 There are commands for every mutation!
               </p>
               </div>
@@ -140,11 +140,11 @@ const Docs = () => {
               <div id="delete" className='section'>
                 <p className='title'>delete(key)</p>
                 <p className='time'>Time Complexity: O(1)</p>
-                <p className='body'>Intended to delete a key that should no longer be in cache, such as if an item was deleted out of the database, and the user wants the stored data in cache to stay fresh.</p>
+                <p className='body'>Removes a key that should no longer be in cache, such as if an item was deleted out of the database, and the user wants the stored data in cache to stay fresh.</p>
               </div>
               <div id="invalidate" className='section'>
                 <p className='title'>invalidate(...keys)</p>
-                <p className='time'>Time Complexity: O(n) where n = amount of keys requiring deletion</p>
+                <p className='time'>Time Complexity: O(n) where n = number of keys requiring deletion</p>
                 <p className='body'>invalidate, or "lazy invalidation". This command can take in one or more keys, and delete the data, and the nodes associated with each key. If you run into an event that leads to a complicated situation when trying to keep data fresh and valid, consider invalidating the cache after such an event. We call this method lazy, because it is to be used as a last resort. We believe our methods can keep most sets of data fresh in cache for a long time.</p>
               </div>
               <div id="listCreate" className='section'>
@@ -155,32 +155,32 @@ const Docs = () => {
               <div id="listRange" className='section'>
                 <p className='title'>listRange(listKey, start, end)</p>
                 <p className='time'>Time Complexity: O(1) if no range specified, otherwise O(n) where n is the length of the list</p>
-                <p className='body'>Used to retrieve a list previously stored. You can return an entire array by just passing in the lists unique key, or you can get a range, to possibly display only the first 10, or last 20</p>
+                <p className='body'>Used to retrieve a previously stored list. You can return an entire list by just passing in the list's unique key, or you can get a range, to return e.g. only the first 10, or the last 20.</p>
               </div>
               <div id="listFetch" className='section'>
                 <p className='title'>listFetch(listKey, filterObject)</p>
                 <p className='time'>Time Complexity: O(n) where n is the length of the list</p>
-                <p className='body'>Used similarly to listRange, this function takes a filterObject. Pass in the key of whatever you want to filter by, and the value you're looking for, i.e. category: "couch" to recieve all results that match that description.</p>
+                <p className='body'>Used similarly to listRange, this function takes a filterObject. Pass in the key of whatever you want to filter by, and the value you're looking for, e.g. {'{'}category: "couch"{'}'} to retrieve all results that match that description.</p>
               </div>
               <div id="listPush" className='section'>
                 <p className='title'>listPush(item, ...listKeys)</p>
                 <p className='time'>Time Complexity: O(1)</p>
-                <p className='body'>This function can be used to add new items to existing list, say we just added a new listing and don't want to invalidate our cache, we can just listPush the new listing to the existing list.</p>
+                <p className='body'>This function can be used to add new items to an existing list. For example, if we just added a new listing and don't want to invalidate our cache, we can just listPush the new listing to the existing list.</p>
               </div>
               <div id="listUpdate" className='section'>
                 <p className='title'>listUpdate(updatedItem, filterObject, ...listKey)</p>
                 <p className='time'>Time Complexity: O(n) where n is the length of the list</p>
-                <p className='body'>Used to update the value of items currently in a list. Similar to the previous function, if we want to maintain freshness of our cache, we can use this function to update each list that item belonged to. This method takes in a filterObject, which can be used with a unique identifier to find the item in need of updating.</p>
+                <p className='body'>Used to update the value of items currently in a list. Similar to the previous function, if we want to maintain freshness of our cache, we can use this function to update each list that a given item belonged to. This method takes in a filterObject, which can be used with a unique identifier to find the item in need of updating.</p>
               </div>
               <div id="listUpsert" className='section'>
                 <p className='title'>listUpsert(item, filterObject, ...listKeys)</p>
                 <p className='time'>Time Complexity: O(n) where n is the length of the list</p>
-                <p className='body'>This function is dual-purpose. Similar to both listPush and listUpdate, this method will scan one or many lists, for an item. THEN, if the item was found it updates it, and if the item was not found, it adds it. Very useful in tricky situations, when you don't know if an item has been included in your cache yet or not.</p>
+                <p className='body'>This function is dual-purpose. Similar to both listPush and listUpdate, this method will scan one or multiple lists for an item. Then, when the item is found, the function updates it, and if the item is not found, the item is added to the given list(s). Very useful in tricky situations, when you don't know if an item has been added in your cache.</p>
               </div>
               <div id="listRemoveItem" className='section'>
                 <p className='title'>listRemoveItem(filterObject, ...listKey)</p>
                 <p className='time'>Time Complexity: O(n) where n is the length of the list</p>
-                <p className='body'>As the name suggests, this function removes an item from one or many lists in cache, great for when something has been deleted from the database, and you want that to reflect instantly in your cache.</p>
+                <p className='body'>As the name suggests, this function removes an item from one or several lists in your cache. It is useful when an item has been deleted from the database, and you want to reflect that instantly in your cache.</p>
               </div>
           </div>
 
@@ -189,9 +189,9 @@ const Docs = () => {
             <div className='section'>
               <p className='title'>How is Qache different from other key-value stores?</p>
               <p className='body'>
-                Qache's main draw is ease of use, and it's gentle learning curve. But behind that, lies a powerful and modular suite of methods to handle complex situations.<br/>
-                Everything is handled in the same server being serviced by the cache. This means several things.<br/>
-                <li>Qache horizontally scales in tandem with servers. Each server AUTOMATICALLY has it's own instance of qache! Keep in mind however that you will need to adopt an aproach such as employing a service worker process to handle cache updates.</li>
+                Qache's main draws are its ease of use and gentle learning curve. But behind that, lies a powerful and modular suite of methods to handle complex situations.<br/>
+                Everything is handled in the same server being serviced by the cache. This has several important consequences:<br/>
+                <li>Qache horizontally scales in tandem with servers. Each server AUTOMATICALLY has its own instance of qache! Keep in mind however that you will need to adopt an approach to handle cache updates, such as employing a service worker process.</li>
                 <li>Qache requires very little upkeep after it's initial set up.</li>
                 <li>In most cases Qache fits perfectly into an ACID compliant system, and can be integrated into existing systems with ease.</li>
               </p>
@@ -199,22 +199,22 @@ const Docs = () => {
             <div className='section'>
               <p className='title'>Will a Qache ever be a bottleneck for my server?</p>
               <p className='body'>
-                It is nearly impossible for Qache to be the bottleneck of your server. We set out to break apart the bottlenecks that come with high traffic sites, or large amounts of database queries, even more specifically GraphQL queries, which are known to sometimes make multiple DB queries in a single request.<br/>
+                It is nearly impossible for Qache to be the bottleneck of your server. We set out to break apart the bottlenecks that come with high site traffic, or large amounts of database queries, even more specifically GraphQL queries, which are known to sometimes make multiple DB queries in a single request.<br/>
                 We accomplished that task, and surpassed our expectations.<br/>
-                To be more specific, every Qache read operation can be constant time, or if neccesary, for say filtered results, linear. This means Qache can get through millions of requests without ever getting bogged down.
+                To be more specific, every Qache read operation can be performed in constant time, or if neccesary, e.g. for filtered results, linear time. This means Qache can get through millions of requests without ever getting bogged down.
               </p>
             </div>
             <div className='section'>
               <p className='title'>Is there a way to control how much memory is used?</p>
               <p className='body'>
-                We have set up a few powerful settings that allow for you to use up as much or as little memory as you want. set a max key limit or set short expiration dates.<br/>
-                If those settings don't suffice, you can take further steps to store your data in stringified form, and parse it, when you receive it back. 
+                We have built in a few powerful settings that allow for you to use up as much or as little memory as you want by setting a max key limit or a short expiration date.<br/>
+                If those settings don't suffice, you can take further steps to store your data in stringified form, and parse it when you receive it. 
               </p>
             </div>
             <div className='section'>
               <p className='title'>What's a good strategy for keeping data in cache accurate?</p>
               <p className='body'>
-                It varies from case to case. But the greatest rule of thumb is this. If a request is making an update, you should also update the cache. And the same goes for deleting and creating. Whatever database action is happening, mirror it with a cache action.<br/>
+                It varies from case to case, but the greatest rule of thumb is this: if a request is making an update, it should also update the cache. And the same goes for deleting and creating. Whatever database action is occurring, mirror it with a cache action.<br/>
                 If the idea of an inaccurate cache scares you, cache.invalidate() after every mutation will ease your worries!
               </p>
             </div>

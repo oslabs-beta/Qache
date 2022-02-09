@@ -54,7 +54,7 @@ const Navbar = () => {
               <li>
                 <a
                   className='nav-icons'
-                  href='https://linkedin.com/'
+                  href='https://www.linkedin.com/company/qache'
                   target='_blank'
                   rel='noreferrer noopener'
                 >
