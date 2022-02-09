@@ -1,14 +1,27 @@
-const Qache = require('../../../Qache/Qache');
+let Qache;
+if (process.env.NODE_ENV === 'development') {
+  Qache = require('../../../Qache/Qache');
+} else if (process.env.NODE_ENV === 'production') {
+  Qache = require('qache');
+}
 const Product = require('../models/ProductModel');
 const Category = require('../models/CategoryModel');
 
-const cache = new Qache({evictionPolicy: "LFU"});
+const cache = new Qache({ evictionPolicy: 'LFU' });
 
 module.exports = {
   // creates new product and adds it to DB
   addProduct: async (args, parent, info) => {
-    const { name, description, imageUrl, quantity, price, onSale, category, inCart } =
-      args.product;
+    const {
+      name,
+      description,
+      imageUrl,
+      quantity,
+      price,
+      onSale,
+      category,
+      inCart,
+    } = args.product;
 
     // creates new product in DB
     const newProduct = await Product.create({
@@ -19,14 +32,14 @@ module.exports = {
       price,
       onSale,
       category,
-      inCart
+      inCart,
     });
 
     newProduct.category.forEach(async (id) => {
       const path = await Category.findById(id);
       cache.listPush(newProduct, category.name);
       path.products.push(newProduct._id);
-      await path.save()
+      await path.save();
     });
     return newProduct;
   },
@@ -35,7 +48,7 @@ module.exports = {
   addCategory: async (args, parent, info) => {
     const { name, products } = args.category;
     const newCategory = await Category.create({ name, products });
-    return newCategory
+    return newCategory;
   },
 
   // returns all existing products in DB
@@ -125,7 +138,7 @@ module.exports = {
     const { onSale } = args.filter;
     const cacheRes = cache.listRange('onSale');
     if (cacheRes) {
-      return cacheRes
+      return cacheRes;
     }
     const filteredProducts = await Product.find({ onSale });
     cache.listCreate('onSale', filteredProducts);
