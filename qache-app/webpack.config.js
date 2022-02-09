@@ -68,6 +68,9 @@ const config = {
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin(),
+    new webpack.EnvironmentPlugin({
+      PORT: 3000,
+    }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   openAnalyzer: false,
