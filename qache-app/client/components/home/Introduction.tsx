@@ -260,7 +260,6 @@ const Introduction = () => {
         </div>
       </section>
       <Team />
-      <div id='team'></div>
     </>
   );
 };

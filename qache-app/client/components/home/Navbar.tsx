@@ -4,6 +4,12 @@ import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import qache from '../../images/qache.png';
 
+const scrollWithOffset = (el:any) => {
+  const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+  const yOffset = -120; 
+  window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
+}
+
 const Navbar = () => {
   return (
     <>
@@ -27,7 +33,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to='/#team' className='nav-link'>
+                <Link to='/#team' scroll={el => scrollWithOffset(el)} className='nav-link'>
                   Meet The Team
                 </Link>
               </li>

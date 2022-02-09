@@ -7,8 +7,7 @@
   align-items: center;
   background-color: $softBlack;
   padding: 2%;
-  margin-top: -120px;
-  padding-top: 240px;
+  padding-top: 120px;
 
   .header-texts {
     display: flex;
@@ -256,8 +255,4 @@
       }
     }
   }
-}
-#team{
-  height: 70px;
-  background-color: $softBlack;
 }
