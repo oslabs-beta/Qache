@@ -13,7 +13,7 @@
     "client": "NODE_ENV=development webpack serve --mode development",
     "build:dev": "NODE_ENV=development webpack --mode development",
     "build:prod": "NODE_ENV=production webpack --mode production",
-    "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch",
+    "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch"
   },
 	"engines": {
 		"node": ">=16.0.0"
