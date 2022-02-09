@@ -7,9 +7,6 @@
     "jest": "^27.4.7"
   },
   "scripts": {
-		"postinstall": "cd qache-app && npm run build:prod",
-		"start": "cd qache-app && npm i && npm start",
-		"deploy": "git push heroku deployment:main",
     "test": "jest --watchAll"
   },
   "repository": {

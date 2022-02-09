@@ -6,13 +6,15 @@
   "scripts": {
     "test": "jest",
     "start": "npm run build:prod && npm run server",
+		"postinstall": "npm run build:prod",
     "start:dev": "concurrently --kill-others-on-fail \"npm run server:dev\" \"npm run client\"",
     "server": "NODE_ENV=production node server/server.js",
     "server:dev": "nodemon server/server.js",
     "client": "NODE_ENV=development webpack serve --mode development",
     "build:dev": "NODE_ENV=development webpack --mode development",
     "build:prod": "NODE_ENV=production webpack --mode production",
-    "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch"
+    "build:css": "npx tailwindcss -i ./client/styles/index.css -o ./dist/main.css --watcmain.css --watch",
+		"deploy": "git push heroku deployment:main"
   },
 	"engines": {
 		"node": ">=16.0.0"
