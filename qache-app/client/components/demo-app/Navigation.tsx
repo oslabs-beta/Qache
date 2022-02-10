@@ -43,8 +43,7 @@ const Navigation = ({ props }: { props: any }) => {
 			}
 		`}
 		const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/graphql': '/graphql'
-		axios.post(uri, body).catch((err) => console.log(err))
-		console.log('Cache invalidated!')
+		axios.post(uri, body)
 	}
 
   return (

@@ -77,11 +77,13 @@ module.exports = {
     if (cacheRes) {
       const t2 = Date.now();
       console.log(t2 - t1, 'ms');
+      console.log('This response came from the CACHE.');
       return cacheRes;
     } // if exists, returns the array of products
     const dbRes = await Category.findOne({ name: category }).populate(
       'products'
     );
+    console.log('This response came from the DATABASE');
     const t3 = Date.now();
     cache.listCreate(category, dbRes.products); // sets products array into cache under the name of category
     console.log(t3 - t1, 'ms');

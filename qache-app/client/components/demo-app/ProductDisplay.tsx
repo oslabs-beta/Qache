@@ -63,7 +63,6 @@ const ProductDisplay = ({ props }: { props: any }) => {
         if (data.data.getProductsBy) setProductData(data.data.getProductsBy);
         else if (data.data.filterProductsBy)
           setProductData(data.data.filterProductsBy);
-        console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
     }, [category, refresh]);
 

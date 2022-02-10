@@ -31,7 +31,6 @@ const Introduction = () => {
     window.getSelection()?.removeAllRanges();
     window.getSelection()?.addRange(range);
     document.execCommand('copy');
-    console.log('Copied to clipboard: ', range.toString());
     window.getSelection()?.removeAllRanges();
   };
 
