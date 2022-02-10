@@ -54,15 +54,15 @@ const ProductDisplay = ({ props }: { props: any }) => {
       };
     }
     const t1 = Date.now(); // time before axios post starts
+		const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/graphql': '/graphql'
     axios
-      .post<Product[]>('http://localhost:3000/graphql', body)
+      .post<Product[]>(uri, body)
       .then(({ data }: AxiosResponse<any>) => {
         const t2 = Date.now();
         setSpeed([...speed, t2 - t1]);
         if (data.data.getProductsBy) setProductData(data.data.getProductsBy);
         else if (data.data.filterProductsBy)
           setProductData(data.data.filterProductsBy);
-        console.log(category, t2 - t1, 'ms'); // time after axios post finished
       });
     }, [category, refresh]);
 

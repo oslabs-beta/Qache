@@ -26,16 +26,16 @@ class Qache {
   }
 
   update(key, newValue) {
-    if(this.content[key]){
-      this._refresh(key)
-      this.content[key].value = newValue
+    if (this.content[key]) {
+      this._refresh(key);
+      this.content[key].value = newValue;
     } else {
       this._addToQueueAndCache(key, newValue);
     }
   }
 
   delete(key) {
-    if(this.content[key]) this._removeFromQueueAndCache(this.content[key])
+    if (this.content[key]) this._removeFromQueueAndCache(this.content[key]);
   }
 
   //Creates a list, with a unique key identifier. Option to add items to this list on creation.
@@ -270,14 +270,15 @@ class Qache {
   }
   // Option to invalidate certain lists, or items and remove them from cache, for certain mutations.
   invalidate(...keys) {
+    console.log(keys);
     //Clears cache if no keys are specified
-    if (keys === undefined) {
+    if (keys.length === 0) {
       this.clear();
     }
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
       if (this.content[key] !== undefined) {
-        this._removeFromQueueAndCache(this.content[key])
+        this._removeFromQueueAndCache(this.content[key]);
       }
     }
   }
@@ -407,7 +408,6 @@ class Qache {
   }
 
   _bubbleSort(node) {
-    console.log(this);
     // 0 node list
     if (!node) return;
     // 1 node list OR 2+ node list where node is tail
@@ -415,7 +415,6 @@ class Qache {
 
     // 2+ node list
     while (node.next && node.next.accessCount < node.accessCount) {
-      console.log('~~~~~~~~~~~~~~Sorting...~~~~~~~~~~~~~~');
       if (node === this.head) {
         this.head = node.next;
 

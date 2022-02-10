@@ -62,13 +62,12 @@ const ProductDetails = ({ productData }: { productData: Product[] }) => {
             {/* <button onClick={() => {
               let body = {
                 query: `mutation {
-                  updateProduct (id: ${product.id}, inCart: true) 
+                  updateProduct (id: ${product.id}, inCart: true)
                 }`
               }
               axios
                 .post<Product[]>('http://localhost:3000/graphql', body)
                 .then(({data}: AxiosResponse<any>) => {
-                  console.log(data)
                 })
             }}>Add to cart</button>
             <button onClick={() => {product.inCart = false}}>Remove from cart</button> */}

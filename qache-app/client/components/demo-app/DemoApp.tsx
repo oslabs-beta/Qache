@@ -59,7 +59,6 @@ const DemoApp = () => {
         onClick={
           sidebar
             ? () => {
-                console.log('clicked');
                 hideSidebar();
               }
             : undefined

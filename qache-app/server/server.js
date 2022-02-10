@@ -1,8 +1,8 @@
+require('dotenv').config();
+const path = require('path');
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const { graphqlHTTP } = require('express-graphql');
-require('dotenv').config();
 
 const schema = require('./typeDefs/schema');
 const resolvers = require('./resolvers/resolvers');
@@ -10,9 +10,11 @@ const resolvers = require('./resolvers/resolvers');
 const port = 3000;
 const app = express();
 
+const cors = require('cors');
+app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: 'http://localhost:8080' }));
 
 mongoose.connect(
   `mongodb+srv://sdu1278:${process.env.PASSWORD}@cluster0.vubqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
@@ -27,19 +29,26 @@ app.use(
   graphqlHTTP({
     schema: schema,
     rootValue: resolvers,
-    graphiql: true,
+    graphiql: process.env.NODE_ENV === 'development',
   })
 );
 
-app.get('/', (req, res) => {
-  res.status(200).send('Welcome to Demo App server!');
-});
+if (process.env.NODE_ENV === 'development') {
+  app.get('/', (req, res) => {
+    res.status(200).send('Welcome to Demo App dev server!');
+  });
+} else if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('/', (req, res) => {
+    return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+  });
+}
 
 app.use('*', (req, res) => {
-  res.status(404).send('Page not found!');
+  res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.use((err, req, res, next) => {
+app.use((error, req, res, next) => {
   const defaultError = {
     log: 'Express error handler caught unknown middleware error',
     status: 400,
@@ -47,9 +56,10 @@ app.use((err, req, res, next) => {
   };
 
   const errorObj = Object.assign(defaultError, error);
+
   res.status(errorObj.status).send(errorObj.message);
 });
 
-app.listen(port, (req, res) =>
-  console.log(`Server is listening on port ${port}!`)
+app.listen(process.env.PORT || port, (req, res) =>
+  console.log(`Server is listening on port ${process.env.PORT || port}!`)
 );

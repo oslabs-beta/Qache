@@ -68,6 +68,9 @@ const config = {
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin(),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+    }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   openAnalyzer: false,

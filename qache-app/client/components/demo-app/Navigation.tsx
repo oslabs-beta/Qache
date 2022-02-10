@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import '../../styles/demo-styles/Navigation.scss';
 import { useLocation } from 'react-router-dom';
@@ -35,6 +36,15 @@ const Navigation = ({ props }: { props: any }) => {
   };
 
   let location = useLocation();
+	const invalidateCache = () => {
+		const body ={query: `
+			{
+				invalidate
+			}
+		`}
+		const uri = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/graphql': '/graphql'
+		axios.post(uri, body)
+	}
 
   return (
     <>
@@ -62,8 +72,8 @@ const Navigation = ({ props }: { props: any }) => {
               Rooms
             </a>
             <Link to='/demo-app/deals'>Deals</Link>
-            <Link to='/#team'>Meet The Team</Link>
-            <div className='search'>
+            <Link to='/#team'>Team</Link>
+            {/* <div className='search'>
               <input
                 id='search'
                 name='search'
@@ -71,7 +81,12 @@ const Navigation = ({ props }: { props: any }) => {
                 placeholder='What are you looking for?'
               />
               <FaSearch className='icon' />
-            </div>
+            </div> */}
+						<button className={location.pathname !== '/demo-app' ? 'active' : 'not-active'}
+						onClick={() => invalidateCache()}
+						>
+							<b>Clear Cache</b>
+						</button>
             <button
               className={location.pathname !== '/demo-app' ? 'active' : 'not-active'}
               onClick={() => setRefresh(!refresh)}
