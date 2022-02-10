@@ -69,7 +69,7 @@ const Introduction = () => {
             target='_blank'
             rel='noopener noreferrer'
           >
-            Qache 1.0.1
+            Qache 1.0.5
           </a>{' '}
           is now available.
         </p>
