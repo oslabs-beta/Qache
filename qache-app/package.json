@@ -16,7 +16,8 @@
     "deploy": "cd .. && npm run deploy"
   },
   "engines": {
-    "node": ">=16.0.0 <=17.4.0"
+    "node": ">=16.0.0 <=17.4.0",
+		"npm": "8.3.1"
   },
   "keywords": [],
   "author": "",
