@@ -49,9 +49,9 @@ describe('Qache Tests', () => {
     // this beforeEach will change soonish... will be replaced with whatever's relevant or just removed.
     beforeEach(() => {
       users = [...testUsers];
-      users2 = [...testUsers].map((user) => user.username + 2);
-      users3 = [...testUsers].map((user) => user.username + 3);
-      users4 = [...testUsers].map((user) => user.username + 4);
+      users2 = testUsers.map((user) => user.username + 2);
+      users3 = testUsers.map((user) => user.username + 3);
+      users4 = testUsers.map((user) => user.username + 4);
       userNode = new Node('users', users);
       userNode2 = new Node('users2', users2);
       userNode3 = new Node('users3', users3);
@@ -182,9 +182,9 @@ describe('Qache Tests', () => {
       describe('set()', () => {
         beforeEach(() => {
           users = [...testUsers];
-          users2 = [...testUsers].map((user) => user.username + 2);
-          users3 = [...testUsers].map((user) => user.username + 3);
-          users4 = [...testUsers].map((user) => user.username + 4);
+          users2 = testUsers.map((user) => user.username + 2);
+          users3 = testUsers.map((user) => user.username + 3);
+          users4 = testUsers.map((user) => user.username + 4);
           userNode = new Node('users', users);
           userNode2 = new Node('users2', users2);
           userNode3 = new Node('users3', users3);
@@ -262,12 +262,45 @@ describe('Qache Tests', () => {
         });
       });
 
+      describe('get()', () => {
+        beforeEach(() => {
+          users = [...testUsers];
+          users2 = testUsers.map((user) => user.username + 2);
+          users3 = testUsers.map((user) => user.username + 3);
+          users4 = testUsers.map((user) => user.username + 4);
+          userNode = new Node('users', users);
+          userNode2 = new Node('users2', users2);
+          userNode3 = new Node('users3', users3);
+          userNode4 = new Node('users4', users4);
+          const nodes = [userNode, userNode2, userNode3, userNode4];
+          nodes.forEach((node) => {
+            node.accessCount++;
+          });
+          cache = new Cache();
+        });
+        it('should get a value from a key in the cache when there is one element in the cache', () => {
+          cache.set('users', users);
+          expect(cache.get('users')).toEqual(userNode.value);
+        });
+        it('should get a value from a key in the cache when there are two elements in the cache', () => {
+          cache.set('users', users);
+          cache.set('users2', users2);
+          expect(cache.get('users2')).toEqual(userNode2.value);
+        });
+        it('should get a value from a key in the cache when there are 3+  elements in the cache', () => {
+          cache.set('users', users);
+          cache.set('users2', users2);
+          cache.set('users3', users3);
+          expect(cache.get('users3')).toEqual(userNode3.value);
+        });
+      });
+
       describe('update()', () => {
         beforeEach(() => {
           users = [...testUsers];
-          users2 = [...testUsers].map((user) => user.username + 2);
-          users3 = [...testUsers].map((user) => user.username + 3);
-          users4 = [...testUsers].map((user) => user.username + 4);
+          users2 = testUsers.map((user) => user.username + 2);
+          users3 = testUsers.map((user) => user.username + 3);
+          users4 = testUsers.map((user) => user.username + 4);
           userNode = new Node('users', users);
           userNode2 = new Node('users2', users2);
           userNode3 = new Node('users3', users3);
@@ -276,8 +309,8 @@ describe('Qache Tests', () => {
         });
 
         it('should move an existing node to the tail of the cache when a new value is passed into update with an existing key', () => {
-          cache.update('users', users);
-          cache.update('users2', users2);
+          cache.set('users', users);
+          cache.set('users2', users2);
           cache.update('users', users3);
           userNode3.keyRef = 'users';
           userNode3.accessCount = 2;
@@ -289,12 +322,6 @@ describe('Qache Tests', () => {
           expect(cache.head).toEqual(userNode2);
           expect(cache.tail).toBe(cache.head.next);
         });
-      });
-
-      describe('get()', () => {
-        it('should add a node to the queue and cache when there is one element in the cache', () => {});
-        xit('should add a node to the queue and cache when there are two elements in the cache', () => {});
-        xit('should add a node to the queue and cache when there are more than two elements in the cache', () => {});
       });
     });
     describe('LFU Eviction Policy Tests:', () => {
