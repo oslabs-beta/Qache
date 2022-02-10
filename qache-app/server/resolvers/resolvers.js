@@ -70,7 +70,7 @@ module.exports = {
   },
 
   // returns all existing products in DB that are in given category
-  getProductsBy: async (args, parent, info) => {
+  getProductsBy: async (args) => {
     const t1 = Date.now();
     const { category } = args;
     const cacheRes = cache.listRange(category); // checks if the category of products exist in cache first
@@ -83,6 +83,16 @@ module.exports = {
     const dbRes = await Category.findOne({ name: category }).populate(
       'products'
     );
+    // *** Our website and our database are hosted in the same AWS warehouse.
+    // *** In order to properly illustrate benefits of our library for the majority of use cases, we sourced average ping time from https://wondernetwork.com/pings/New%20York
+    // ** medium-high latency simulation = average ping from NYC -> Dallas 58ms (East -> Central) - averages taken from our actual database pings 8.5ms (AWS US-East-1 for both server and database)
+    // ** medium-high latency simulation - 50 ms
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('medium-high latency simulation');
+      }, 50);
+    });
+
     console.log('This response came from the DATABASE');
     const t3 = Date.now();
     cache.listCreate(category, dbRes.products); // sets products array into cache under the name of category
@@ -155,6 +165,17 @@ module.exports = {
       return cacheRes;
     }
     const filteredProducts = await Product.find({ onSale });
+
+    // *** Our website and our database are hosted in the same AWS warehouse.
+    // *** In order to properly illustrate benefits of our library for the majority of use cases, we sourced average ping time from https://wondernetwork.com/pings/New%20York
+    // ** medium-high latency simulation = average ping from NYC -> Dallas 58ms (East -> Central) - averages taken from our actual database pings 8.5ms (AWS US-East-1 for both server and database)
+    // ** medium-high latency simulation - 50 ms
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('medium-high latency simulation');
+      }, 50);
+    });
+
     cache.listCreate('onSale', filteredProducts);
     return filteredProducts;
   },
