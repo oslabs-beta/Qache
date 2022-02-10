@@ -294,14 +294,14 @@ class Qache {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
-        this._removeFromQueueAndCache(this.content[key]);
+        this.delete(key);
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
         if (this.content[key].expires < Date.now()) {
-          this._removeFromQueueAndCache(this.content[key]);
+          this.delete(key);
         }
       }
     }

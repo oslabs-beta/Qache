@@ -83,14 +83,13 @@ describe('Qache Tests', () => {
         expect(typeof cache.set).toBe('function');
       });
 
-      it('should take in any data type and store a refrence to the value in the cache as a node', () => {
+      it('should take in a data type and store a refrence to the value in the cache as a node', () => {
         const testKeys = [
           'string',
           'number',
           'boolean',
           'array',
           'object',
-          'undefined',
           'null',
           'NaN',
         ].map((type) => type + 'Key');
@@ -100,7 +99,6 @@ describe('Qache Tests', () => {
           true,
           [1, 2, 3],
           { a: 'asdf' },
-          undefined,
           null,
           NaN,
         ];
@@ -331,6 +329,90 @@ describe('Qache Tests', () => {
         cache.set('users3', users3);
         cache.invalidate(...userArr);
         for (const user of userArr) {
+          expect(cache.content[user]).toBe(undefined);
+        }
+      });
+    });
+
+    describe('cleanUp()', () => {
+      beforeEach(() => {
+        users = [...testUsers];
+        users2 = testUsers.map((user) => user.username + 2);
+        users3 = testUsers.map((user) => user.username + 3);
+        users4 = testUsers.map((user) => user.username + 4);
+        userNode = new Node('users', users);
+        userNode2 = new Node('users2', users2);
+        userNode3 = new Node('users3', users3);
+        userNode4 = new Node('users4', users4);
+        cache = new Cache();
+      });
+
+      it(`should be a method on the 'Qache' class`, () => {
+        expect(cache.invalidate).toBeDefined();
+        expect(typeof cache.invalidate).toBe('function');
+      });
+
+      it('should evict a provided key if the key exceeds its TTL', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.content['users'].expires = Date.now() - 100;
+        cache.cleanUp('users');
+        expect(cache.content['users']).toBe(undefined);
+      });
+
+      it('should not evict a provided key if the key does not exceed its TTL', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.content['users'].expires = Date.now() + 100;
+        cache.cleanUp('users');
+        expect(cache.content['users']).not.toBe(undefined);
+      });
+
+      it('should evict all provided keys when all the keys exceed their respective TTL', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        for (const user of ['users', 'users2', 'users3', 'users4']) {
+          cache.content[user].expires = Date.now() - 100;
+          cache.cleanUp(user);
+          expect(cache.content[user]).toBe(undefined);
+        }
+      });
+
+      it('should evict some provided keys on successive calls when some of the keys exceed their respective TTL', () => {
+        const users = ['users', 'users2', 'users3', 'users4'];
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        for (let i = 0; i < users.length; i++) {
+          const user = users[i];
+          cache.content[user].expires =
+            i % 2 === 0 ? Date.now() - 100 : Date.now() + 100;
+          cache.cleanUp(user);
+          i % 2 === 0
+            ? expect(cache.content[user]).toBe(undefined)
+            : expect(cache.content[user]).not.toBe(undefined);
+        }
+      });
+
+      it('should evict all keys in the cache whose expiration time has passed and no key is passed in', () => {
+        const users = ['users', 'users2', 'users3', 'users4'];
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        console.log(cache.content);
+        users.forEach((user) => {
+          cache.content[user].expires = Date.now() - 100;
+        });
+        cache.cleanUp();
+        for (const user of users) {
           expect(cache.content[user]).toBe(undefined);
         }
       });
