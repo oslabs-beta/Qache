@@ -4,7 +4,7 @@ class Node {
     this.value = value;
     this.prev = this.next = null;
     this.expires = Infinity;
-    this.accessCount = 1
+    this.accessCount = 1;
   }
 }
 
