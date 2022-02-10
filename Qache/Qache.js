@@ -22,7 +22,12 @@ class Qache {
   }
 
   set(key, value) {
-    this._addToQueueAndCache(key, value);
+    if (this.content[key]) {
+      this.update(key, value);
+      console.log(
+        `Updated Qache key "${key}" with value ${value}. In the future, use the "update" method.`
+      );
+    } else this._addToQueueAndCache(key, value);
   }
 
   update(key, newValue) {
@@ -30,7 +35,10 @@ class Qache {
       this._refresh(key);
       this.content[key].value = newValue;
     } else {
-      this._addToQueueAndCache(key, newValue);
+      this.set(key, newValue);
+      console.log(
+        `Set Qache key "${key}" with value ${newValue}. In the future, use the "set" method to adding nodes to the cache.`
+      );
     }
   }
 
@@ -270,16 +278,13 @@ class Qache {
   }
   // Option to invalidate certain lists, or items and remove them from cache, for certain mutations.
   invalidate(...keys) {
-    console.log(keys);
     //Clears cache if no keys are specified
     if (keys.length === 0) {
       this.clear();
     }
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
-      if (this.content[key] !== undefined) {
-        this._removeFromQueueAndCache(this.content[key]);
-      }
+      this.delete(key);
     }
   }
 
@@ -289,14 +294,14 @@ class Qache {
     //Evict a stale key if key is provided
     if (key !== undefined && this.content[key] !== undefined) {
       if (this.content[key].expires < Date.now()) {
-        this._removeFromQueueAndCache(this.content[key]);
+        this.delete(key);
       }
     }
     //Option to cleanUp all keys if need arises
     else {
       for (const key in this.content) {
         if (this.content[key].expires < Date.now()) {
-          this._removeFromQueueAndCache(this.content[key]);
+          this.delete(key);
         }
       }
     }
@@ -335,7 +340,7 @@ class Qache {
       // the node is already in the cache, so we must remove the old one so that our new node is inserted at the tail of the queue.
       if (nodeInCache) {
         // we only remove from queue and NOT cache since we are just enqueueing this node
-        this._refresh(key, value);
+        this._refresh(key);
       }
       // when the cache is full, we dequeue the head from the cache/queue
       else if (this.size === this.maxSize) {
@@ -390,12 +395,11 @@ class Qache {
     this._bubbleSort(node);
   }
 
-  _refresh(key, value = undefined) {
+  _refresh(key) {
     const existingNode = this.content[key];
 
     if (existingNode) {
       existingNode.accessCount++;
-      if (value !== undefined) existingNode.value = value;
 
       if (this.policyType === 'LRU') {
         this._refreshRecent(existingNode);
@@ -511,21 +515,39 @@ class Qache {
     this.size--;
   }
 
+  /**
+   * Removes a node from the queue by detaching itself from its neighbors and connecting those neighbors' pointers.
+   * @param {Node} node
+   */
   _removeFromQueue(node) {
+    // if this node is the only node in the queue
     if (!node.next && !node.prev) {
       this.head = this.tail = null;
-    } else if (!node.next) {
+    }
+    // if node is at the tail of the queue
+    else if (!node.next) {
       node.prev.next = null;
       this.tail = node.prev;
-    } else if (!node.prev) {
+    }
+    // if node is at the head of the queue
+    else if (!node.prev) {
       node.next.prev = null;
       this.head = node.next;
-    } else {
+    }
+    // node is between two nodes, so connect neighboring pointers
+    else {
       node.next.prev = node.prev;
       node.prev.next = node.next;
     }
+    // remove node's pointers to former neighbors in queue
+    node.prev = node.next = null;
   }
 
+  /**
+   * Refresh a node in the queue and return its value
+   * @param {Node} node
+   * @returns
+   */
   _getDataFromQueue(key) {
     const nodeInCache = this.content[key];
 
@@ -539,6 +561,10 @@ class Qache {
     return nodeInCache.value;
   }
 
+  /**
+   * Used for testing
+   * @returns {Boolean}
+   */
   _isSizeValid() {
     return this.size === Object.keys(this.content).length;
   }
