@@ -78,12 +78,12 @@ describe('Qache Tests', () => {
     });
 
     describe('set()', () => {
-      it(`should be a method on the 'Cache' class`, () => {
+      it(`should be a method on the 'Qache' class`, () => {
         expect(cache.set).toBeDefined();
         expect(typeof cache.set).toBe('function');
       });
 
-      it('should take in any data type and store it in the cache as a node with the value of what was passed into set', () => {
+      it('should take in any data type and store a refrence to the value in the cache as a node', () => {
         const testKeys = [
           'string',
           'number',
@@ -163,18 +163,107 @@ describe('Qache Tests', () => {
         expect(typeof cache.get).toBe('function');
       });
 
-      it(`should take in a cache key and return the data found inside that key's/Node's 'value' property`, () => {
-        cache.content['users'] = userNode;
-        expect(cache.get('users')).toBe(users);
+      it('should get a value from a key in the cache when there is one element in the cache', () => {
+        cache.set('users', users);
+        expect(cache.get('users')).toEqual(userNode.value);
+      });
+      it('should get a value from a key in the cache when there are two elements in the cache', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        expect(cache.get('users2')).toEqual(userNode2.value);
+      });
+      it('should get a value from a key in the cache when there are 3+  elements in the cache', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        expect(cache.get('users3')).toEqual(userNode3.value);
       });
 
-      it('should increment accessCount', () => {
+      it('should get the reference to the value in the node and not a copy of the value', () => {
+        cache.content['users'] = userNode;
+        expect(cache.get('users')).toBe(userNode.value);
+      });
+
+      it('should increment accessCount on the cache node', () => {
         userNode.accessCount = 0;
         cache.content['users'] = userNode;
         expect(cache.get('users')).toBe(users);
         expect(userNode.accessCount).toBe(1);
         expect(cache.get('users')).toBe(users);
         expect(userNode.accessCount).toBe(2);
+      });
+    });
+
+    describe('delete()', () => {
+      beforeEach(() => {
+        users = [...testUsers];
+        users2 = testUsers.map((user) => user.username + 2);
+        users3 = testUsers.map((user) => user.username + 3);
+        users4 = testUsers.map((user) => user.username + 4);
+        userNode = new Node('users', users);
+        userNode2 = new Node('users2', users2);
+        userNode3 = new Node('users3', users3);
+        userNode4 = new Node('users4', users4);
+        cache = new Cache();
+      });
+
+      it(`should be a method on the 'Qache' class`, () => {
+        expect(cache.delete).toBeDefined();
+        expect(typeof cache.delete).toBe('function');
+      });
+
+      it('should take in a cache key and remove the corresponding node from the cache', () => {
+        cache.set('users', users);
+        cache.delete('users');
+        expect(cache.get('users')).toBe(null);
+        expect(cache.content['users']).toBe(undefined);
+      });
+
+      it('should take in a cache key and remove the corresponding node from the queue', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.delete('users2');
+        let curr = cache.head;
+        while (curr) {
+          expect(curr).not.toEqual(userNode2);
+          curr = curr.next;
+        }
+      });
+
+      it('should remove a node from the cache and set head/tail to null when the node was the only one in cache before deletion', () => {
+        cache.set('users', users);
+        cache.delete('users');
+        expect(cache.head).toBe(null);
+        expect(cache.tail).toBe(null);
+      });
+
+      it('should assign the next node to the head of the linked list when the node at the head is deleted', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.delete('users');
+        userNode2.prev = null;
+        userNode2.next = userNode3;
+        userNode3.prev = userNode2;
+        userNode3.next = userNode4;
+        userNode4.prev = userNode3;
+        expect(cache.head).toEqual(userNode2);
+      });
+      it('should assign the previous node to the tail of the linked list when the node at the tail is deleted', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.delete('users4');
+        userNode.next = userNode2;
+        userNode2.prev = userNode;
+        userNode2.next = userNode3;
+        userNode3.prev = userNode2;
+        userNode3.next = null;
+        expect(cache.tail).toEqual(userNode3);
       });
     });
 
@@ -278,20 +367,12 @@ describe('Qache Tests', () => {
           });
           cache = new Cache();
         });
-        it('should get a value from a key in the cache when there is one element in the cache', () => {
+
+        it('should refresh node position in the queue by moving it to the tail', () => {
           cache.set('users', users);
-          expect(cache.get('users')).toEqual(userNode.value);
-        });
-        it('should get a value from a key in the cache when there are two elements in the cache', () => {
-          cache.set('users', users);
-          cache.set('users2', users2);
-          expect(cache.get('users2')).toEqual(userNode2.value);
-        });
-        it('should get a value from a key in the cache when there are 3+  elements in the cache', () => {
-          cache.set('users', users);
-          cache.set('users2', users2);
-          cache.set('users3', users3);
-          expect(cache.get('users3')).toEqual(userNode3.value);
+          cache.get('users');
+          expect(cache.tail).toBe(cache.content['users']);
+          expect(cache.tail).toEqual(userNode);
         });
       });
 
