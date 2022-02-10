@@ -557,19 +557,20 @@ describe('Qache Tests', () => {
       });
     });
     describe('LFU Eviction Policy Tests:', () => {
-      beforeEach(() => {
-        users = [...testUsers];
-        users2 = testUsers.map((user) => user.username + 2);
-        users3 = testUsers.map((user) => user.username + 3);
-        users4 = testUsers.map((user) => user.username + 4);
-        userNode = new Node('users', users);
-        userNode2 = new Node('users2', users2);
-        userNode3 = new Node('users3', users3);
-        userNode4 = new Node('users4', users4);
-        cache = new Cache();
+      describe('set()', () => {
+        beforeEach(() => {
+          users = [...testUsers];
+          users2 = testUsers.map((user) => user.username + 2);
+          users3 = testUsers.map((user) => user.username + 3);
+          users4 = testUsers.map((user) => user.username + 4);
+          userNode = new Node('users', users);
+          userNode2 = new Node('users2', users2);
+          userNode3 = new Node('users3', users3);
+          userNode4 = new Node('users4', users4);
+          cache = new Cache();
+        });
+        it('should evict the node with the lowest access count', () => {});
       });
-
-      it('should Evict the node with the lowest access count', () => {});
     });
   });
 });
