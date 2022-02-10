@@ -15,7 +15,6 @@ module.exports = {
     try {
       cache.invalidate();
       console.log('Cache invalidated!');
-      console.log(cache);
       return true;
     } catch (error) {
       console.log(error);
