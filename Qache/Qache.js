@@ -284,9 +284,7 @@ class Qache {
     }
     //Clears specific keys and adjusts size property if key exists.
     for (let key of keys) {
-      if (this.content[key] !== undefined) {
-        this._removeFromQueueAndCache(this.content[key]);
-      }
+      this.delete(key);
     }
   }
 

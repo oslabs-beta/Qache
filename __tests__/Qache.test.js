@@ -267,6 +267,75 @@ describe('Qache Tests', () => {
       });
     });
 
+    describe('invalidate()', () => {
+      beforeEach(() => {
+        users = [...testUsers];
+        users2 = testUsers.map((user) => user.username + 2);
+        users3 = testUsers.map((user) => user.username + 3);
+        users4 = testUsers.map((user) => user.username + 4);
+        userNode = new Node('users', users);
+        userNode2 = new Node('users2', users2);
+        userNode3 = new Node('users3', users3);
+        userNode4 = new Node('users4', users4);
+        cache = new Cache();
+      });
+
+      it(`should be a method on the 'Qache' class`, () => {
+        expect(cache.invalidate).toBeDefined();
+        expect(typeof cache.invalidate).toBe('function');
+      });
+
+      it('should clear the entire cache if no arguments are passed in', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.set('users4', users4);
+        cache.invalidate();
+        expect(cache.size).toBe(0);
+        expect(cache.head).toBe(null);
+        expect(cache.tail).toBe(null);
+        expect(Object.keys(cache.content).length).toBe(0);
+      });
+
+      it('should remove a single item from the cache when it is the only item in the cache', () => {
+        cache.set('users', users);
+        cache.invalidate('users');
+        expect(cache.content['users']).toBe(undefined);
+      });
+
+      it('should remove a single item from the cache when there are two items in the cache and the item is at the head, as well as reassign the head node to the next node in the queue', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.invalidate('users');
+        expect(cache.content['users']).toBe(undefined);
+        expect(cache.head).toBe(cache.tail);
+      });
+      it('should remove a single item from the cache when there are two items in the cache and the item is at the tail, as well as reassign the tail node to the previous node in the queue', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.invalidate('users2');
+        expect(cache.content['users2']).toBe(undefined);
+        expect(cache.tail).toBe(cache.head);
+      });
+      it('should remove a single item from the cache when there are 3+ items in the cache', () => {
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.invalidate('users2');
+        expect(cache.content['users2']).toBe(undefined);
+      });
+      it('should remove all keys passed in from the cache', () => {
+        const userArr = ['users2', 'users3', 'users'];
+        cache.set('users', users);
+        cache.set('users2', users2);
+        cache.set('users3', users3);
+        cache.invalidate(...userArr);
+        for (const user of userArr) {
+          expect(cache.content[user]).toBe(undefined);
+        }
+      });
+    });
+
     describe('LRU Eviction Policy Tests:', () => {
       describe('set()', () => {
         beforeEach(() => {
@@ -406,7 +475,19 @@ describe('Qache Tests', () => {
       });
     });
     describe('LFU Eviction Policy Tests:', () => {
-      it('should ', () => {});
+      beforeEach(() => {
+        users = [...testUsers];
+        users2 = testUsers.map((user) => user.username + 2);
+        users3 = testUsers.map((user) => user.username + 3);
+        users4 = testUsers.map((user) => user.username + 4);
+        userNode = new Node('users', users);
+        userNode2 = new Node('users2', users2);
+        userNode3 = new Node('users3', users3);
+        userNode4 = new Node('users4', users4);
+        cache = new Cache();
+      });
+
+      it('should Evict the node with the lowest access count', () => {});
     });
   });
 });
