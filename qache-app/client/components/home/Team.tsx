@@ -60,7 +60,7 @@ const Team = () => {
               Meet our team
             </h2>
             <p className='text-center text-xl text-gray-300'>
-              Connect and follow our engineers!
+              Connect with our engineers!
             </p>
           </div>
           <ul
