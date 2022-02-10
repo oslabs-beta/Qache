@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('*', (req, res) => {
-  res.status(404).send('Page not found!');
+  res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.use((error, req, res, next) => {

@@ -11,10 +11,11 @@
   z-index: 1;
   top: 0;
   background-color: $black;
+  white-space: nowrap;
 
   .image-container {
     display: flex;
-    min-width: 200px;
+    width: 200px;
     margin-right: 10;
     img {
       height: 100%;
@@ -40,7 +41,7 @@
 
       .nav-link {
         text-decoration: none;
-        font-size: x-large;
+        font-size: large;
         font-weight: 550;
         color: $white;
         display: block;
