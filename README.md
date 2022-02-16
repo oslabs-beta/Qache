@@ -31,10 +31,9 @@ All code changes happen through Github Pull Requests and we actively welcome the
 
 ## Setting up the Dev Server, Demo, and Mongo DB
 1. Clone this repo.
-2. Run `npm install`.
-3. `cd demo-app`
-4. Run `npm install` once more
-5. `npm start`
+2. `cd qache-app`
+3. Run `npm install` once more
+4. `npm start`
 
 ## Coding Style
 2 spaces for indentation
